@@ -645,7 +645,7 @@ async function callGemini(apiKey) {
   const grade= state.sessionGrade||'a class';
   const topic= state.sessionTopic||'a topic';
 
-  const prompt = `You are Shiksha Sathi, a warm and practical teaching coach for Indian school teachers.
+  const prompt = `You are Shiksha Sathi, a practical teaching coach for Indian school teachers.
 Give a short, specific, actionable coaching note based on what the teacher shares.
 Use principles from Rosenshine's Principles of Instruction and Teach Like a Champion.
 
@@ -654,7 +654,11 @@ Watch for: daily review / prior knowledge activation, checking for understanding
 Respond ONLY in this JSON format, nothing else, no markdown:
 {"strength":"2-3 sentences on one specific thing the teacher did well.","pattern":"2-3 sentences on one pattern limiting learning, explained gently.","try":"2-3 sentences: one very concrete small action for the very next lesson.","tip":"One sentence, max 15 words, imperative verb, the single most actionable takeaway. Example: 'Cold-call one student by name after your next explanation.'"}
 
-Tone: warm, practical, non-judgmental. Like a supportive colleague, not an evaluator. Avoid jargon.
+Tone rules — strictly follow these:
+- Do NOT start any field with "It's wonderful", "Great", "Fantastic", or any enthusiastic opener.
+- Be direct and warm, like a trusted senior colleague giving honest feedback over chai.
+- Specific over generic. Name the actual technique, the actual moment, the actual student behaviour.
+- No jargon. No evaluation language. No "we" — speak to the teacher as "you".
 
 Subject: ${subj}, ${grade}. Topic: ${topic}.
 Lesson transcript: ${state.lessonTranscript}
@@ -699,7 +703,7 @@ function saveSession() {
     dateDisplay: new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'2-digit'}),
     subject:  state.sessionSubject,
     grade:    state.sessionGrade,
-    topic:    state.sessionTopic,
+    topic:    state.sessionTopic ? state.sessionTopic.charAt(0).toUpperCase()+state.sessionTopic.slice(1) : '',
     strength: document.getElementById('note-strength').textContent.trim(),
     pattern:  document.getElementById('note-pattern').textContent.trim(),
     tryThis:  document.getElementById('note-try').textContent.trim(),
@@ -850,6 +854,9 @@ function loadSettingsScreen() {
   document.getElementById('api-key-input').value=key;
   document.getElementById('key-status').textContent = key ? '✓ Key saved on this device' : '';
   document.getElementById('key-status').className   = 'key-status '+(key?'ok':'');
+  // always close advanced on normal load
+  document.getElementById('advanced-toggle').classList.remove('open');
+  document.getElementById('advanced-body').classList.remove('open');
 }
 
 function loadProfileDisplay() {
