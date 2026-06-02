@@ -307,6 +307,27 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <p id="reflection-question">"You taught a full lesson today — which moment felt most uncertain, and why?"</p>
   </div>
 
+  <!-- text answer — shown first, open by default -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <p style="font-size:14px;font-weight:500;color:var(--ink);">Write your response</p>
+      <button onclick="toggleReflectText()" id="reflect-text-toggle" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;">show / hide</button>
+    </div>
+    <div id="reflect-text-panel" style="display:flex;flex-direction:column;gap:6px;">
+      <textarea id="reflect-text-input" rows="3"
+        placeholder="Type your answer here…"
+        style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
+        oninput="onReflectTextInput()"></textarea>
+    </div>
+  </div>
+
+  <!-- divider -->
+  <div style="display:flex;align-items:center;gap:10px;margin-top:-8px;">
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+    <span style="font-size:12px;color:var(--ink3);">or speak</span>
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+  </div>
+
   <div class="rec-area">
     <button class="rec-btn idle" id="reflect-rec-btn" onclick="toggleReflectRecording()">
       <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
@@ -322,24 +343,10 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <div class="rec-timer" id="reflect-timer" style="display:none">0:00</div>
   </div>
 
-  <!-- sample chips — subtle, beneath recorder -->
+  <!-- chips — below recorder, as quick shortcuts -->
   <div id="chips-wrap" style="display:none">
-    <p class="chips-label">Or pick what fits your lesson today:</p>
+    <p class="chips-label">Or pick what fits:</p>
     <div class="chips-row" id="chips-row"></div>
-  </div>
-
-  <!-- text answer option — equal weight -->
-  <div style="display:flex;flex-direction:column;gap:8px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;">
-      <p style="font-size:14px;font-weight:500;color:var(--ink);">Or write your response</p>
-      <button onclick="toggleReflectText()" id="reflect-text-toggle" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;">show / hide</button>
-    </div>
-    <div id="reflect-text-panel" style="display:none;flex-direction:column;gap:6px;">
-      <textarea id="reflect-text-input" rows="3"
-        placeholder="Type your answer here…"
-        style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
-        oninput="onReflectTextInput()"></textarea>
-    </div>
   </div>
 
   <button class="btn-primary" id="feedback-btn" disabled onclick="proceedToFeedback()">
@@ -352,9 +359,18 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 
 <!-- ══════ SCREEN 3 — Coaching note ══════ -->
 <div class="screen" id="screen-feedback">
-  <div class="back-link" onclick="goTo('screen-reflect')">
+  <div class="back-link" onclick="checkUnsavedNote()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
     Back
+  </div>
+
+  <!-- unsaved warning — shown inline, not a modal -->
+  <div id="unsaved-warning" style="display:none;background:var(--amber-l);border:1px solid rgba(200,121,26,0.25);border-radius:10px;padding:12px 14px;display:none;">
+    <p style="font-size:13px;color:var(--amber);margin-bottom:10px;">Note not saved — save it before leaving?</p>
+    <div style="display:flex;gap:8px;">
+      <button onclick="saveSession()" style="flex:1;padding:9px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Save &amp; leave</button>
+      <button onclick="confirmLeaveNote()" style="flex:1;padding:9px;background:none;color:var(--amber);border:1px solid rgba(200,121,26,0.4);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Leave without saving</button>
+    </div>
   </div>
   <div>
     <p class="wordmark">Shiksha Sathi</p>
@@ -717,11 +733,28 @@ function goTo(id) {
   window.scrollTo(0,0);
 }
 function navTo(screenId, navId) {
+  // If navigating away from feedback screen with unsaved note, warn
+  const currentScreen = document.querySelector('.screen.active');
+  if (currentScreen && currentScreen.id === 'screen-feedback') {
+    const noteVisible = document.getElementById('note-card').style.display === 'flex';
+    const alreadySaved = document.getElementById('save-btn').disabled;
+    if (noteVisible && !alreadySaved && screenId !== 'screen-feedback') {
+      const warn = document.getElementById('unsaved-warning');
+      warn.style.display = 'block';
+      // Update leave button to go to intended destination
+      warn.querySelector('button:last-child').onclick = () => {
+        warn.style.display = 'none';
+        newSession();
+        // newSession calls navTo internally — so just proceed
+      };
+      return;
+    }
+  }
   // If navigating back to record screen and a session was completed
   // but not saved, reset so the UI is clean
   if (screenId === 'screen-record' && state.lessonDone && !state.saving) {
     newSession();
-    return; // newSession calls navTo itself at the end
+    return;
   }
   goTo(screenId);
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -852,16 +885,65 @@ function proceedToReflection() {
   state.sessionGrade   = grd;
   state.sessionTopic   = topic;
   // Pick reflection question targeting weakest rubric dimension
+  // Inject topic for specificity
   const { question, dimId } = getReflectionQuestionAndDim(state.rubricSignals);
-  state.reflectionQuestion = question;
+  const topicPhrase = topic ? `in your ${topic} lesson` : 'today';
+  const questionWithTopic = question.replace(
+    /today'?s? lesson|today/i,
+    topicPhrase
+  ) || question;
+  state.reflectionQuestion = questionWithTopic;
   state.weakestDim = dimId;
-  document.getElementById('reflection-question').textContent = `"${question}"`;
+  document.getElementById('reflection-question').textContent = `"${questionWithTopic}"`;
   renderReflectionChips(dimId);
   goTo('screen-reflect');
 }
 
-function proceedToFeedback()  { showFeedbackScreen(); }
-function skipReflection()     { state.reflectTranscript='(teacher skipped reflection)'; showFeedbackScreen(); }
+function proceedToFeedback() {
+  // Combine all reflection inputs — rank by richness
+  // Voice transcript (set by runDummyTranscription) > typed text > chip
+  const typed = document.getElementById('reflect-text-input').value.trim();
+  const chip  = state.selectedChip || '';
+
+  // Build combined reflection — richer inputs first
+  const parts = [];
+  if (state.reflectTranscript && state.reflectTranscript !== typed && state.reflectTranscript !== chip) {
+    // Voice recording was transcribed — use as primary
+    parts.push(state.reflectTranscript);
+  }
+  if (typed) parts.push(typed);
+  if (chip && !parts.some(p => p === chip)) parts.push(chip);
+
+  if (parts.length > 0) {
+    state.reflectTranscript = parts.join(' | ');
+  } else if (!state.reflectTranscript) {
+    state.reflectTranscript = '(no reflection provided)';
+  }
+  showFeedbackScreen();
+}
+
+function skipReflection() {
+  state.reflectTranscript = '(teacher skipped reflection)';
+  showFeedbackScreen();
+}
+
+// ── Unsaved note warning ──
+function checkUnsavedNote() {
+  const noteVisible = document.getElementById('note-card').style.display === 'flex';
+  const alreadySaved = document.getElementById('save-btn').disabled;
+  if (noteVisible && !alreadySaved) {
+    // Show inline warning
+    const warn = document.getElementById('unsaved-warning');
+    warn.style.display = warn.style.display === 'block' ? 'none' : 'block';
+  } else {
+    goTo('screen-reflect');
+  }
+}
+
+function confirmLeaveNote() {
+  document.getElementById('unsaved-warning').style.display = 'none';
+  goTo('screen-reflect');
+}
 
 async function showFeedbackScreen() {
   // context tags
@@ -1158,9 +1240,10 @@ function newSession() {
   document.getElementById('lesson-text-panel').style.display='flex';
   document.getElementById('lesson-text-input').value='';
   document.getElementById('lesson-text-toggle-btn').textContent='show / hide';
-  document.getElementById('reflect-text-panel').style.display='none';
+  document.getElementById('reflect-text-panel').style.display='flex';
   document.getElementById('reflect-text-input').value='';
   document.getElementById('reflect-text-toggle').textContent='show / hide';
+  document.getElementById('unsaved-warning').style.display='none';
 
   navTo('screen-record','nav-home');
   checkApiBanner();
