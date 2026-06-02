@@ -3,29 +3,28 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Shiksha Sahai</title>
+<title>Shiksha Sathi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-  /* ── tokens ── */
   :root {
-    --bg:       #F5F0E8;
-    --surface:  #FDFAF4;
-    --ink:      #1C1C1A;
-    --ink2:     #5A5850;
-    --ink3:     #9A9890;
-    --teal:     #1D6B5A;
-    --teal-l:   #E6F0ED;
-    --amber:    #C8791A;
-    --amber-l:  #FDF3E3;
-    --red:      #B84040;
-    --red-l:    #FDEAEA;
-    --border:   rgba(28,28,26,0.12);
-    --radius:   14px;
-    --shadow:   0 2px 16px rgba(28,28,26,0.08);
+    --bg:      #F5F0E8;
+    --surface: #FDFAF4;
+    --ink:     #1C1C1A;
+    --ink2:    #5A5850;
+    --ink3:    #9A9890;
+    --teal:    #1D6B5A;
+    --teal-l:  #E6F0ED;
+    --amber:   #C8791A;
+    --amber-l: #FDF3E3;
+    --red:     #B84040;
+    --red-l:   #FDEAEA;
+    --blue-l:  #EEF3FF;
+    --blue:    #3B5FBE;
+    --border:  rgba(28,28,26,0.12);
+    --radius:  14px;
+    --shadow:  0 2px 16px rgba(28,28,26,0.08);
   }
-
-  /* ── reset ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
     height: 100%;
@@ -36,8 +35,6 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
-
-  /* ── layout ── */
   .app {
     min-height: 100dvh;
     display: flex;
@@ -46,40 +43,22 @@
     margin: 0 auto;
     padding: 0 20px 40px;
   }
-
-  /* ── screens ── */
   .screen { display: none; flex-direction: column; gap: 24px; padding-top: 48px; animation: fadeIn 0.3s ease; }
   .screen.active { display: flex; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
-  /* ── wordmark ── */
   .wordmark {
     font-family: 'Lora', serif;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 13px; font-weight: 500;
     letter-spacing: 0.08em;
     color: var(--teal);
     text-transform: uppercase;
     margin-bottom: -8px;
   }
+  h1 { font-family:'Lora',serif; font-size:26px; font-weight:600; line-height:1.25; }
+  h2 { font-family:'Lora',serif; font-size:20px; font-weight:500; }
+  .subtext { font-size:14px; color:var(--ink2); line-height:1.55; }
 
-  /* ── headings ── */
-  h1 {
-    font-family: 'Lora', serif;
-    font-size: 26px;
-    font-weight: 600;
-    line-height: 1.25;
-    color: var(--ink);
-  }
-  h2 {
-    font-family: 'Lora', serif;
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--ink);
-  }
-  .subtext { font-size: 14px; color: var(--ink2); line-height: 1.55; }
-
-  /* ── card ── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -87,10 +66,8 @@
     padding: 20px;
     box-shadow: var(--shadow);
   }
-
-  /* ── form fields ── */
-  .field { display: flex; flex-direction: column; gap: 6px; }
-  .field label { font-size: 12px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink2); }
+  .field { display:flex; flex-direction:column; gap:6px; }
+  .field label { font-size:12px; font-weight:500; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink2); }
   .field select, .field input {
     appearance: none;
     background: var(--bg);
@@ -98,256 +75,191 @@
     border-radius: 8px;
     padding: 10px 14px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    color: var(--ink);
+    font-size: 15px; color: var(--ink);
     outline: none;
     transition: border-color 0.15s;
+    width: 100%;
   }
   .field select:focus, .field input:focus { border-color: var(--teal); }
+  .field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 
-  /* ── row of fields ── */
-  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-  /* ── record button ── */
   .rec-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    padding: 28px 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+    padding:28px 20px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
   }
   .rec-btn {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.15s, box-shadow 0.15s;
-    position: relative;
+    width:72px; height:72px; border-radius:50%; border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform 0.15s, box-shadow 0.15s;
+    position:relative;
   }
-  .rec-btn:active { transform: scale(0.95); }
-  .rec-btn.idle   { background: var(--teal); box-shadow: 0 4px 20px rgba(29,107,90,0.35); }
-  .rec-btn.idle:hover { box-shadow: 0 6px 28px rgba(29,107,90,0.45); transform: translateY(-1px); }
-  .rec-btn.recording { background: var(--red); box-shadow: 0 4px 20px rgba(184,64,64,0.4); animation: pulse 1.4s ease-in-out infinite; }
-  .rec-btn.done { background: #e8e4da; box-shadow: none; cursor: default; }
+  .rec-btn:active { transform:scale(0.95); }
+  .rec-btn.idle { background:var(--teal); box-shadow:0 4px 20px rgba(29,107,90,0.35); }
+  .rec-btn.idle:hover { box-shadow:0 6px 28px rgba(29,107,90,0.45); transform:translateY(-1px); }
+  .rec-btn.recording { background:var(--red); box-shadow:0 4px 20px rgba(184,64,64,0.4); animation:pulse 1.4s ease-in-out infinite; }
+  .rec-btn.done { background:#e8e4da; box-shadow:none; cursor:default; }
   @keyframes pulse {
-    0%, 100% { box-shadow: 0 4px 20px rgba(184,64,64,0.4); }
-    50% { box-shadow: 0 4px 36px rgba(184,64,64,0.65); }
+    0%,100% { box-shadow:0 4px 20px rgba(184,64,64,0.4); }
+    50% { box-shadow:0 4px 36px rgba(184,64,64,0.65); }
   }
-  .rec-btn svg { width: 28px; height: 28px; }
-  .rec-label { font-size: 14px; color: var(--ink2); text-align: center; }
-  .rec-label strong { color: var(--ink); display: block; font-size: 15px; font-weight: 500; }
-  .rec-timer { font-family: 'Lora', serif; font-size: 22px; color: var(--red); letter-spacing: 0.04em; }
-
-  /* ── ripple ring (recording indicator) ── */
   .rec-btn.recording::after {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    border: 2px solid var(--red);
-    opacity: 0;
-    animation: ring 1.4s ease-out infinite;
+    content:''; position:absolute; inset:-6px; border-radius:50%;
+    border:2px solid var(--red); opacity:0;
+    animation:ring 1.4s ease-out infinite;
   }
   @keyframes ring {
-    0% { opacity: 0.6; transform: scale(1); }
-    100% { opacity: 0; transform: scale(1.35); }
+    0% { opacity:0.6; transform:scale(1); }
+    100% { opacity:0; transform:scale(1.35); }
   }
+  .rec-label { font-size:14px; color:var(--ink2); text-align:center; }
+  .rec-label strong { color:var(--ink); display:block; font-size:15px; font-weight:500; }
+  .rec-timer { font-family:'Lora',serif; font-size:22px; color:var(--red); letter-spacing:0.04em; }
 
-  /* ── status pill ── */
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 4px 10px;
-    border-radius: 20px;
-  }
-  .pill.processing { background: var(--amber-l); color: var(--amber); }
-  .pill.done-pill  { background: var(--teal-l);  color: var(--teal);  }
-  .pill.dot::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-    flex-shrink: 0;
-  }
+  .pill { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:4px 10px; border-radius:20px; }
+  .pill.processing { background:var(--amber-l); color:var(--amber); }
+  .pill.done-pill  { background:var(--teal-l);  color:var(--teal); }
+  .pill.error-pill { background:var(--red-l);   color:var(--red); }
+  .pill.dot::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
 
-  /* ── divider ── */
-  .divider { display: flex; align-items: center; gap: 12px; color: var(--ink3); font-size: 13px; }
-  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-  /* ── primary button ── */
   .btn-primary {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    background: var(--teal);
-    color: #fff;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    text-align: center;
-    transition: background 0.15s, transform 0.1s;
+    display:block; width:100%; padding:14px;
+    background:var(--teal); color:#fff;
+    font-family:'DM Sans',sans-serif; font-size:15px; font-weight:500;
+    border:none; border-radius:10px; cursor:pointer; text-align:center;
+    transition:background 0.15s, transform 0.1s;
   }
-  .btn-primary:hover { background: #175a4a; }
-  .btn-primary:active { transform: scale(0.98); }
-  .btn-primary:disabled { background: var(--ink3); cursor: not-allowed; transform: none; }
+  .btn-primary:hover { background:#175a4a; }
+  .btn-primary:active { transform:scale(0.98); }
+  .btn-primary:disabled { background:var(--ink3); cursor:not-allowed; transform:none; }
 
-  /* ── ghost button ── */
   .btn-ghost {
-    display: block;
-    width: 100%;
-    padding: 13px;
-    background: transparent;
-    color: var(--ink2);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    cursor: pointer;
-    text-align: center;
-    transition: border-color 0.15s, color 0.15s;
+    display:block; width:100%; padding:13px;
+    background:transparent; color:var(--ink2);
+    font-family:'DM Sans',sans-serif; font-size:14px;
+    border:1px solid var(--border); border-radius:10px;
+    cursor:pointer; text-align:center;
+    transition:border-color 0.15s, color 0.15s;
   }
-  .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+  .btn-ghost:hover { border-color:var(--teal); color:var(--teal); }
 
-  /* ── reflection question box ── */
   .question-box {
-    background: var(--teal-l);
-    border-left: 3px solid var(--teal);
-    border-radius: 0 var(--radius) var(--radius) 0;
-    padding: 16px 18px;
+    background:var(--teal-l);
+    border-left:3px solid var(--teal);
+    border-radius:0 var(--radius) var(--radius) 0;
+    padding:16px 18px;
   }
   .question-box p {
-    font-family: 'Lora', serif;
-    font-size: 16px;
-    color: var(--teal);
-    line-height: 1.5;
-    font-style: italic;
+    font-family:'Lora',serif; font-size:16px;
+    color:var(--teal); line-height:1.5; font-style:italic;
   }
 
-  /* ── coaching note sections ── */
-  .note-section { display: flex; flex-direction: column; gap: 8px; }
+  .note-section { display:flex; flex-direction:column; gap:8px; }
   .note-tag {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 4px;
-    display: inline-block;
-    align-self: flex-start;
+    font-size:11px; font-weight:500; letter-spacing:0.07em;
+    text-transform:uppercase; padding:3px 8px; border-radius:4px;
+    display:inline-block; align-self:flex-start;
   }
-  .note-tag.strength { background: var(--teal-l); color: var(--teal); }
-  .note-tag.pattern  { background: var(--amber-l); color: var(--amber); }
-  .note-tag.try      { background: #EEF3FF; color: #3B5FBE; }
-  .note-body {
-    font-size: 15px;
-    color: var(--ink);
-    line-height: 1.65;
-  }
-  .note-sep { height: 1px; background: var(--border); margin: 4px 0; }
+  .note-tag.strength { background:var(--teal-l);  color:var(--teal);  }
+  .note-tag.pattern  { background:var(--amber-l); color:var(--amber); }
+  .note-tag.try      { background:var(--blue-l);  color:var(--blue);  }
+  .note-body { font-size:15px; color:var(--ink); line-height:1.65; }
+  .note-sep { height:1px; background:var(--border); margin:4px 0; }
 
-  /* ── session history ── */
-  .history-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
+  /* generating state */
+  .generating {
+    display:flex; flex-direction:column; align-items:center;
+    gap:12px; padding:32px 20px; text-align:center;
   }
-  .history-item:last-child { border-bottom: none; }
-  .history-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--teal);
-    margin-top: 5px;
-    flex-shrink: 0;
+  .spinner {
+    width:32px; height:32px; border:3px solid var(--teal-l);
+    border-top-color:var(--teal); border-radius:50%;
+    animation:spin 0.8s linear infinite;
   }
-  .history-meta { font-size: 12px; color: var(--ink3); }
-  .history-text { font-size: 14px; color: var(--ink2); margin-top: 2px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
 
-  /* ── back link ── */
+  .history-item { display:flex; align-items:flex-start; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); }
+  .history-item:last-child { border-bottom:none; }
+  .history-dot { width:10px; height:10px; border-radius:50%; background:var(--teal); margin-top:5px; flex-shrink:0; }
+  .history-meta { font-size:12px; color:var(--ink3); }
+  .history-text { font-size:14px; color:var(--ink2); margin-top:2px; }
+
   .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: var(--ink2);
-    cursor: pointer;
-    margin-bottom: -8px;
-    width: fit-content;
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:13px; color:var(--ink2); cursor:pointer;
+    margin-bottom:-8px; width:fit-content;
   }
-  .back-link:hover { color: var(--teal); }
+  .back-link:hover { color:var(--teal); }
 
-  /* ── bottom nav ── */
+  /* settings */
+  .key-input-wrap { position:relative; }
+  .key-input-wrap input { padding-right:72px; font-family:monospace; font-size:13px; }
+  .key-toggle {
+    position:absolute; right:10px; top:50%; transform:translateY(-50%);
+    background:none; border:none; cursor:pointer;
+    font-size:12px; color:var(--ink2); font-family:'DM Sans',sans-serif;
+  }
+  .key-status { font-size:13px; margin-top:6px; }
+  .key-status.ok  { color:var(--teal); }
+  .key-status.err { color:var(--red); }
+
+  .setting-row {
+    display:flex; flex-direction:column; gap:6px;
+    padding:14px 0; border-bottom:1px solid var(--border);
+  }
+  .setting-row:last-child { border-bottom:none; }
+  .setting-label { font-size:12px; font-weight:500; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink2); }
+  .setting-desc  { font-size:13px; color:var(--ink3); }
+
+  .tag-row { display:flex; gap:8px; flex-wrap:wrap; }
+  .info-tag { font-size:12px; padding:3px 10px; border-radius:20px; background:var(--bg); border:1px solid var(--border); color:var(--ink2); }
+
   .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex;
-    padding: 10px 0 20px;
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:480px;
+    background:var(--surface); border-top:1px solid var(--border);
+    display:flex; padding:10px 0 20px;
   }
   .nav-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    cursor: pointer;
-    padding: 6px 0;
-    color: var(--ink3);
-    font-size: 11px;
-    transition: color 0.15s;
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+    cursor:pointer; padding:6px 0; color:var(--ink3); font-size:11px;
+    transition:color 0.15s;
   }
-  .nav-item.active { color: var(--teal); }
-  .nav-item svg { width: 22px; height: 22px; }
+  .nav-item.active { color:var(--teal); }
+  .nav-item svg { width:22px; height:22px; }
+  .spacer-nav { height:72px; }
 
-  /* ── extras ── */
-  .spacer-nav { height: 72px; }
-  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
-  .info-tag {
-    font-size: 12px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--ink2);
+  /* api key warning banner */
+  .api-banner {
+    background:var(--amber-l); border:1px solid rgba(200,121,26,0.25);
+    border-radius:10px; padding:12px 14px;
+    font-size:13px; color:var(--amber);
+    display:flex; align-items:center; gap:10px; cursor:pointer;
   }
+  .api-banner svg { flex-shrink:0; }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- ════════════════════════════════
+  <!-- ══════════════════════════════════
        SCREEN 1 — Record lesson
-       ════════════════════════════════ -->
+       ══════════════════════════════════ -->
   <div class="screen active" id="screen-record">
     <div>
-      <p class="wordmark">Shiksha Sahai</p>
+      <p class="wordmark">Shiksha Sathi</p>
       <h1>Today's<br/>lesson</h1>
     </div>
 
-    <!-- context fields -->
+    <!-- api key warning (shown if no key saved) -->
+    <div class="api-banner" id="api-banner" style="display:none" onclick="navTo('screen-settings','nav-settings')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      No API key set — tap to add one in Settings. Coaching note will use a fallback template.
+    </div>
+
     <div class="card" style="display:flex;flex-direction:column;gap:14px;">
       <div class="field-row">
         <div class="field">
@@ -380,13 +292,12 @@
       </div>
     </div>
 
-    <!-- recorder -->
-    <div class="rec-area" id="lesson-rec-area">
+    <div class="rec-area">
       <button class="rec-btn idle" id="lesson-rec-btn" onclick="toggleLessonRecording()">
-        <!-- mic icon -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
           <rect x="9" y="2" width="6" height="12" rx="3"/>
-          <path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="21" x2="12" y2="17"/>
+          <path d="M5 10a7 7 0 0014 0"/>
+          <line x1="12" y1="21" x2="12" y2="17"/>
           <line x1="8" y1="21" x2="16" y2="21"/>
         </svg>
       </button>
@@ -397,10 +308,9 @@
       <div class="rec-timer" id="lesson-timer" style="display:none">0:00</div>
     </div>
 
-    <!-- status: shows after recording done -->
     <div id="lesson-status" style="display:none">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-        <span class="pill processing dot" id="status-pill">Transcribing…</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="pill dot" id="status-pill">Transcribing…</span>
         <span class="subtext" id="status-text">This takes a moment</span>
       </div>
     </div>
@@ -408,39 +318,34 @@
     <button class="btn-primary" id="proceed-btn" disabled onclick="proceedToReflection()">
       Continue to reflection →
     </button>
-
     <div class="spacer-nav"></div>
   </div>
 
 
-  <!-- ════════════════════════════════
+  <!-- ══════════════════════════════════
        SCREEN 2 — Reflection
-       ════════════════════════════════ -->
+       ══════════════════════════════════ -->
   <div class="screen" id="screen-reflect">
     <div class="back-link" onclick="goTo('screen-record')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
       Back
     </div>
-
     <div>
-      <p class="wordmark">Shiksha Sahai</p>
+      <p class="wordmark">Shiksha Sathi</p>
       <h1>One moment<br/>before feedback</h1>
-      <p class="subtext" style="margin-top:8px;">Your answer shapes the coaching note you'll receive.</p>
+      <p class="subtext" style="margin-top:8px;">Your answer shapes the coaching note.</p>
     </div>
 
-    <!-- the generated reflection question -->
     <div class="question-box">
-      <p id="reflection-question">
-        "You mentioned the back row wasn't following — what do you think was happening there?"
-      </p>
+      <p id="reflection-question">"You taught a full lesson today — which moment felt most uncertain, and why?"</p>
     </div>
 
-    <!-- reflection recorder -->
-    <div class="rec-area" id="reflect-rec-area">
+    <div class="rec-area">
       <button class="rec-btn idle" id="reflect-rec-btn" onclick="toggleReflectRecording()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
           <rect x="9" y="2" width="6" height="12" rx="3"/>
-          <path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="21" x2="12" y2="17"/>
+          <path d="M5 10a7 7 0 0014 0"/>
+          <line x1="12" y1="21" x2="12" y2="17"/>
           <line x1="8" y1="21" x2="16" y2="21"/>
         </svg>
       </button>
@@ -455,94 +360,115 @@
       Get my coaching note →
     </button>
     <button class="btn-ghost" onclick="skipReflection()">Skip — just show the note</button>
-
     <div class="spacer-nav"></div>
   </div>
 
 
-  <!-- ════════════════════════════════
+  <!-- ══════════════════════════════════
        SCREEN 3 — Coaching note
-       ════════════════════════════════ -->
+       ══════════════════════════════════ -->
   <div class="screen" id="screen-feedback">
     <div class="back-link" onclick="goTo('screen-reflect')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
       Back
     </div>
-
     <div>
-      <p class="wordmark">Shiksha Sahai</p>
+      <p class="wordmark">Shiksha Sathi</p>
       <h1>Your coaching<br/>note</h1>
     </div>
 
-    <!-- context tags -->
-    <div class="tag-row" id="session-tags">
-      <!-- filled by JS -->
+    <div class="tag-row" id="session-tags"></div>
+
+    <!-- loading state -->
+    <div class="card generating" id="note-generating" style="display:none">
+      <div class="spinner"></div>
+      <p class="subtext">Writing your coaching note…</p>
     </div>
 
-    <!-- the note card -->
+    <!-- the note (hidden while loading) -->
     <div class="card" id="note-card" style="display:flex;flex-direction:column;gap:16px;">
-
       <div class="note-section">
         <span class="note-tag strength">What worked</span>
-        <p class="note-body" id="note-strength">
-          You opened with a strong recall question — asking three students by name
-          about yesterday's content before introducing new material. That's exactly
-          the kind of daily review that builds long-term retention.
-        </p>
+        <p class="note-body" id="note-strength">—</p>
       </div>
-
       <div class="note-sep"></div>
-
       <div class="note-section">
         <span class="note-tag pattern">A pattern to notice</span>
-        <p class="note-body" id="note-pattern">
-          Most responses stayed choral — the whole class answering together.
-          That makes it hard to know which individual students actually understood.
-          Checking for understanding was thin after your main explanation.
-        </p>
+        <p class="note-body" id="note-pattern">—</p>
       </div>
-
       <div class="note-sep"></div>
-
       <div class="note-section">
         <span class="note-tag try">Try tomorrow</span>
-        <p class="note-body" id="note-try">
-          After your next explanation, pause for 5 seconds — then cold-call
-          one student by name before moving on. Just one. It takes 20 seconds
-          and tells you far more than "everyone understood?"
-        </p>
+        <p class="note-body" id="note-try">—</p>
       </div>
     </div>
 
-    <!-- save / next -->
-    <button class="btn-primary" onclick="saveSession()">Save this note ✓</button>
-    <button class="btn-ghost" onclick="newSession()">Start a new session</button>
+    <!-- error state -->
+    <div id="note-error" style="display:none">
+      <span class="pill error-pill dot">Could not reach Gemini — showing fallback note</span>
+    </div>
 
+    <button class="btn-primary" id="save-btn" onclick="saveSession()">Save this note ✓</button>
+    <button class="btn-ghost" onclick="newSession()">Start a new session</button>
     <div class="spacer-nav"></div>
   </div>
 
 
-  <!-- ════════════════════════════════
-       SCREEN 4 — History / Journey
-       ════════════════════════════════ -->
+  <!-- ══════════════════════════════════
+       SCREEN 4 — Journey / History
+       ══════════════════════════════════ -->
   <div class="screen" id="screen-history">
     <div>
-      <p class="wordmark">Shiksha Sahai</p>
+      <p class="wordmark">Shiksha Sathi</p>
       <h1>Your journey</h1>
       <p class="subtext" style="margin-top:6px;">Patterns across your sessions.</p>
     </div>
+    <div class="card" id="history-list"></div>
+    <div class="spacer-nav"></div>
+  </div>
 
-    <div class="card" id="history-list">
-      <!-- filled by JS -->
+
+  <!-- ══════════════════════════════════
+       SCREEN 5 — Settings
+       ══════════════════════════════════ -->
+  <div class="screen" id="screen-settings">
+    <div>
+      <p class="wordmark">Shiksha Sathi</p>
+      <h1>Settings</h1>
     </div>
 
+    <div class="card" style="display:flex;flex-direction:column;gap:0;">
+
+      <div class="setting-row">
+        <span class="setting-label">Gemini API Key</span>
+        <span class="setting-desc">Used to generate your coaching note. Stored only on this device — never sent to anyone else.</span>
+        <div class="key-input-wrap" style="margin-top:8px;">
+          <input type="password" id="api-key-input" placeholder="Paste your key here…" autocomplete="off" spellcheck="false"/>
+          <button class="key-toggle" id="key-toggle-btn" onclick="toggleKeyVisibility()">Show</button>
+        </div>
+        <div class="key-status" id="key-status"></div>
+        <button class="btn-primary" style="margin-top:10px;" onclick="saveApiKey()">Save key</button>
+      </div>
+
+      <div class="setting-row">
+        <span class="setting-label">Get a free key</span>
+        <span class="setting-desc">Go to <strong>aistudio.google.com</strong> → sign in with Google → "Get API key" → "Create API key". Free, no credit card needed.</span>
+      </div>
+
+      <div class="setting-row">
+        <span class="setting-label">Clear all data</span>
+        <span class="setting-desc">Deletes your saved session history from this device.</span>
+        <button class="btn-ghost" style="margin-top:8px;" onclick="clearAllData()">Clear history</button>
+      </div>
+
+    </div>
     <div class="spacer-nav"></div>
   </div>
 
 </div><!-- /app -->
 
 
-<!-- ── bottom nav ── -->
+<!-- bottom nav -->
 <nav class="bottom-nav">
   <div class="nav-item active" id="nav-home" onclick="navTo('screen-record','nav-home')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -550,11 +476,18 @@
     </svg>
     Record
   </div>
-  <div class="nav-item" id="nav-history" onclick="navTo('screen-history','nav-history')">
+  <div class="nav-item" id="nav-history" onclick="navTo('screen-history','nav-history');renderHistory()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
     </svg>
     Journey
+  </div>
+  <div class="nav-item" id="nav-settings" onclick="navTo('screen-settings','nav-settings');loadSettingsScreen()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+    Settings
   </div>
 </nav>
 
@@ -565,6 +498,7 @@
 // ══════════════════════════════════════════
 const state = {
   lessonRecording: false,
+  reflectRecording: false,
   lessonDone: false,
   reflectDone: false,
   lessonSeconds: 0,
@@ -573,12 +507,25 @@ const state = {
   reflectInterval: null,
   lessonMediaRecorder: null,
   reflectMediaRecorder: null,
-  lessonAudioBlob: null,
-  reflectAudioBlob: null,
+  lessonTranscript: '',   // filled by (dummy) transcription
+  reflectTranscript: '',  // filled by (dummy) transcription
   sessionSubject: '',
   sessionGrade: '',
   sessionTopic: '',
+  reflectionQuestion: '',
 };
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  checkApiBanner();
+});
+
+function checkApiBanner() {
+  const key = localStorage.getItem('ss_gemini_key');
+  document.getElementById('api-banner').style.display = key ? 'none' : 'flex';
+}
 
 // ══════════════════════════════════════════
 //  NAVIGATION
@@ -593,47 +540,43 @@ function navTo(screenId, navId) {
   goTo(screenId);
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById(navId).classList.add('active');
-  if (screenId === 'screen-history') renderHistory();
 }
 
 // ══════════════════════════════════════════
 //  LESSON RECORDING
 // ══════════════════════════════════════════
 async function toggleLessonRecording() {
-  const btn = document.getElementById('lesson-rec-btn');
+  const btn   = document.getElementById('lesson-rec-btn');
   const label = document.getElementById('lesson-rec-label');
-  const sub = document.getElementById('lesson-rec-sub');
+  const sub   = document.getElementById('lesson-rec-sub');
   const timer = document.getElementById('lesson-timer');
-
   if (state.lessonDone) return;
 
   if (!state.lessonRecording) {
     // START
+    state.lessonRecording = true;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       state.lessonMediaRecorder = new MediaRecorder(stream);
       const chunks = [];
       state.lessonMediaRecorder.ondataavailable = e => chunks.push(e.data);
       state.lessonMediaRecorder.onstop = () => {
-        state.lessonAudioBlob = new Blob(chunks, { type: 'audio/webm' });
-        onLessonRecordingComplete();
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        runDummyTranscription('lesson', blob);
       };
       state.lessonMediaRecorder.start();
     } catch(e) {
-      // Demo fallback: no mic access (e.g. file:// or blocked)
-      console.warn('Mic not available, using demo mode:', e.message);
-      state.lessonAudioBlob = null; // will use dummy transcript
+      // No mic (Claude preview / file://) — go straight to dummy
+      console.warn('Mic unavailable, demo mode');
+      // will call runDummyTranscription on stop
     }
 
-    state.lessonRecording = true;
     state.lessonSeconds = 0;
     btn.className = 'rec-btn recording';
-    // swap to stop icon
-    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="#fff" width="28" height="28"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
+    btn.innerHTML = stopIcon();
     label.textContent = 'Recording…';
     sub.textContent = 'Tap to stop when done';
     timer.style.display = 'block';
-
     state.lessonInterval = setInterval(() => {
       state.lessonSeconds++;
       timer.textContent = formatTime(state.lessonSeconds);
@@ -647,42 +590,22 @@ async function toggleLessonRecording() {
       state.lessonMediaRecorder.stop();
       state.lessonMediaRecorder.stream.getTracks().forEach(t => t.stop());
     } else {
-      onLessonRecordingComplete(); // demo fallback
+      runDummyTranscription('lesson', null);
     }
     btn.className = 'rec-btn done';
-    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#9A9890" stroke-width="2" width="28" height="28"><polyline points="20 6 9 17 4 12"/></svg>`;
+    btn.innerHTML = checkIcon();
     label.textContent = 'Recording saved';
     sub.textContent = `Duration: ${formatTime(state.lessonSeconds)}`;
   }
-}
-
-function onLessonRecordingComplete() {
-  state.lessonDone = true;
-  document.getElementById('lesson-status').style.display = 'block';
-
-  // Simulate transcription (replace with real Whisper WASM later)
-  const pill = document.getElementById('status-pill');
-  const statusText = document.getElementById('status-text');
-  pill.className = 'pill processing dot';
-  pill.textContent = 'Transcribing…';
-  statusText.textContent = 'Processing your audio';
-
-  setTimeout(() => {
-    pill.className = 'pill done-pill dot';
-    pill.textContent = 'Transcribed';
-    statusText.textContent = 'Ready to continue';
-    document.getElementById('proceed-btn').disabled = false;
-  }, 2200); // simulates Whisper processing time
 }
 
 // ══════════════════════════════════════════
 //  REFLECT RECORDING
 // ══════════════════════════════════════════
 async function toggleReflectRecording() {
-  const btn = document.getElementById('reflect-rec-btn');
+  const btn   = document.getElementById('reflect-rec-btn');
   const label = document.getElementById('reflect-rec-label');
   const timer = document.getElementById('reflect-timer');
-
   if (state.reflectDone) return;
 
   if (!state.reflectRecording) {
@@ -693,23 +616,22 @@ async function toggleReflectRecording() {
       const chunks = [];
       state.reflectMediaRecorder.ondataavailable = e => chunks.push(e.data);
       state.reflectMediaRecorder.onstop = () => {
-        state.reflectAudioBlob = new Blob(chunks, { type: 'audio/webm' });
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        runDummyTranscription('reflect', blob);
       };
       state.reflectMediaRecorder.start();
     } catch(e) {
-      console.warn('Mic not available, demo mode');
+      console.warn('Mic unavailable, demo mode');
     }
 
     state.reflectSeconds = 0;
     btn.className = 'rec-btn recording';
-    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="#fff" width="28" height="28"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
+    btn.innerHTML = stopIcon();
     label.textContent = 'Recording…';
     timer.style.display = 'block';
-
     state.reflectInterval = setInterval(() => {
       state.reflectSeconds++;
       timer.textContent = formatTime(state.reflectSeconds);
-      // auto-stop at 90s
       if (state.reflectSeconds >= 90) stopReflectRecording();
     }, 1000);
 
@@ -721,64 +643,207 @@ async function toggleReflectRecording() {
 function stopReflectRecording() {
   clearInterval(state.reflectInterval);
   state.reflectRecording = false;
-  state.reflectDone = true;
-  const btn = document.getElementById('reflect-rec-btn');
+  const btn   = document.getElementById('reflect-rec-btn');
   const label = document.getElementById('reflect-rec-label');
   if (state.reflectMediaRecorder && state.reflectMediaRecorder.state !== 'inactive') {
     state.reflectMediaRecorder.stop();
     state.reflectMediaRecorder.stream.getTracks().forEach(t => t.stop());
+  } else {
+    runDummyTranscription('reflect', null);
   }
   btn.className = 'rec-btn done';
-  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#9A9890" stroke-width="2" width="28" height="28"><polyline points="20 6 9 17 4 12"/></svg>`;
+  btn.innerHTML = checkIcon();
   label.textContent = 'Response saved';
-  document.getElementById('feedback-btn').disabled = false;
+}
+
+// ══════════════════════════════════════════
+//  DUMMY TRANSCRIPTION
+//  Replace this whole function with Whisper WASM later.
+//  It receives the blob (ignored for now) and sets a
+//  plausible dummy transcript in state, then unlocks UI.
+// ══════════════════════════════════════════
+function runDummyTranscription(type, blob) {
+  if (type === 'lesson') {
+    const pill = document.getElementById('status-pill');
+    const statusText = document.getElementById('status-text');
+    document.getElementById('lesson-status').style.display = 'block';
+    pill.className = 'pill processing dot';
+    pill.textContent = 'Transcribing…';
+    statusText.textContent = 'Processing your audio';
+
+    setTimeout(() => {
+      // Dummy lesson transcript — replace with real Whisper output
+      state.lessonTranscript = `Teacher started the lesson on ${state.sessionTopic || 'the topic'}. 
+        Opened with a quick question to the whole class about yesterday's content. 
+        Most students answered together in chorus. Teacher explained the new concept 
+        for about 15 minutes with some examples on the board. Asked "everyone understood?" 
+        at the end. A few students in the back row seemed disengaged. 
+        No individual students were cold-called by name during the lesson. 
+        Ended with a group activity.`;
+
+      state.lessonDone = true;
+      pill.className = 'pill done-pill dot';
+      pill.textContent = 'Transcribed';
+      statusText.textContent = 'Ready to continue';
+      document.getElementById('proceed-btn').disabled = false;
+    }, 2000);
+
+  } else {
+    // reflect
+    setTimeout(() => {
+      state.reflectTranscript = `I felt uncertain during the explanation part. 
+        The students in the back row were not following and I wasn't sure 
+        if my examples were clear enough. I think I moved too fast.`;
+      state.reflectDone = true;
+      document.getElementById('feedback-btn').disabled = false;
+    }, 800);
+  }
 }
 
 // ══════════════════════════════════════════
 //  TRANSITIONS
 // ══════════════════════════════════════════
 function proceedToReflection() {
-  state.sessionSubject = document.getElementById('subject').value || 'Lesson';
-  state.sessionGrade   = document.getElementById('grade').value || '';
-  state.sessionTopic   = document.getElementById('topic').value || '';
+  state.sessionSubject = document.getElementById('subject').value || '';
+  state.sessionGrade   = document.getElementById('grade').value  || '';
+  state.sessionTopic   = document.getElementById('topic').value  || '';
 
-  // Generate a dummy reflection question (replace with rubric logic later)
+  // Pick a reflection question (dummy — later comes from rubric signal)
   const questions = [
     "You taught a full lesson today — which moment felt most uncertain, and why?",
     "Think about when you asked questions. Who answered? Who stayed quiet?",
     "Was there a point where you felt you lost the class? What was happening then?",
-    "How much did students talk compared to you today? What does that tell you?",
+    "How much did students talk compared to you today?",
     "If you taught this lesson again tomorrow, what one thing would you change first?",
   ];
-  const q = questions[Math.floor(Math.random() * questions.length)];
-  document.getElementById('reflection-question').textContent = `"${q}"`;
-
+  state.reflectionQuestion = questions[Math.floor(Math.random() * questions.length)];
+  document.getElementById('reflection-question').textContent = `"${state.reflectionQuestion}"`;
   goTo('screen-reflect');
 }
 
-function proceedToFeedback() {
-  showFeedbackScreen();
-}
+function proceedToFeedback() { showFeedbackScreen(); }
+function skipReflection()    { state.reflectTranscript = '(skipped)'; showFeedbackScreen(); }
 
-function skipReflection() {
-  showFeedbackScreen();
-}
-
-function showFeedbackScreen() {
-  // Fill context tags
+async function showFeedbackScreen() {
+  // fill context tags
   const tags = document.getElementById('session-tags');
   tags.innerHTML = '';
-  const items = [state.sessionSubject, state.sessionGrade, state.sessionTopic].filter(Boolean);
-  items.forEach(t => {
-    const span = document.createElement('span');
-    span.className = 'info-tag';
-    span.textContent = t;
-    tags.appendChild(span);
+  [state.sessionSubject, state.sessionGrade, state.sessionTopic].filter(Boolean).forEach(t => {
+    const s = document.createElement('span');
+    s.className = 'info-tag'; s.textContent = t;
+    tags.appendChild(s);
   });
 
-  // Dummy coaching note — replace with Gemini API call later
-  // (content already set in HTML as default, but we could vary by subject here)
   goTo('screen-feedback');
+
+  // show loading, hide note card
+  document.getElementById('note-generating').style.display = 'flex';
+  document.getElementById('note-card').style.display = 'none';
+  document.getElementById('note-error').style.display = 'none';
+  document.getElementById('save-btn').disabled = true;
+
+  const key = localStorage.getItem('ss_gemini_key');
+  let note;
+  if (key) {
+    note = await callGemini(key);
+  } else {
+    note = fallbackNote();
+    await delay(900); // small pause so it doesn't feel instant
+  }
+
+  // render note
+  document.getElementById('note-strength').textContent = note.strength;
+  document.getElementById('note-pattern').textContent  = note.pattern;
+  document.getElementById('note-try').textContent      = note.try;
+
+  document.getElementById('note-generating').style.display = 'none';
+  document.getElementById('note-card').style.display = 'flex';
+  document.getElementById('save-btn').disabled = false;
+}
+
+// ══════════════════════════════════════════
+//  GEMINI API CALL
+// ══════════════════════════════════════════
+async function callGemini(apiKey) {
+  const subject = state.sessionSubject || 'a subject';
+  const grade   = state.sessionGrade   || 'a class';
+  const topic   = state.sessionTopic   || 'a topic';
+
+  const systemPrompt = `You are Shiksha Sathi, a warm and practical teaching coach for Indian school teachers.
+Your job is to give a short, specific, and actionable coaching note based on what a teacher shares about their lesson.
+You follow principles from Rosenshine's Principles of Instruction and Teach Like a Champion.
+
+Key principles to watch for:
+- Daily review / prior knowledge activation
+- Checking for understanding (CFU) — quality vs choral responses
+- Wait time after questions
+- Cold-calling individual students by name
+- Pace of explanation — small steps vs rushing
+- Student talk ratio vs teacher talk
+- Engagement of all students, especially back row / quieter ones
+
+Always respond in this exact JSON format, nothing else:
+{
+  "strength": "One specific thing the teacher did well, 2-3 sentences.",
+  "pattern": "One pattern to notice — something that might be limiting learning, explained gently, 2-3 sentences.",
+  "try": "One very concrete, small action to try in the very next lesson. Specific enough that the teacher knows exactly what to do. 2-3 sentences."
+}
+
+Keep language warm, practical, non-judgmental. Avoid jargon. Write as a supportive colleague, not an evaluator.`;
+
+  const userMessage = `Subject: ${subject}, ${grade}
+Topic: ${topic}
+
+Lesson transcript (auto-generated, may be rough):
+${state.lessonTranscript}
+
+Teacher's own reflection (their answer to: "${state.reflectionQuestion}"):
+${state.reflectTranscript}
+
+Write the coaching note.`;
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: systemPrompt + '\n\n' + userMessage }] }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 600 }
+        })
+      }
+    );
+
+    if (!res.ok) throw new Error(`API error ${res.status}`);
+    const data = await res.json();
+    const raw  = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    // strip markdown code fences if present
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    if (parsed.strength && parsed.pattern && parsed.try) return parsed;
+    throw new Error('Unexpected response shape');
+
+  } catch(err) {
+    console.error('Gemini error:', err);
+    document.getElementById('note-error').style.display = 'block';
+    return fallbackNote();
+  }
+}
+
+// ══════════════════════════════════════════
+//  FALLBACK NOTE (no key / API error)
+// ══════════════════════════════════════════
+function fallbackNote() {
+  const subject = state.sessionSubject || 'your subject';
+  const topic   = state.sessionTopic   || 'today\'s topic';
+  return {
+    strength: `You completed a full lesson on ${topic} and took the time to reflect — that habit alone puts you ahead of most. Recording and reviewing your own teaching is a powerful first step toward growth.`,
+    pattern:  `Think about how many students actually responded individually during the lesson. If most answers came from the whole class together, it's worth asking: do you know which individual students understood, and which didn't?`,
+    try:      `In your next lesson, after explaining something, pause for 5 seconds — then say one student's name and ask them to explain it back. Just one student, one time. Notice what you learn from that single exchange.`
+  };
 }
 
 // ══════════════════════════════════════════
@@ -787,95 +852,138 @@ function showFeedbackScreen() {
 function saveSession() {
   const sessions = JSON.parse(localStorage.getItem('ss_sessions') || '[]');
   sessions.unshift({
-    date: new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short' }),
-    subject: state.sessionSubject,
-    grade: state.sessionGrade,
-    topic: state.sessionTopic,
+    date:     new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'2-digit' }),
+    subject:  state.sessionSubject,
+    grade:    state.sessionGrade,
+    topic:    state.sessionTopic,
     strength: document.getElementById('note-strength').textContent.trim(),
     pattern:  document.getElementById('note-pattern').textContent.trim(),
     tryThis:  document.getElementById('note-try').textContent.trim(),
   });
   localStorage.setItem('ss_sessions', JSON.stringify(sessions));
-
-  const btn = document.querySelector('#screen-feedback .btn-primary');
+  const btn = document.getElementById('save-btn');
   btn.textContent = 'Saved ✓';
   btn.disabled = true;
 }
 
 function newSession() {
   // reset state
-  state.lessonDone = false;
-  state.reflectDone = false;
-  state.lessonSeconds = 0;
-  state.reflectSeconds = 0;
-  state.lessonAudioBlob = null;
-  state.reflectAudioBlob = null;
-
-  // reset UI
-  const lbtn = document.getElementById('lesson-rec-btn');
-  lbtn.className = 'rec-btn idle';
-  lbtn.innerHTML = micIcon();
+  Object.assign(state, {
+    lessonRecording:false, reflectRecording:false,
+    lessonDone:false, reflectDone:false,
+    lessonSeconds:0, reflectSeconds:0,
+    lessonMediaRecorder:null, reflectMediaRecorder:null,
+    lessonTranscript:'', reflectTranscript:'',
+    sessionSubject:'', sessionGrade:'', sessionTopic:'', reflectionQuestion:''
+  });
+  // reset lesson recorder UI
+  const lb = document.getElementById('lesson-rec-btn');
+  lb.className = 'rec-btn idle'; lb.innerHTML = micIcon();
   document.getElementById('lesson-rec-label').textContent = 'Tap to start recording';
-  document.getElementById('lesson-rec-sub').textContent = 'Record your full class period';
-  document.getElementById('lesson-timer').style.display = 'none';
-  document.getElementById('lesson-status').style.display = 'none';
+  document.getElementById('lesson-rec-sub').textContent   = 'Record your full class period';
+  document.getElementById('lesson-timer').style.display   = 'none';
+  document.getElementById('lesson-status').style.display  = 'none';
   document.getElementById('proceed-btn').disabled = true;
-
-  const rbtn = document.getElementById('reflect-rec-btn');
-  rbtn.className = 'rec-btn idle';
-  rbtn.innerHTML = micIcon();
+  // reset reflect recorder UI
+  const rb = document.getElementById('reflect-rec-btn');
+  rb.className = 'rec-btn idle'; rb.innerHTML = micIcon();
   document.getElementById('reflect-rec-label').textContent = 'Tap to answer';
-  document.getElementById('reflect-timer').style.display = 'none';
+  document.getElementById('reflect-timer').style.display   = 'none';
   document.getElementById('feedback-btn').disabled = true;
+  // reset form
+  ['subject','grade','topic'].forEach(id => document.getElementById(id).value = '');
+  // reset save btn
+  const sb = document.getElementById('save-btn');
+  sb.textContent = 'Save this note ✓'; sb.disabled = false;
 
-  document.getElementById('subject').value = '';
-  document.getElementById('grade').value = '';
-  document.getElementById('topic').value = '';
-
-  document.querySelector('#screen-feedback .btn-primary').disabled = false;
-  document.querySelector('#screen-feedback .btn-primary').textContent = 'Save this note ✓';
-
-  goTo('screen-record');
   navTo('screen-record','nav-home');
+  checkApiBanner();
 }
 
 // ══════════════════════════════════════════
-//  HISTORY SCREEN
+//  HISTORY
 // ══════════════════════════════════════════
 function renderHistory() {
   const list = document.getElementById('history-list');
   const sessions = JSON.parse(localStorage.getItem('ss_sessions') || '[]');
-
   if (sessions.length === 0) {
     list.innerHTML = `<p class="subtext" style="text-align:center;padding:24px 0;">No sessions yet.<br/>Record your first lesson to get started.</p>`;
     return;
   }
-
   list.innerHTML = sessions.map(s => `
     <div class="history-item">
       <div class="history-dot"></div>
-      <div>
-        <div class="history-meta">${s.date} · ${[s.subject, s.grade].filter(Boolean).join(', ')}</div>
-        ${s.topic ? `<div class="history-meta">${s.topic}</div>` : ''}
-        <div class="history-text">${s.tryThis.substring(0, 90)}…</div>
+      <div style="flex:1">
+        <div class="history-meta">${s.date}${s.subject ? ' · '+s.subject : ''}${s.grade ? ', '+s.grade : ''}</div>
+        ${s.topic ? `<div class="history-meta" style="margin-top:1px;">${s.topic}</div>` : ''}
+        <div class="history-text" style="margin-top:4px;">${s.tryThis.substring(0,100)}…</div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+//  SETTINGS
+// ══════════════════════════════════════════
+function loadSettingsScreen() {
+  const key = localStorage.getItem('ss_gemini_key') || '';
+  const input = document.getElementById('api-key-input');
+  input.value = key;
+  document.getElementById('key-status').textContent = key ? '✓ Key saved on this device' : '';
+  document.getElementById('key-status').className = 'key-status ' + (key ? 'ok' : '');
+}
+
+function saveApiKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  const status = document.getElementById('key-status');
+  if (!key) {
+    status.textContent = 'Please paste a key first.';
+    status.className = 'key-status err';
+    return;
+  }
+  if (!key.startsWith('AIza')) {
+    status.textContent = 'That doesn\'t look like a Gemini key (should start with AIza…).';
+    status.className = 'key-status err';
+    return;
+  }
+  localStorage.setItem('ss_gemini_key', key);
+  status.textContent = '✓ Key saved on this device';
+  status.className = 'key-status ok';
+  checkApiBanner();
+}
+
+function toggleKeyVisibility() {
+  const input = document.getElementById('api-key-input');
+  const btn   = document.getElementById('key-toggle-btn');
+  if (input.type === 'password') { input.type = 'text';     btn.textContent = 'Hide'; }
+  else                           { input.type = 'password'; btn.textContent = 'Show'; }
+}
+
+function clearAllData() {
+  if (!confirm('Delete all saved sessions from this device?')) return;
+  localStorage.removeItem('ss_sessions');
+  renderHistory();
+  alert('History cleared.');
 }
 
 // ══════════════════════════════════════════
 //  UTILS
 // ══════════════════════════════════════════
-function formatTime(s) {
-  return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
-}
+function formatTime(s) { return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }
+function delay(ms)     { return new Promise(r => setTimeout(r, ms)); }
 
 function micIcon() {
   return `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
     <rect x="9" y="2" width="6" height="12" rx="3"/>
-    <path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="21" x2="12" y2="17"/>
+    <path d="M5 10a7 7 0 0014 0"/>
+    <line x1="12" y1="21" x2="12" y2="17"/>
     <line x1="8" y1="21" x2="16" y2="21"/>
   </svg>`;
+}
+function stopIcon() {
+  return `<svg viewBox="0 0 24 24" fill="#fff" width="28" height="28"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
+}
+function checkIcon() {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="#9A9890" stroke-width="2" width="28" height="28"><polyline points="20 6 9 17 4 12"/></svg>`;
 }
 </script>
 </body>
