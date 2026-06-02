@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#F5F0E8"/>
 <title>Shiksha Sathi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
@@ -31,7 +32,8 @@ html,body{height:100%;background:var(--bg);color:var(--ink);font-family:'DM Sans
 .screen{display:none;flex-direction:column;gap:24px;padding-top:48px;animation:fadeIn 0.3s ease;}
 .screen.active{display:flex;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.wordmark{font-family:'Lora',serif;font-size:13px;font-weight:500;letter-spacing:0.08em;color:var(--teal);text-transform:uppercase;margin-bottom:-8px;}
+.wordmark{font-family:'Lora',serif;font-size:13px;font-weight:500;letter-spacing:0.08em;color:var(--teal);text-transform:uppercase;margin-bottom:2px;}
+.tagline{font-size:12px;color:var(--ink3);letter-spacing:0.01em;margin-bottom:10px;}
 h1{font-family:'Lora',serif;font-size:26px;font-weight:600;line-height:1.25;}
 h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 .subtext{font-size:14px;color:var(--ink2);line-height:1.55;}
@@ -75,6 +77,12 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 .note-body{font-size:15px;color:var(--ink);line-height:1.65;}
 .note-sep{height:1px;background:var(--border);margin:4px 0;}
 .generating{display:flex;flex-direction:column;align-items:center;gap:12px;padding:32px 20px;text-align:center;}
+/* reflection chips */
+.chips-label{font-size:12px;color:var(--ink3);margin-bottom:6px;}
+.chips-row{display:flex;flex-wrap:wrap;gap:7px;}
+.chip{font-size:12px;color:var(--ink2);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 12px;cursor:pointer;transition:border-color 0.15s,color 0.15s,background 0.15s;line-height:1.4;}
+.chip:hover{border-color:var(--teal);color:var(--teal);}
+.chip.selected{border-color:var(--teal);color:var(--teal);background:var(--teal-l);}
 .tip-box{background:var(--amber-l);border:1px solid rgba(200,121,26,0.2);border-radius:10px;padding:12px 16px;display:flex;align-items:flex-start;gap:10px;}
 .tip-box-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
 .tip-box-text{font-size:14px;color:var(--amber);line-height:1.5;font-weight:500;}
@@ -138,6 +146,32 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 .advanced-body{display:none;padding-top:4px;}
 .advanced-body.open{display:block;}
 
+/* follow-up chat */
+.followup-wrap{display:none;flex-direction:column;gap:12px;}
+.followup-label{font-size:12px;color:var(--ink3);letter-spacing:0.04em;text-transform:uppercase;font-weight:500;}
+.followup-chips{display:flex;flex-direction:column;gap:7px;}
+.followup-chip{font-size:13px;color:var(--ink2);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 14px;cursor:pointer;text-align:left;transition:border-color 0.15s,color 0.15s;line-height:1.45;}
+.followup-chip:hover{border-color:var(--teal);color:var(--teal);}
+.chat-thread{display:flex;flex-direction:column;gap:10px;}
+.chat-bubble{padding:10px 14px;border-radius:10px;font-size:14px;line-height:1.55;max-width:92%;}
+.chat-bubble.teacher{background:var(--teal-l);color:var(--teal);align-self:flex-end;border-radius:10px 10px 2px 10px;}
+.chat-bubble.coach{background:var(--surface);border:1px solid var(--border);color:var(--ink);align-self:flex-start;border-radius:10px 10px 10px 2px;}
+.chat-input-row{display:flex;gap:8px;align-items:flex-end;}
+.chat-input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);outline:none;resize:none;line-height:1.5;}
+.chat-input:focus{border-color:var(--teal);}
+.chat-send{width:40px;height:40px;background:var(--teal);border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-send:disabled{background:var(--ink3);cursor:not-allowed;}
+.chat-limit{font-size:12px;color:var(--ink3);text-align:center;padding:8px 0;}
+.followup-toggle{font-size:13px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:4px 0;display:flex;align-items:center;gap:5px;}
+.onboarding{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px;}
+.onboard-logo{font-family:'Lora',serif;font-size:14px;font-weight:500;letter-spacing:0.1em;color:var(--teal);text-transform:uppercase;margin-bottom:4px;text-align:center;}
+.onboard-tagline{font-size:13px;color:var(--ink3);margin-bottom:40px;text-align:center;}
+.onboard-steps{display:flex;flex-direction:column;gap:24px;width:100%;max-width:380px;margin-bottom:40px;}
+.onboard-step{display:flex;align-items:flex-start;gap:16px;}
+.onboard-num{width:32px;height:32px;border-radius:50%;background:var(--teal);color:#fff;font-family:'Lora',serif;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.onboard-step-title{font-size:15px;font-weight:500;color:var(--ink);margin-bottom:3px;}
+.onboard-step-desc{font-size:13px;color:var(--ink2);line-height:1.5;}
+
 /* bottom nav */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--border);display:flex;padding:10px 0 20px;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;color:var(--ink3);font-size:11px;transition:color 0.15s;}
@@ -153,7 +187,8 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 <div class="screen active" id="screen-record">
   <div>
     <p class="wordmark">Shiksha Sathi</p>
-    <h1>Today's<br/>lesson</h1>
+    <p class="tagline">Your daily teaching coach</p>
+    <h1>Today's lesson</h1>
   </div>
 
   <div class="api-banner" id="api-banner" style="display:none" onclick="navTo('screen-settings','nav-settings');showKeySection()">
@@ -165,7 +200,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <div class="field-row">
       <div class="field">
         <label>Subject</label>
-        <select id="subject">
+        <select id="subject" onchange="onContextChange()">
           <option value="">— pick —</option>
           <option>Maths</option><option>Science</option><option>Hindi</option>
           <option>English</option><option>Social Science</option><option>Other</option>
@@ -173,7 +208,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       </div>
       <div class="field">
         <label>Class</label>
-        <select id="grade">
+        <select id="grade" onchange="onContextChange()">
           <option value="">— pick —</option>
           <option>Class 3</option><option>Class 4</option><option>Class 5</option>
           <option>Class 6</option><option>Class 7</option><option>Class 8</option>
@@ -208,6 +243,25 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     </div>
   </div>
 
+  <!-- demo mode toggle -->
+  <div style="display:flex;align-items:center;gap:8px;margin-top:-8px;">
+    <span style="font-size:12px;color:var(--ink3);">No audio? Use a</span>
+    <button onclick="toggleDemoMode()" id="demo-toggle-btn" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;padding:0;">sample lesson</button>
+  </div>
+  <div id="demo-panel" style="display:none;background:var(--teal-l);border:1px solid rgba(29,107,90,0.2);border-radius:10px;padding:14px;gap:10px;flex-direction:column;">
+    <p style="font-size:12px;font-weight:500;color:var(--teal);text-transform:uppercase;letter-spacing:0.05em;">Demo mode — sample lesson</p>
+    <div class="field">
+      <label>Select a sample</label>
+      <select id="demo-select" onchange="onDemoSelect()">
+        <option value="">— choose —</option>
+        <option value="good">Good lesson</option>
+        <option value="average">Average lesson</option>
+        <option value="weak">Weak lesson</option>
+      </select>
+    </div>
+    <p style="font-size:12px;color:var(--teal);opacity:0.8;">Subject/class will be pre-filled. Tap Continue when ready.</p>
+  </div>
+
   <button class="btn-primary" id="proceed-btn" disabled onclick="proceedToReflection()">
     Continue to reflection →
   </button>
@@ -223,7 +277,8 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   </div>
   <div>
     <p class="wordmark">Shiksha Sathi</p>
-    <h1>One moment<br/>before feedback</h1>
+    <p class="tagline">Your daily teaching coach</p>
+    <h1>One moment before feedback</h1>
     <p class="subtext" style="margin-top:8px;">Your answer shapes the coaching note.</p>
   </div>
 
@@ -246,6 +301,12 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <div class="rec-timer" id="reflect-timer" style="display:none">0:00</div>
   </div>
 
+  <!-- sample chips — subtle, beneath recorder -->
+  <div id="chips-wrap" style="display:none">
+    <p class="chips-label">Or pick what fits your lesson today:</p>
+    <div class="chips-row" id="chips-row"></div>
+  </div>
+
   <button class="btn-primary" id="feedback-btn" disabled onclick="proceedToFeedback()">
     Get my coaching note →
   </button>
@@ -262,7 +323,8 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   </div>
   <div>
     <p class="wordmark">Shiksha Sathi</p>
-    <h1>Your coaching<br/>note</h1>
+    <p class="tagline">Your daily teaching coach</p>
+    <h1>Your coaching note</h1>
   </div>
 
   <div class="tag-row" id="session-tags"></div>
@@ -298,7 +360,42 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <span class="pill error-pill dot">Gemini unreachable — showing template note</span>
   </div>
 
+  <div id="note-no-key" style="display:none;margin-top:-8px;">
+    <div class="api-banner" onclick="navTo('screen-settings','nav-settings');showKeySection()" style="font-size:13px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      This is a template note, not AI-generated — no API key set. Tap to add one in Settings.
+    </div>
+  </div>
+
   <button class="btn-primary" id="save-btn" disabled onclick="saveSession()">Save this note ✓</button>
+  <button class="btn-ghost" id="copy-note-btn" style="display:none" onclick="copyNote()">Copy note</button>
+
+  <!-- follow-up chat -->
+  <div class="followup-wrap" id="followup-wrap">
+    <button class="followup-toggle" id="followup-toggle" onclick="toggleFollowUp()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Ask a follow-up
+    </button>
+
+    <div id="followup-body" style="display:none;flex-direction:column;gap:12px;">
+      <!-- suggested questions as chips -->
+      <div id="followup-suggestions" style="display:flex;flex-direction:column;gap:7px;"></div>
+
+      <!-- chat thread -->
+      <div class="chat-thread" id="chat-thread" style="display:none;"></div>
+
+      <!-- input row — hidden after 3 turns -->
+      <div class="chat-input-row" id="chat-input-row" style="display:none;">
+        <textarea class="chat-input" id="chat-input" rows="2" placeholder="Ask anything about this coaching note…" onkeydown="onChatKeydown(event)"></textarea>
+        <button class="chat-send" id="chat-send" onclick="sendFollowUp()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+
+      <div class="chat-limit" id="chat-limit" style="display:none;"></div>
+    </div>
+  </div>
+
   <button class="btn-ghost" onclick="newSession()">Start a new session</button>
   <div class="spacer-nav"></div>
 </div>
@@ -336,7 +433,10 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 
   <!-- quick revisions -->
   <div id="quick-rev-wrap">
-    <p style="font-size:12px;color:var(--ink3);letter-spacing:0.04em;text-transform:uppercase;font-weight:500;margin-bottom:10px;">Quick revision — all tips</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <p style="font-size:12px;color:var(--ink3);letter-spacing:0.04em;text-transform:uppercase;font-weight:500;">Quick revision — all tips</p>
+      <button onclick="copyAllTips()" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;" id="copy-all-btn">Copy all</button>
+    </div>
     <div class="card" id="quick-rev-list" style="display:flex;flex-direction:column;gap:0;padding:8px 16px;"></div>
   </div>
 
@@ -419,6 +519,43 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   <div class="spacer-nav"></div>
 </div>
 
+<!-- ══════ ONBOARDING OVERLAY — first visit only ══════ -->
+<div class="onboarding" id="onboarding" style="display:none">
+  <p class="onboard-logo">Shiksha Sathi</p>
+  <p class="onboard-tagline">Your daily teaching coach</p>
+
+  <div class="onboard-steps">
+    <div class="onboard-step">
+      <div class="onboard-num">1</div>
+      <div>
+        <div class="onboard-step-title">Record your lesson</div>
+        <div class="onboard-step-desc">Tap record before class. Shiksha Sathi listens to the full lesson — you teach normally.</div>
+      </div>
+    </div>
+    <div class="onboard-step">
+      <div class="onboard-num">2</div>
+      <div>
+        <div class="onboard-step-title">Reflect for 60 seconds</div>
+        <div class="onboard-step-desc">Answer one quick question about how the lesson went. Or pick a phrase that fits.</div>
+      </div>
+    </div>
+    <div class="onboard-step">
+      <div class="onboard-num">3</div>
+      <div>
+        <div class="onboard-step-title">Get your coaching note</div>
+        <div class="onboard-step-desc">A short, specific note: what worked, what to notice, one thing to try tomorrow.</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-primary" style="max-width:380px;width:100%;" onclick="dismissOnboarding()">
+    Start — record today's lesson →
+  </button>
+  <p style="font-size:12px;color:var(--ink3);margin-top:14px;text-align:center;">
+    Based on Rosenshine's Principles of Instruction
+  </p>
+</div>
+
 </div><!-- /app -->
 
 <!-- bottom nav -->
@@ -448,6 +585,13 @@ const state = {
   lessonInterval:null, reflectInterval:null,
   lessonMediaRecorder:null, reflectMediaRecorder:null,
   lessonTranscript:'', reflectTranscript:'',
+  rubricSignals: null,
+  saving: false,
+  weakestDim: null,
+  selectedChip: null,
+  coachingNote: null,
+  chatHistory: [],
+  chatTurns: 0,
   sessionSubject:'', sessionGrade:'', sessionTopic:'', reflectionQuestion:'',
 };
 
@@ -457,10 +601,63 @@ const state = {
 window.addEventListener('DOMContentLoaded', () => {
   checkApiBanner();
   loadProfileDisplay();
+  checkMediaRecorderSupport();
+  checkOnboarding();
 });
 
+function checkOnboarding() {
+  const seen = lsGet('ss_onboarded');
+  if (!seen) {
+    document.getElementById('onboarding').style.display = 'flex';
+    // Hide bottom nav while onboarding is showing
+    document.querySelector('.bottom-nav').style.display = 'none';
+  }
+}
+
+function dismissOnboarding() {
+  lsSet('ss_onboarded', '1');
+  const ob = document.getElementById('onboarding');
+  ob.style.opacity = '0';
+  ob.style.transition = 'opacity 0.3s ease';
+  setTimeout(() => {
+    ob.style.display = 'none';
+    document.querySelector('.bottom-nav').style.display = 'flex';
+  }, 300);
+}
+
+function checkMediaRecorderSupport() {
+  const supported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+  if (!supported) {
+    // Show a persistent warning on the record screen
+    const warn = document.createElement('div');
+    warn.className = 'api-banner';
+    warn.style.cssText = 'background:var(--red-l);border-color:rgba(184,64,64,0.2);color:var(--red);';
+    warn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Recording not supported on this browser. Please use Chrome or Firefox. Use a sample lesson instead.`;
+    const recArea = document.getElementById('lesson-rec-btn').closest('.rec-area');
+    recArea.style.opacity = '0.4';
+    recArea.style.pointerEvents = 'none';
+    recArea.parentNode.insertBefore(warn, recArea);
+  }
+}
+
+// ── Safe localStorage helpers ──
+// Silently handle full storage or corrupt data
+function lsGet(key, fallback='') {
+  try { return localStorage.getItem(key) ?? fallback; }
+  catch(e) { return fallback; }
+}
+function lsSet(key, value) {
+  try { localStorage.setItem(key, value); return true; }
+  catch(e) { console.warn('localStorage write failed:', e); return false; }
+}
+function lsGetJSON(key, fallback=[]) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+  catch(e) { return fallback; }
+}
+
 function checkApiBanner() {
-  const key = localStorage.getItem('ss_gemini_key');
+  const key = lsGet('ss_gemini_key');
   document.getElementById('api-banner').style.display = key ? 'none' : 'flex';
 }
 
@@ -553,8 +750,9 @@ function stopReflect() {
 }
 
 // ═══════════════════════════════════
-//  DUMMY TRANSCRIPTION
-//  — swap this for real Whisper WASM later —
+//  TRANSCRIPTION + RUBRIC PIPELINE
+//  — real Whisper WASM replaces runTranscription() later —
+//  — rubric engine runs on whatever transcript is set —
 // ═══════════════════════════════════
 function runDummyTranscription(type, blob) {
   if (type==='lesson') {
@@ -563,7 +761,12 @@ function runDummyTranscription(type, blob) {
     pill.className='pill processing dot'; pill.textContent='Transcribing…';
     st.textContent='Processing your audio';
     setTimeout(()=>{
-      state.lessonTranscript = `Teacher started the lesson on ${state.sessionTopic||'the topic'}. Opened with a quick question to the whole class about yesterday's content. Most students answered together in chorus. Teacher explained the new concept for about 15 minutes with examples on the board. Asked "everyone understood?" at the end. A few students in the back row seemed disengaged. No individual students were cold-called by name. Ended with a group activity.`;
+      // If no demo transcript was loaded, use the old generic dummy
+      if (!state.lessonTranscript) {
+        state.lessonTranscript = `Teacher started the lesson on ${state.sessionTopic||'the topic'}. Opened with a quick question to the whole class about yesterday's content. Most students answered together in chorus. Teacher explained the new concept for about 15 minutes with examples on the board. Asked "everyone understood?" at the end. A few students in the back row seemed disengaged. No individual students were cold-called by name. Ended with a group activity.`;
+      }
+      // Run rubric engine on transcript
+      state.rubricSignals = runRubricEngine(state.lessonTranscript);
       state.lessonDone=true;
       pill.className='pill done-pill dot'; pill.textContent='Transcribed';
       st.textContent='Ready to continue';
@@ -595,15 +798,12 @@ function proceedToReflection() {
   state.sessionSubject = subj;
   state.sessionGrade   = grd;
   state.sessionTopic   = document.getElementById('topic').value||'';
-  const qs = [
-    "You taught a full lesson today — which moment felt most uncertain, and why?",
-    "Think about when you asked questions. Who answered? Who stayed quiet?",
-    "Was there a point where you felt you lost the class? What was happening then?",
-    "How much did students talk compared to you today?",
-    "If you taught this lesson again tomorrow, what one thing would you change first?",
-  ];
-  state.reflectionQuestion = qs[Math.floor(Math.random()*qs.length)];
-  document.getElementById('reflection-question').textContent = `"${state.reflectionQuestion}"`;
+  // Pick reflection question targeting weakest rubric dimension
+  const { question, dimId } = getReflectionQuestionAndDim(state.rubricSignals);
+  state.reflectionQuestion = question;
+  state.weakestDim = dimId;
+  document.getElementById('reflection-question').textContent = `"${question}"`;
+  renderReflectionChips(dimId);
   goTo('screen-reflect');
 }
 
@@ -623,10 +823,14 @@ async function showFeedbackScreen() {
   document.getElementById('note-generating').style.display='flex';
   document.getElementById('note-card').style.display='none';
   document.getElementById('note-error').style.display='none';
+  document.getElementById('note-no-key').style.display='none';
   document.getElementById('save-btn').disabled=true;
 
   const key=localStorage.getItem('ss_gemini_key');
   let note = key ? await callGemini(key) : (await delay(800), fallbackNote());
+
+  // show appropriate warning
+  if (!key) document.getElementById('note-no-key').style.display='block';
 
   document.getElementById('note-strength').textContent = note.strength;
   document.getElementById('note-pattern').textContent  = note.pattern;
@@ -635,61 +839,190 @@ async function showFeedbackScreen() {
   document.getElementById('note-generating').style.display='none';
   document.getElementById('note-card').style.display='flex';
   document.getElementById('save-btn').disabled=false;
+  document.getElementById('copy-note-btn').style.display='block';
+
+  // Store coaching note in state for follow-up context
+  state.coachingNote = note;
+  state.chatHistory  = [];
+  state.chatTurns    = 0;
+
+  // Render follow-up section
+  renderFollowUpSuggestions(note.followups);
+  document.getElementById('followup-wrap').style.display='flex';
 }
 
 // ═══════════════════════════════════
 //  GEMINI CALL
 // ═══════════════════════════════════
+function buildSignalBlock(signals) {
+  const lines = ['Rubric analysis of lesson transcript:'];
+  for (const s of Object.values(signals)) {
+    const level = s.score === 2 ? 'clearly present' : s.score === 1 ? 'weakly present' : 'absent';
+    let ev = '';
+    if (s.evidence) ev = ' (evidence: "' + s.evidence + '")';
+    else if (s.absenceEvidence) ev = ' (absence marker: "' + s.absenceEvidence + '")';
+    lines.push('- ' + s.label + ': ' + level + ev);
+  }
+  const weakest = getWeakestDimension(signals);
+  lines.push('');
+  lines.push('Weakest dimension: ' + weakest.label);
+  lines.push('Raw excerpt: ' + state.lessonTranscript.substring(0, 400) + '...');
+  return lines.join('\n');
+}
+
 async function callGemini(apiKey) {
-  const subj = state.sessionSubject||'a subject';
-  const grade= state.sessionGrade||'a class';
-  const topic= state.sessionTopic||'a topic';
+  const subj  = state.sessionSubject || 'a subject';
+  const grade = state.sessionGrade   || 'a class';
+  const topic = state.sessionTopic   || 'a topic';
 
-  const prompt = `You are Shiksha Sathi, a practical teaching coach for Indian school teachers.
-Give a short, specific, actionable coaching note based on what the teacher shares.
-Use principles from Rosenshine's Principles of Instruction and Teach Like a Champion.
+  const signals    = state.rubricSignals;
+  const signalBlock = signals
+    ? buildSignalBlock(signals)
+    : `Lesson transcript (no rubric analysis available): ${state.lessonTranscript}`;
 
-Watch for: daily review / prior knowledge activation, checking for understanding (CFU quality vs choral responses), wait time, cold-calling by name, pacing, student talk ratio, back-row engagement.
+  // Check if lesson was genuinely strong across all dimensions
+  const allStrong = signals && Object.values(signals).every(s => s.score === 2);
 
-Respond ONLY in this JSON format, nothing else, no markdown:
-{"strength":"2-3 sentences on one specific thing the teacher did well.","pattern":"2-3 sentences on one pattern limiting learning, explained gently.","try":"2-3 sentences: one very concrete small action for the very next lesson.","tip":"One sentence, max 15 words, imperative verb, the single most actionable takeaway. Example: 'Cold-call one student by name after your next explanation.'"}
+  const systemInstruction = `You are Shiksha Sathi — a teaching coach for Indian government school teachers.
 
-Tone rules — strictly follow these:
-- Do NOT start any field with "It's wonderful", "Great", "Fantastic", or any enthusiastic opener.
-- Be direct and warm, like a trusted senior colleague giving honest feedback over chai.
-- Specific over generic. Name the actual technique, the actual moment, the actual student behaviour.
-- No jargon. No evaluation language. No "we" — speak to the teacher as "you".
+Your voice: direct, warm, specific. Like a respected senior teacher giving honest feedback over chai after school. Not an evaluator. Not a cheerleader. A thinking partner who notices things and asks the teacher to notice them too.
 
-Subject: ${subj}, ${grade}. Topic: ${topic}.
-Lesson transcript: ${state.lessonTranscript}
-Teacher reflection (their answer to "${state.reflectionQuestion}"): ${state.reflectTranscript}`;
+Rules for every field:
+- Never start any field with "It's wonderful", "Great", "Fantastic", "As a teacher", "In today's lesson".
+- Never end any field with a question. Make statements.
+- Reference actual rubric evidence — name what you saw, not generic patterns.
+- Speak to the teacher as "you". Never "we".
+- No jargon. No formal academic language.
+- Respond ONLY with valid JSON. No markdown, no preamble, no explanation.`;
+
+  const userMessage = `Lesson context: ${subj}, ${grade}. Topic: ${topic}.
+
+${signalBlock}
+
+Teacher's reflection (their answer to the question "${state.reflectionQuestion}"):
+${state.reflectTranscript}
+
+${allStrong ? 'Note: rubric signals were strong across all dimensions — the lesson was generally good. For "pattern", name one area with room to grow as an invitation, not a critique.' : ''}
+
+Write the coaching note in this exact JSON structure:
+{
+  "strength": "One specific thing the teacher did, named precisely. Start with what they did, not a compliment. Reference actual evidence from the rubric. 2 sentences.",
+  "pattern": "The most important thing to notice, grounded in the weakest rubric dimension. Name what it means for students — not what the teacher did wrong. 2 sentences.",
+  "try": "One action specific enough that the teacher knows exactly what to do and say in the next lesson. Name the technique, the moment, the words if possible. 2 sentences.",
+  "tip": "The single most actionable takeaway. Start with an imperative verb. Maximum 15 words.",
+  "followups": [
+    "A question the teacher would ask about HOW to execute the tip in a large or mixed class. Max 10 words.",
+    "A question about what to do when the tip goes wrong or students don't respond. Max 10 words.",
+    "A question about adapting the tip to their specific subject or grade. Max 10 words."
+  ]
+}`;
 
   try {
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
-      { method:'POST', headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({contents:[{parts:[{text:prompt}]}], generationConfig:{temperature:0.7,maxOutputTokens:500}}) }
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: systemInstruction }] },
+          contents: [{ role: 'user', parts: [{ text: userMessage }] }],
+          generationConfig: { temperature: 0.6, maxOutputTokens: 700 }
+        })
+      }
     );
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const raw  = data.candidates?.[0]?.content?.parts?.[0]?.text||'';
-    const clean= raw.replace(/```json|```/g,'').trim();
+    if (!res.ok) {
+      if (res.status === 429) throw new Error('RATE_LIMIT');
+      if (res.status === 401 || res.status === 403) throw new Error('AUTH');
+      throw new Error(`HTTP ${res.status}`);
+    }
+    const data   = await res.json();
+    const raw    = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const clean  = raw.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
     if (parsed.strength && parsed.pattern && parsed.try) return parsed;
     throw new Error('Bad shape');
   } catch(err) {
-    console.error('Gemini error:',err);
-    document.getElementById('note-error').style.display='block';
+    console.error('Gemini error:', err);
+    const errEl = document.getElementById('note-error');
+    errEl.style.display = 'block';
+    const pill = errEl.querySelector('.pill');
+    if (err.message === 'RATE_LIMIT')
+      pill.textContent = 'API limit reached for today — showing template note';
+    else if (err.message === 'AUTH')
+      pill.textContent = 'API key invalid — check Settings';
+    else
+      pill.textContent = 'Could not reach Gemini — showing template note';
     return fallbackNote();
   }
 }
 
 function fallbackNote() {
+  // Use rubric signals if available — no API needed, purely local
+  const signals = state.rubricSignals;
+
+  // Per-dimension fallback content keyed by dimension id
+  const DIM_CONTENT = {
+    prior_review: {
+      pattern: `The lesson started without connecting to what students already know. When new content arrives without a bridge to prior learning, students have to work harder to find where it fits — and some don't make that connection at all.`,
+      try:     `Open tomorrow's lesson with one recall question before touching new content. Ask one student by name: "What do you remember about what we did last class?" Even 90 seconds of this changes how students receive new information.`,
+      tip:     `Open with one recall question before teaching anything new.`
+    },
+    small_steps: {
+      pattern: `The new content was presented in a single block without practice breaks. When students can't consolidate one idea before the next arrives, confusion compounds — and by the end, the teacher can't see where things went wrong.`,
+      try:     `After explaining one idea tomorrow, stop and give students 2 minutes to try one example themselves before moving on. Watch what they do — that tells you more than asking "understood?".`,
+      tip:     `Explain one idea, then pause and let students try before continuing.`
+    },
+    cfu_quality: {
+      pattern: `Checking for understanding relied on whole-class responses — "everyone understood?" or choral answers. These tell you what the confident students know, not what the class as a whole has grasped.`,
+      try:     `After your next explanation, pause — then say one student's name and ask them to explain it back in their own words. Just one student. Notice what you learn from that single exchange.`,
+      tip:     `Ask one student by name to explain it back after your next explanation.`
+    },
+    cold_call: {
+      pattern: `Questions went to students who volunteered — likely the same few who always answer. The rest of the class learned they don't need to think, because someone else will answer.`,
+      try:     `Tomorrow, after asking a question, pause for 5 seconds — then say a name before anyone raises their hand. Don't start with the most challenging student; start with someone you think knows, to build the habit.`,
+      tip:     `Name a student before they raise their hand — every question.`
+    },
+    wait_time: {
+      pattern: `Questions were answered very quickly, which usually means only the fastest thinkers responded. Students who need more processing time — often the ones who most need to practise — never got the chance.`,
+      try:     `Tomorrow, after asking a question, count silently to 5 before accepting any answer. Say "think first, don't call out" if needed. The silence feels longer than it is — students adjust within a lesson.`,
+      tip:     `Count to 5 silently after every question before taking answers.`
+    },
+    student_talk: {
+      pattern: `Students mostly listened and gave short answers. When students only receive information rather than explaining it themselves, their understanding stays thin — they can recognise the right answer but can't generate it.`,
+      try:     `Give students 30 seconds to explain the key idea to the person next to them before you move on. You don't need to hear all pairs — circulate and listen to two or three. That's enough signal.`,
+      tip:     `Give students 30 seconds to explain the idea to a partner before moving on.`
+    },
+    uptake: {
+      pattern: `Student answers were acknowledged as right or wrong and the lesson moved on. When teachers don't build on what students say, students learn that their thinking doesn't really matter — only the correct answer does.`,
+      try:     `When a student answers tomorrow — correctly or not — ask one follow-up: "Why do you think that?" or "Say more." You don't need to do this every time. Once per lesson changes the classroom dynamic.`,
+      tip:     `Ask "why do you think that?" at least once after a student answers.`
+    },
+    back_row: {
+      pattern: `Students at the back or sides weren't specifically checked on during the lesson. In most classrooms, disengagement clusters at the edges — and it's invisible until it becomes a behaviour issue or a failing grade.`,
+      try:     `Tomorrow, when students are working independently, walk to the back of the room first — not to check behaviour, but to look at what students have written. Crouch down to one student and ask "show me what you have so far."`,
+      tip:     `Walk to the back row first during independent work — every lesson.`
+    },
+  };
+
+  // Find weakest dimension
+  let dimId = 'cfu_quality'; // default
+  if (signals) {
+    const sorted = Object.entries(signals).sort((a,b) => a[1].score - b[1].score);
+    dimId = sorted[0][0];
+  }
+
+  const content = DIM_CONTENT[dimId] || DIM_CONTENT['cfu_quality'];
+
   return {
-    strength:`You completed a full lesson and took time to reflect — that habit alone is valuable. Recording and reviewing your own teaching is a meaningful first step toward growth.`,
-    pattern:`Think about how many students responded individually. If most answers came from the whole class together, it's worth asking: do you know which individual students understood, and which didn't?`,
-    try:`In your next lesson, after explaining something, pause for 5 seconds — then say one student's name and ask them to explain it back. Just one student, one time. Notice what you learn from that single exchange.`,
-    tip:`Pause after your next explanation and cold-call one student by name.`
+    strength: `You completed a full lesson and took time to reflect on it. That habit — stepping back and noticing what happened — is the foundation of every teacher who gets better over time. Most don't do it.`,
+    pattern:  content.pattern,
+    try:      content.try,
+    tip:      content.tip,
+    followups: [
+      "How do I do this with 50 students at once?",
+      "What if students still don't respond?",
+      "How long does this take to become a habit?",
+    ]
   };
 }
 
@@ -697,7 +1030,9 @@ function fallbackNote() {
 //  SAVE SESSION
 // ═══════════════════════════════════
 function saveSession() {
-  const sessions = JSON.parse(localStorage.getItem('ss_sessions')||'[]');
+  if (state.saving) return; // race condition guard
+  state.saving = true;
+  const sessions = lsGetJSON('ss_sessions', []);
   sessions.unshift({
     date: new Date().toISOString(),
     dateDisplay: new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'2-digit'}),
@@ -709,11 +1044,11 @@ function saveSession() {
     tryThis:  document.getElementById('note-try').textContent.trim(),
     tip:      document.getElementById('note-tip').textContent.trim(),
   });
-  localStorage.setItem('ss_sessions',JSON.stringify(sessions));
-  const btn=document.getElementById('save-btn');
-  btn.textContent='Saved ✓'; btn.disabled=true;
-  // auto-reset after brief pause so teacher sees confirmation
-  setTimeout(()=>newSession(), 1500);
+  const ok = lsSet('ss_sessions', JSON.stringify(sessions));
+  const btn = document.getElementById('save-btn');
+  btn.textContent = ok ? 'Saved ✓' : 'Save failed — storage full?';
+  btn.disabled = true;
+  setTimeout(() => { state.saving = false; newSession(); }, 1500);
 }
 
 // ═══════════════════════════════════
@@ -726,6 +1061,8 @@ function newSession() {
     lessonSeconds:0,reflectSeconds:0,
     lessonMediaRecorder:null,reflectMediaRecorder:null,
     lessonTranscript:'',reflectTranscript:'',
+    rubricSignals:null, saving:false, weakestDim:null, selectedChip:null,
+    coachingNote:null, chatHistory:[], chatTurns:0,
     sessionSubject:'',sessionGrade:'',sessionTopic:'',reflectionQuestion:''
   });
   // lesson rec
@@ -742,11 +1079,26 @@ function newSession() {
   document.getElementById('reflect-rec-label').textContent='Tap to answer';
   document.getElementById('reflect-timer').style.display='none';
   document.getElementById('feedback-btn').disabled=true;
+  document.getElementById('chips-wrap').style.display='none';
+  document.getElementById('chips-row').innerHTML='';
   // form
   ['subject','grade','topic'].forEach(id=>document.getElementById(id).value='');
   // save btn
   const sb=document.getElementById('save-btn');
   sb.textContent='Save this note ✓'; sb.disabled=false;
+  document.getElementById('followup-wrap').style.display='none';
+  document.getElementById('followup-body').style.display='none';
+  document.getElementById('followup-toggle').innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Ask a follow-up`;
+  document.getElementById('chat-thread').innerHTML='';
+  document.getElementById('chat-thread').style.display='none';
+  document.getElementById('chat-input-row').style.display='none';
+  document.getElementById('chat-limit').style.display='none';
+  document.getElementById('followup-suggestions').innerHTML='';
+
+  // reset demo panel
+  document.getElementById('demo-panel').style.display='none';
+  document.getElementById('demo-select').value='';
+  document.getElementById('demo-toggle-btn').textContent='sample lesson';
 
   navTo('screen-record','nav-home');
   checkApiBanner();
@@ -756,7 +1108,7 @@ function newSession() {
 //  JOURNEY / STATS
 // ═══════════════════════════════════
 function renderJourney() {
-  const sessions = JSON.parse(localStorage.getItem('ss_sessions')||'[]');
+  const sessions = lsGetJSON('ss_sessions', []);
   const now = new Date();
   const thisMonth = now.getMonth();
   const thisYear  = now.getFullYear();
@@ -832,6 +1184,7 @@ function renderJourney() {
           <span class="exp-tag t">Try tomorrow</span>
           <div class="exp-body">${s.tryThis}</div>
         </div>
+        <button id="copy-session-${i}" onclick="event.stopPropagation();copySession(${i})" style="margin-top:10px;font-size:12px;color:var(--teal);background:none;border:1px solid var(--teal-l);border-radius:6px;padding:4px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;">Copy</button>
       </div>
     </div>`).join('');
 }
@@ -845,23 +1198,22 @@ function toggleExpand(i) {
 //  SETTINGS / PROFILE
 // ═══════════════════════════════════
 function loadSettingsScreen() {
-  const name   = localStorage.getItem('ss_name')||'';
-  const school = localStorage.getItem('ss_school')||'';
+  const name   = lsGet('ss_name');
+  const school = lsGet('ss_school');
   document.getElementById('profile-name').value   = name;
   document.getElementById('profile-school').value = school;
   loadProfileDisplay();
-  const key=localStorage.getItem('ss_gemini_key')||'';
+  const key = lsGet('ss_gemini_key');
   document.getElementById('api-key-input').value=key;
   document.getElementById('key-status').textContent = key ? '✓ Key saved on this device' : '';
   document.getElementById('key-status').className   = 'key-status '+(key?'ok':'');
-  // always close advanced on normal load
   document.getElementById('advanced-toggle').classList.remove('open');
   document.getElementById('advanced-body').classList.remove('open');
 }
 
 function loadProfileDisplay() {
-  const name   = localStorage.getItem('ss_name')||'Your name';
-  const school = localStorage.getItem('ss_school')||'School not set';
+  const name   = lsGet('ss_name') || 'Your name';
+  const school = lsGet('ss_school') || 'School not set';
   document.getElementById('profile-name-display').textContent   = name;
   document.getElementById('profile-school-display').textContent = school;
   const initials = name.split(' ').filter(Boolean).map(w=>w[0].toUpperCase()).slice(0,2).join('') || '?';
@@ -871,20 +1223,22 @@ function loadProfileDisplay() {
 function saveProfile() {
   const name   = document.getElementById('profile-name').value.trim();
   const school = document.getElementById('profile-school').value.trim();
-  if (name)   localStorage.setItem('ss_name',name);
-  if (school) localStorage.setItem('ss_school',school);
+  if (name)   lsSet('ss_name', name);
+  if (school) lsSet('ss_school', school);
   loadProfileDisplay();
-  const btn=document.querySelector('#screen-settings .btn-primary');
-  const orig=btn.textContent; btn.textContent='Saved ✓';
-  setTimeout(()=>btn.textContent=orig,1500);
+  const btn = document.querySelector('#screen-settings .btn-primary');
+  const orig = btn.textContent;
+  // Show feedback even if fields were empty
+  btn.textContent = (name || school) ? 'Saved ✓' : 'Nothing to save — fill in your name first';
+  setTimeout(()=>btn.textContent=orig, 2000);
 }
 
 function saveApiKey() {
-  const key=document.getElementById('api-key-input').value.trim();
-  const status=document.getElementById('key-status');
+  const key = document.getElementById('api-key-input').value.trim();
+  const status = document.getElementById('key-status');
   if (!key) { status.textContent='Paste a key first.'; status.className='key-status err'; return; }
   if (!key.startsWith('AIza')) { status.textContent='Doesn\'t look like a Gemini key (should start with AIza…).'; status.className='key-status err'; return; }
-  localStorage.setItem('ss_gemini_key',key);
+  lsSet('ss_gemini_key', key);
   status.textContent='✓ Key saved on this device'; status.className='key-status ok';
   checkApiBanner();
 }
@@ -908,10 +1262,846 @@ function showKeySection() {
 }
 
 function clearAllData() {
-  if (!confirm('Delete all saved sessions from this device?')) return;
-  localStorage.removeItem('ss_sessions');
-  renderJourney();
-  alert('History cleared.');
+  // Use a custom in-page confirm to avoid blocked confirm() in WebViews
+  const btn = event.target;
+  if (btn.dataset.confirming) {
+    lsSet('ss_sessions', '[]');
+    renderJourney();
+    btn.textContent = 'Cleared ✓';
+    btn.dataset.confirming = '';
+    setTimeout(()=>btn.textContent='Clear history', 2000);
+  } else {
+    btn.dataset.confirming = '1';
+    btn.textContent = 'Tap again to confirm';
+    setTimeout(()=>{ btn.dataset.confirming=''; btn.textContent='Clear history'; }, 3000);
+  }
+}
+
+// ═══════════════════════════════════
+//  DEMO TRANSCRIPTS
+// ═══════════════════════════════════
+const DEMO_TRANSCRIPTS = {
+good: {
+  label:"Good lesson (sample)", subject:"Maths", grade:"Class 6", topic:"Fractions",
+  text:`[00:00] Okay class, settle down. Books closed for now.
+[00:08] Before we start today, I want to go back to yesterday. We talked about what a fraction means.
+[00:15] Priya — without looking at your notebook — can you tell me, what is a fraction?
+[00:22] [4 second pause]
+[00:26] Priya: Ma'am, it is a part of a whole thing.
+[00:29] Interesting. Can you say more about that — what kind of part?
+[00:32] Priya: Equal part ma'am, like equal pieces.
+[00:35] Good, she added equal. That matters. Now Arjun — give me one example from real life. Take your time.
+[00:41] [5 second pause]
+[00:46] Arjun: Like if we cut an apple into four pieces and eat one, that is one-fourth.
+[00:51] Exactly. Now notice what Arjun said — he said equal pieces without me asking. That's the key idea.
+[00:58] Today we go one step further — comparing two fractions. Just one new idea. We'll practice it before moving on.
+[01:05] Which is bigger — one-half or one-third? Think quietly, don't call out yet.
+[01:11] [6 second pause]
+[01:17] Sunita — what do you think?
+[01:19] Sunita: I think one-half is bigger ma'am.
+[01:22] Why do you think that? Don't just tell me the answer, tell me your reasoning.
+[01:26] Sunita: Because if you cut something in two pieces, each piece is bigger than if you cut into three pieces?
+[01:33] Notice what she just did — she used a real picture in her head, not a rule. That's good thinking.
+[01:40] Now let me draw this on the board. One thing at a time — just this comparison first.
+[01:58] I've shaded one part in each. Which is bigger? Raju?
+[02:02] Raju: The first one ma'am, the one with two parts.
+[02:06] Right. Now here is the rule — smaller denominator, bigger fraction. Just that, for now.
+[02:13] Now — try one yourself. Which is bigger: one-fourth or one-sixth? Work it out individually.
+[02:20] [students work — 2 minutes]
+[02:22] [teacher circulates, stops at back row] Fatima, show me what you have.
+[02:26] Fatima: One-fourth ma'am. Four is smaller than six.
+[02:30] Good. Can you explain it in your own words, not the rule?
+[02:33] Fatima: If you cut into four pieces, each piece is bigger than cutting into six pieces.
+[02:38] Exactly. That's the understanding, not just the rule. 
+[02:42] Now — tell your partner the rule in your own words. Thirty seconds.
+[02:46] [pairs discussing]
+[03:16] Mohammad — what did your partner say?
+[03:19] Mohammad: He said smaller the bottom number, the bigger the fraction.
+[03:23] Good. Now let me give you three more pairs to try.
+[07:18] Pens down. Neha — you got number two wrong. What did you write?
+[07:24] Neha: I wrote one-fifth is bigger than one-third.
+[07:28] Interesting answer. Class — why might someone think that? Arjun?
+[07:33] Arjun: Because five looks like a bigger number than three?
+[07:36] Yes. Build on that — what does that tell us about this rule? Sunita?
+[07:40] Sunita: The bigger number at the bottom actually means smaller pieces, so smaller fraction.
+[07:45] Perfect. Neha — does that make sense now?
+[07:47] Neha: Yes ma'am.
+[07:50] Write this as a warning in your notebook: bigger denominator does NOT mean bigger fraction.
+[07:56] Three things before we finish. What did we compare today? [4 second pause] Priya?
+[08:01] Priya: Fractions with the same numerator.
+[08:03] Rule? [pause] Mohammad?
+[08:06] Mohammad: Smaller denominator means bigger fraction.
+[08:08] The trap? [pause] Fatima?
+[08:12] Fatima: The bigger bottom number fools you but the fraction is actually smaller.
+[08:16] Perfect. Tomorrow — fractions with different numerators. New challenge.`
+},
+average: {
+  label:"Average lesson (sample)", subject:"Maths", grade:"Class 6", topic:"Fractions",
+  text:`[00:00] Okay class, quiet please. Kal humne fractions padha tha, remember?
+[00:06] What is a fraction? Everyone?
+[00:08] Class together: Part of a whole!
+[00:10] And what do we call the top number?
+[00:12] Class together: Numerator!
+[00:14] Bottom number?
+[00:15] Class together: Denominator!
+[00:17] Good. Today we are going to learn how to compare fractions.
+[00:22] So the question is — which fraction is bigger, one-half or one-third?
+[00:28] Let me draw on the board.
+[01:58] Okay so you can see here, one-half is the bigger piece.
+[02:04] The rule is — when numerators are same, smaller denominator means bigger fraction.
+[02:11] Is that clear? [Class: Yes ma'am]
+[02:13] Okay. So if I have one-fourth and one-sixth, which is bigger?
+[02:18] Class together: One-fourth!
+[02:20] Correct, because four is smaller than six. Good.
+[02:24] Let me do one more example. One-fifth and one-ninth?
+[02:28] Class together: One-fifth!
+[02:30] Right. Now write these questions in your notebook and solve.
+[02:36] [writes 5 comparison questions on board]
+[03:10] [students copy and work — teacher sits at desk checking register]
+[07:22] Okay time up. First question — one-half or one-fifth?
+[07:28] Class together: One-half!
+[07:30] Correct. Second — one-third or one-eighth?
+[07:33] Class together: One-third!
+[07:35] Third — Rahul, what did you get?
+[07:38] Rahul: One-fourth ma'am.
+[07:40] Is that right class?
+[07:41] Class together: Yes ma'am!
+[07:43] Good. Questions four and five — are they done?
+[07:46] Class together: Yes ma'am!
+[07:48] Good. So remember — same numerator, smaller denominator is the bigger fraction.
+[07:54] Tomorrow we will do fractions with different numerators.
+[07:58] Any doubts? [silence] Okay, dismissed.`
+},
+weak: {
+  label:"Weak lesson (sample)", subject:"Maths", grade:"Class 6", topic:"Fractions",
+  text:`[00:00] Okay, open your books to page 47. Today we start fractions comparison.
+[00:06] So fractions — numerator on top, denominator on bottom. As we know.
+[00:13] Now comparing fractions. There are two cases. Case one — same denominator. Case two — same numerator.
+[00:19] If denominators are same, bigger numerator means bigger fraction. Three-fifths is bigger than two-fifths.
+[00:27] If numerators are same, smaller denominator means bigger fraction. One-third bigger than one-fifth.
+[00:35] There is also cross multiplication method. You multiply diagonally and compare.
+[00:41] One-third vs one-fifth. One times five is five, one times three is three. Five bigger, so one-third bigger.
+[00:50] This method always works. Remember it. Theek hai?
+[00:53] Class together: Yes sir!
+[00:55] So we have two methods. Method one — compare directly. Method two — cross multiply.
+[01:03] Now I will do three examples quickly.
+[01:06] Example one — two-thirds and three-fourths. Cross multiply. Two times four is eight. Three times three is nine. Nine bigger so three-fourths bigger.
+[01:18] Example two — five-eighths and three-eighths. Same denominator, compare numerators. Five bigger so five-eighths.
+[01:26] Example three — one-half and two-thirds. Cross multiply. One times three is three, two times two is four. Four bigger so two-thirds bigger.
+[01:37] Understood? [Class: Yes sir]
+[01:40] [4 students at back clearly not following, one has head down]
+[01:44] Okay now write these six questions. [dictates rapidly]
+[02:30] Ten minutes. Solve.
+[02:33] [teacher sits at desk, does not circulate]
+[07:20] Okay stop. Q1?
+[07:22] Class together: Two-thirds sir!
+[07:24] Q2?
+[07:26] Class together: Five-eighths sir!
+[07:28] Q3 to Q6 — all done?
+[07:31] Class together: Yes sir!
+[07:33] Good. Any doubts? [silence — two students exchange glances, do not speak] No doubts. 
+[07:38] Tomorrow — ordering fractions. Study today's notes.
+[07:42] [bell rings] Dismissed.`
+}
+};
+
+// ═══════════════════════════════════
+//  DEMO MODE UI HANDLERS
+// ═══════════════════════════════════
+function onContextChange() {
+  // If a demo transcript is loaded but context fields changed,
+  // warn that the transcript no longer matches
+  if (state.lessonDone && state.lessonTranscript) {
+    const pill = document.getElementById('status-pill');
+    const st   = document.getElementById('status-text');
+    if (pill.textContent === 'Sample loaded') {
+      pill.className = 'pill processing dot';
+      pill.textContent = 'Context changed';
+      st.textContent = 'Sample transcript may not match new subject/class';
+    }
+  }
+}
+
+function toggleDemoMode() {
+  const panel = document.getElementById('demo-panel');
+  const btn   = document.getElementById('demo-toggle-btn');
+  const isHidden = panel.style.display === 'none' || panel.style.display === '';
+  panel.style.display = isHidden ? 'flex' : 'none';
+  btn.textContent = isHidden ? 'hide demo mode' : 'sample lesson';
+}
+
+function onDemoSelect() {
+  const key = document.getElementById('demo-select').value;
+  if (!key) return;
+  const t = DEMO_TRANSCRIPTS[key];
+
+  // Pre-fill form fields
+  document.getElementById('subject').value = t.subject;
+  document.getElementById('grade').value   = t.grade;
+  document.getElementById('topic').value   = t.topic;
+
+  // Load transcript into state directly (no recording needed)
+  state.lessonTranscript = t.text;
+  state.rubricSignals    = runRubricEngine(t.text);
+  state.lessonDone       = true;
+
+  // Show status as done
+  document.getElementById('lesson-status').style.display='block';
+  const pill=document.getElementById('status-pill'), st=document.getElementById('status-text');
+  pill.className='pill done-pill dot'; pill.textContent='Sample loaded';
+  st.textContent=t.label;
+  document.getElementById('proceed-btn').disabled=false;
+
+  // Reset recorder UI to idle (since we're not recording)
+  const btn=document.getElementById('lesson-rec-btn');
+  btn.className='rec-btn done'; btn.innerHTML=checkIcon();
+  document.getElementById('lesson-rec-label').textContent='Using sample lesson';
+  document.getElementById('lesson-rec-sub').textContent='Demo mode active';
+}
+
+// ═══════════════════════════════════════════════════════
+//  RUBRIC ENGINE  v2
+//  8 dimensions. Each dimension uses regex arrays for
+//  flexible matching — catches paraphrases, Hindi/Hinglish,
+//  spelling variants, not just exact phrases.
+//  score: 0 = absent, 1 = weak/choral only, 2 = strong/individual
+// ═══════════════════════════════════════════════════════
+function runRubricEngine(text) {
+  const t = text.toLowerCase();
+
+  // Helper: test an array of regex patterns against t
+  // Returns the first matching pattern string, or null
+  function match(patterns) {
+    for (const p of patterns) {
+      const m = t.match(p);
+      if (m) return m[0];
+    }
+    return null;
+  }
+
+  const dims = {
+
+    // ── 1. PRIOR REVIEW ──────────────────────────────────
+    // Rosenshine P1: begin with short review of previous learning
+    prior_review: {
+      label: 'Prior knowledge review',
+      strong: [
+        // English variants
+        /\b(yesterday|last class|last time|last week|last lesson)\b/,
+        /\b(go back to|think back|before we start|let's recall|let me remind)\b/,
+        /\b(we learned|we studied|we covered|we did|we talked about)\b.*\b(last|yesterday|before)\b/,
+        /\b(review|recall|remember what|who remembers|what do you know about)\b/,
+        /\b(prior knowledge|background knowledge|activate)\b/,
+        // Hindi / Hinglish
+        /\b(kal humne|kal padha|pichli class|pichli baar|pehle kya|yaad hai kya)\b/,
+        /\b(revision karte|revise karte|revise kar)\b/,
+      ],
+      weak: [
+        /\b(everyone remember|class remember|you remember|do you remember)\b/,
+        /\b(as we know|we know that|you already know)\b/,
+      ],
+      absent: [
+        /\bopen your books? to page\b/,
+        /\btoday (is|we start|we begin|we will learn)\b/,
+        /\bdirectly (start|begin|jump)\b/,
+      ],
+    },
+
+    // ── 2. SMALL STEPS + PRACTICE BREAKS ─────────────────
+    // Rosenshine P2: new material in small steps, practice after each
+    small_steps: {
+      label: 'Small steps with practice breaks',
+      strong: [
+        /\b(try (this|one|it) (yourself|now|first)|now you (try|do|practice))\b/,
+        /\b(work (on this|individually|it out)|solve (this|one|it)\b)/,
+        /\b(write (it|this|your answer) (down|in your notebook))\b/,
+        /\b(practice (this|now)|let's practice|your turn now)\b/,
+        /\b(first.*then we|step by step|one thing at a time)\b/,
+        // Hindi
+        /\b(ab tum karo|khud karo|likho|try karo|practice karo)\b/,
+      ],
+      weak: [
+        /\b(write these (questions|problems|examples)|copy (this|these|the))\b/,
+        /\b(do these (questions|sums|problems)|solve these)\b/,
+      ],
+      absent: [
+        /\b(method one.*method two|case one.*case two)\b/,
+        /\b(two methods|three methods|multiple (ways|methods|cases))\b.*\b(same (time|lesson|class))\b/,
+      ],
+    },
+
+    // ── 3. CFU QUALITY ────────────────────────────────────
+    // Rosenshine P3: check responses of all students, not just chorus
+    cfu_quality: {
+      label: 'Checking for understanding',
+      strong: [
+        /\b(in your own words|apne shabdon mein)\b/,
+        /\b(explain (it|this|that) (back|to me|in your own))\b/,
+        /\b(can you (tell me why|explain why|show me why))\b/,
+        /\b(why (do you think|did you|is that)|how do you know)\b/,
+        /\b(show me what you (have|wrote|got))\b/,
+        /\b(what (would happen if|do you notice|makes you think))\b/,
+        /\b(convince me|prove it|justify)\b/,
+        // Hindi
+        /\b(kya samjhe|apne shabd mein|kyun aisa|samjhao)\b/,
+      ],
+      weak: [
+        /\b(understood\?|everyone understood|is that clear|any (doubts|questions|confusion))\b/,
+        /\b(clear\?|okay\?|sab samajh aaya|ho gaya\?)\b/,
+        /\b(right class\?|correct class\?|yes class)\b/,
+      ],
+      absent: [],
+    },
+
+    // ── 4. COLD CALL BY NAME ──────────────────────────────
+    // TLAC: call on students regardless of hand-raising
+    // Handled by regex separately below — student Name: patterns
+    cold_call: {
+      label: 'Cold-calling by name',
+      strong:  [], // handled by named-call regex
+      weak:    [/\bone student\b/, /\bask (a|one|any) student\b/],
+      absent:  [
+        /\b(class together|everyone together|all together|sabhi|sab log)\b/,
+        /\b(class:|students:|all:)\b/,
+      ],
+    },
+
+    // ── 5. WAIT TIME ──────────────────────────────────────
+    // Rosenshine + TLAC: pause after questions, give think time
+    wait_time: {
+      label: 'Wait time after questions',
+      strong: [
+        /\b\d+[\s-]second (pause|wait|silence)\b/,
+        /\b(take your time|no rush|think (quietly|first|about it)|don't (call out|answer yet))\b/,
+        /\b(give (everyone|yourself|them) (a chance|time) to think)\b/,
+        /\b(pause|silence|wait)\b.*\b(second|moment|minute)\b/,
+        /\[.*?(pause|silence|wait|seconds?).*?\]/,  // transcript notes like [4 second pause]
+        // Hindi
+        /\b(sochne do|socho pehle|jaldi mat|ruko|ek minute sochte hain)\b/,
+      ],
+      weak: [
+        /\b(think about it|have a think|take a moment)\b/,
+      ],
+      absent: [],
+    },
+
+    // ── 6. STUDENT TALK / EXPLANATION ────────────────────
+    // TLAC Ratio: students doing cognitive work, not just answering
+    student_talk: {
+      label: 'Student talk and explanation',
+      strong: [
+        /\b(turn (and talk|to your partner)|talk to (your partner|the person next to))\b/,
+        /\b(tell your (partner|neighbour|neighbour|friend)|discuss with)\b/,
+        /\b(say it in your own words|explain to (your partner|a friend|someone))\b/,
+        /\b(pair(s)? (work|discussing|sharing)|pair discussion|partner talk)\b/,
+        /\b(student(s)? (talk|discussion|explaining)|group (discussion|talk))\b/,
+        /\b(repeat (that|the rule|the idea) (to|with|in))\b/,
+        // Hindi
+        /\b(apne dost ko batao|partner ko samjhao|dono milke)\b/,
+      ],
+      weak: [
+        /\b(group (activity|work|task)|discuss (in groups|with class))\b/,
+        /\b(work (together|in pairs|with a partner))\b/,
+      ],
+      absent: [
+        /\bteacher (sits|sat) (at|behind|on) (the |their )?(desk|chair)\b/,
+        /\bdoes not circulate\b/,
+        /\b(sit at desk|sitting at desk)\b/,
+      ],
+    },
+
+    // ── 7. UPTAKE OF STUDENT RESPONSES ───────────────────
+    // NLP research: does teacher build on what students say?
+    uptake: {
+      label: 'Uptake of student responses',
+      strong: [
+        /\b(say (more|a bit more)|tell me more|can you add|go on)\b/,
+        /\b(build on (that|what .+ said)|add to (that|what))\b/,
+        /\b(interesting[,.]? (why|how|tell)|good point[,.]? (can you|now))\b/,
+        /\b(notice (what|how) (she|he|they) said)\b/,
+        /\b(who (agrees|disagrees|can add)|does anyone want to (add|build|respond))\b/,
+        /\b(she (said|noticed|pointed)|he (said|noticed|pointed)|they said)\b.*\b(and that|which means|so)\b/,
+        // Hindi
+        /\b(aur batao|theek hai lekin|uski baat sun|aage batao)\b/,
+      ],
+      weak: [
+        /\b(good answer|correct|very good|that's right|shabash)\b/,
+        /\b(yes[,.]? (now|and|so|let's)|right[,.]? (so|now|let's))\b/,
+      ],
+      absent: [],
+    },
+
+    // ── 8. BACK ROW / EQUITY ─────────────────────────────
+    // India context: are quieter/weaker/back students reached?
+    back_row: {
+      label: 'Reaching all students (equity)',
+      strong: [
+        /\b(back (row|of the class)|back (benches|bench))\b/,
+        /\b(circulate|walks (around|to)|went (to|over to|around))\b/,
+        /\b(quieter students|weaker students|those who (haven't|didn't|don't))\b/,
+        /\b(show me what you have|check (your|their) work individually)\b/,
+        // Names being checked individually (caught also by cold call)
+        /\b(what (have you|did you) (got|written|done)\?)\b/,
+        // Hindi
+        /\b(peeche wale|peeche baithe|kamazon|jo samajh nahi|ghoomna)\b/,
+      ],
+      weak: [
+        /\b(quiet (at the|in the) back|stop (talking|chatting) (at the |in the )?back)\b/,
+        /\b(pay attention (at the back|everyone)|back row (listen|focus))\b/,
+        /\b(aye peeche|chup raho peeche)\b/,
+      ],
+      absent: [
+        /\b(head down|not following|disengaged|lost|zoned out)\b/,
+        /\bdoes not circulate\b/,
+        /\b(teacher sits|teacher sat|sat at (the )?desk)\b/,
+      ],
+    },
+
+  }; // end dims
+
+  const signals = {};
+  const EXCLUDED_NAMES = new Set([
+    'Class','Good','Right','Okay','Now','Today','Yes','No','And','But',
+    'The','Teacher','Student','Sir','Maam','Ma\'am','Bell','Let','Can',
+    'When','There','These','That','This','What','Here','Well','Just',
+    'Tell','Hindi','Math','Maths','One','Two','Three','Four','Five',
+    'Six','Seven','Eight','Nine','Ten','Case','Method','Step','Part',
+    'Note','Next','Last','First','Also','Then','After','Before'
+  ]);
+
+  for (const [id, dim] of Object.entries(dims)) {
+    let score = 0;
+    let evidence = null;
+    let absenceEvidence = null;
+
+    // ── Cold call: special named-student regex ──
+    if (id === 'cold_call') {
+      const namedCallRegex = /\b([A-Z][a-z]{2,12})\s*[:\-—]/g;
+      const matches = [...text.matchAll(namedCallRegex)];
+      const names = matches
+        .map(m => m[1])
+        .filter(n => !EXCLUDED_NAMES.has(n));
+      const uniqueNames = [...new Set(names)];
+      if (uniqueNames.length >= 3) {
+        score = 2;
+        evidence = 'named students: ' + uniqueNames.slice(0,5).join(', ');
+      } else if (uniqueNames.length >= 1) {
+        score = 1;
+        evidence = 'some named: ' + uniqueNames.join(', ');
+      }
+      const absentHit = match(dim.absent);
+      if (absentHit) absenceEvidence = absentHit;
+    }
+
+    // ── All other dimensions: check absence FIRST to prevent false positives,
+    //    then strong, then weak ──
+    else {
+      const absentHit = match(dim.absent);
+      if (absentHit) absenceEvidence = absentHit;
+
+      // Only score positive if absence signal doesn't negate it
+      // (e.g. "does not circulate" should block "circulate" from scoring)
+      if (!absentHit || dim.absent.length === 0) {
+        const strongHit = match(dim.strong);
+        if (strongHit) { score = 2; evidence = strongHit; }
+        if (score < 2) {
+          const weakHit = match(dim.weak);
+          if (weakHit) { score = 1; evidence = weakHit; }
+        }
+      } else {
+        // Absence found — still check strong (strong evidence can override weak absence)
+        // but weak evidence cannot override absence
+        const strongHit = match(dim.strong);
+        if (strongHit) { score = 2; evidence = strongHit; }
+        // score stays 0 if only weak signals present alongside absence
+      }
+    }
+
+    signals[id] = { label: dim.label, score, evidence, absenceEvidence };
+  }
+
+  return signals;
+}
+
+function getWeakestDimension(signals) {
+  if (!signals) return null;
+  return Object.values(signals).reduce((weakest, dim) =>
+    dim.score < weakest.score ? dim : weakest
+  );
+}
+
+// ═══════════════════════════════════
+//  REFLECTION QUESTION BANK
+//  Keyed by rubric dimension — targets the weakest signal
+// ═══════════════════════════════════
+const REFLECTION_CHIPS = {
+  prior_review: [
+    "jumped straight to new content",
+    "no time for review today",
+    "assumed they remembered from last class",
+  ],
+  small_steps: [
+    "explained everything first, then gave practice",
+    "covered a lot at once without breaks",
+    "felt rushed to get through the content",
+  ],
+  cfu_quality: [
+    "asked 'everyone understood?' and moved on",
+    "mostly the class answered together",
+    "hard to tell who actually understood",
+  ],
+  cold_call: [
+    "only front-row students answered",
+    "same 3–4 students every time",
+    "didn't call anyone by name today",
+  ],
+  wait_time: [
+    "moved on as soon as someone answered",
+    "didn't pause much after questions",
+    "felt pressure to keep pace",
+  ],
+  student_talk: [
+    "I talked most of the lesson",
+    "students only gave short answers",
+    "no pair or group discussion today",
+  ],
+  uptake: [
+    "said correct/wrong and moved on",
+    "didn't really build on what students said",
+    "acknowledged answers briefly and continued",
+  ],
+  back_row: [
+    "didn't check back rows specifically",
+    "some students seemed lost but I moved on",
+    "didn't circulate during the lesson",
+  ],
+};
+
+const REFLECTION_QUESTIONS = {
+  small_steps:   "After you explained something new today, did students get a chance to try it before you moved on — or did you cover everything first?",
+  cfu_quality:   "When you asked questions, how did you know which individual students understood and which didn't?",
+  cold_call:     "Think about the students who answered your questions today — who answered? Who stayed quiet the whole time?",
+  wait_time:     "After asking a question, what typically happened in the next few seconds before someone answered?",
+  student_talk:  "How much did students talk today compared to you? When did they get to explain something in their own words?",
+  uptake:        "When a student gave an answer — right or wrong — what did you do with it? Did you build on it or move on?",
+  back_row:      "Think about the students at the back or the sides — were you sure they were following throughout the lesson?",
+};
+const FALLBACK_QUESTIONS = [
+  "Which moment in today's lesson felt most uncertain, and why?",
+  "If you taught this lesson again tomorrow, what one thing would you change first?",
+];
+
+// Returns { question, dimId } so caller can also get the dimension
+function getReflectionQuestionAndDim(signals) {
+  // Priority 1: target weakest rubric dimension
+  if (signals) {
+    const entries = Object.entries(signals).sort((a,b)=>a[1].score-b[1].score);
+    const weakest = entries[0];
+    if (weakest[1].score < 2) {
+      return {
+        question: REFLECTION_QUESTIONS[weakest[0]] || FALLBACK_QUESTIONS[0],
+        dimId: weakest[0]
+      };
+    }
+  }
+  // Priority 2: rotate by session history
+  const sessions = lsGetJSON('ss_sessions', []);
+  const dimKeys = Object.keys(REFLECTION_QUESTIONS);
+  if (sessions.length > 0) {
+    const idx = sessions.length % dimKeys.length;
+    return { question: REFLECTION_QUESTIONS[dimKeys[idx]], dimId: dimKeys[idx] };
+  }
+  // Fallback
+  return { question: FALLBACK_QUESTIONS[0], dimId: null };
+}
+
+// Kept for any legacy calls
+function getReflectionQuestion(signals) {
+  return getReflectionQuestionAndDim(signals).question;
+}
+
+function renderReflectionChips(dimId) {
+  const wrap = document.getElementById('chips-wrap');
+  const row  = document.getElementById('chips-row');
+  row.innerHTML = '';
+  const chips = dimId && REFLECTION_CHIPS[dimId];
+  if (!chips) { wrap.style.display='none'; return; }
+
+  chips.forEach(text => {
+    const btn = document.createElement('button');
+    btn.className = 'chip';
+    btn.textContent = text;
+    btn.onclick = () => selectChip(btn, text);
+    row.appendChild(btn);
+  });
+  wrap.style.display = 'block';
+}
+
+function selectChip(btn, text) {
+  // Deselect all chips first
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+
+  if (state.selectedChip === text) {
+    // Tapping same chip again deselects — teacher can record instead
+    state.selectedChip = null;
+    state.reflectTranscript = '';
+    // Only disable feedback btn if not already recorded
+    if (!state.reflectDone) document.getElementById('feedback-btn').disabled = true;
+    return;
+  }
+
+  btn.classList.add('selected');
+  state.selectedChip = text;
+  state.reflectTranscript = text;
+  state.reflectDone = true;
+  document.getElementById('feedback-btn').disabled = false;
+
+  // Update recorder label to show chip was selected
+  const lbl = document.getElementById('reflect-rec-label');
+  if (!state.reflectRecording) {
+    lbl.textContent = 'Response selected';
+  }
+}
+
+// ═══════════════════════════════════
+//  FOLLOW-UP CHAT
+//  Max 3 turns. Context = coaching note + history.
+// ═══════════════════════════════════
+const MAX_TURNS = 3;
+
+function renderFollowUpSuggestions(followups) {
+  const container = document.getElementById('followup-suggestions');
+  container.innerHTML = '';
+  const questions = (followups && followups.length)
+    ? followups
+    : [
+        "How do I handle it if no one answers?",
+        "What does a good cold-call look like?",
+        "How do I make this work with a large class?",
+      ];
+  questions.forEach(q => {
+    const btn = document.createElement('button');
+    btn.className = 'followup-chip';
+    btn.textContent = q;
+    btn.onclick = () => submitFollowUp(q);
+    container.appendChild(btn);
+  });
+}
+
+function toggleFollowUp() {
+  const body   = document.getElementById('followup-body');
+  const toggle = document.getElementById('followup-toggle');
+  const open   = body.style.display === 'flex' || body.style.display === 'block';
+  if (open) {
+    body.style.display = 'none';
+    toggle.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Ask a follow-up`;
+  } else {
+    body.style.display = 'flex';
+    toggle.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Close`;
+  }
+}
+
+function onChatKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendFollowUp(); }
+}
+
+function submitFollowUp(question) {
+  // Called when a suggestion chip is tapped
+  document.getElementById('followup-suggestions').style.display = 'none';
+  document.getElementById('chat-thread').style.display  = 'flex';
+  document.getElementById('chat-input-row').style.display = 'flex';
+  addChatBubble('teacher', question);
+  fetchFollowUpResponse(question);
+}
+
+function sendFollowUp() {
+  const input = document.getElementById('chat-input');
+  const text  = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  document.getElementById('followup-suggestions').style.display = 'none';
+  document.getElementById('chat-thread').style.display  = 'flex';
+  document.getElementById('chat-input-row').style.display = 'flex';
+  addChatBubble('teacher', text);
+  fetchFollowUpResponse(text);
+}
+
+function addChatBubble(role, text) {
+  const thread = document.getElementById('chat-thread');
+  const div = document.createElement('div');
+  div.className = 'chat-bubble ' + role;
+  div.textContent = text;
+  thread.appendChild(div);
+  thread.scrollTop = thread.scrollHeight;
+  return div;
+}
+
+async function fetchFollowUpResponse(question) {
+  state.chatTurns++;
+  const key = lsGet('ss_gemini_key');
+
+  document.getElementById('chat-send').disabled  = true;
+  document.getElementById('chat-input').disabled = true;
+
+  const typingBubble = addChatBubble('coach', '…');
+  let responseText   = '';
+
+  if (!key) {
+    responseText = "Add a Gemini API key in Settings for real follow-up coaching. For now: try the tip in your very next lesson — your own observation will tell you more than any advice.";
+  } else {
+    try {
+      const note = state.coachingNote;
+      const noteContext = note
+        ? `What worked: ${note.strength}\nPattern: ${note.pattern}\nTry tomorrow: ${note.try}\nTip: ${note.tip}`
+        : '(Coaching note not available)';
+
+      const turnNum   = state.chatTurns;
+      const isLastTurn = turnNum >= MAX_TURNS;
+
+      const systemPrompt = `You are Shiksha Sathi, a teaching coach for Indian school teachers.
+
+The teacher just received this coaching note:
+${noteContext}
+
+Subject: ${state.sessionSubject||'unknown'}, ${state.sessionGrade||'unknown'}.
+
+This is a brief follow-up conversation. This is exchange ${turnNum} of ${MAX_TURNS}.
+
+Your job: help the teacher understand HOW to execute the tip in their specific classroom.
+Answer only implementation questions — how to do it, what to say, how to adapt for large classes, what to do when it fails.
+
+If the teacher asks something not related to this coaching note, respond:
+"That's worth thinking about — but let's stay with today's note. [briefly redirect to the tip]."
+
+Voice: direct, warm, specific. Same voice as the coaching note. No jargon. No lists.
+Maximum 3 sentences — if you need more, you are saying too much.
+${isLastTurn ? 'This is the final exchange. End with one grounding sentence that sends the teacher back to their classroom with confidence — not a question, a statement.' : ''}`;
+
+      const messages = [
+        ...state.chatHistory,
+        { role: 'user', parts: [{ text: question }] }
+      ];
+
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${key}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: systemPrompt }] },
+            contents: messages,
+            generationConfig: { temperature: 0.65, maxOutputTokens: 220 }
+          })
+        }
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Could not get a response.';
+
+      state.chatHistory.push(
+        { role: 'user',  parts: [{ text: question     }] },
+        { role: 'model', parts: [{ text: responseText }] }
+      );
+
+    } catch(err) {
+      console.error('Follow-up error:', err);
+      responseText = "Couldn't reach the coaching service just now — try again in a moment.";
+      state.chatTurns--;
+    }
+  }
+
+  typingBubble.textContent = responseText;
+
+  const remaining = MAX_TURNS - state.chatTurns;
+  if (remaining <= 0) {
+    document.getElementById('chat-input-row').style.display = 'none';
+    const limitEl = document.getElementById('chat-limit');
+    limitEl.textContent = "That's the coaching session for today — try it in class tomorrow.";
+    limitEl.style.display = 'block';
+  } else {
+    document.getElementById('chat-send').disabled  = false;
+    document.getElementById('chat-input').disabled = false;
+    document.getElementById('chat-input').focus();
+    document.getElementById('chat-input').placeholder =
+      remaining === 1 ? 'One more question…' : 'Ask another question…';
+  }
+}
+
+// ═══════════════════════════════════
+//  COPY FUNCTIONS
+// ═══════════════════════════════════
+async function copyNote() {
+  const subj  = state.sessionSubject;
+  const grade = state.sessionGrade;
+  const topic = state.sessionTopic;
+  const date  = new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'2-digit'});
+  const lines = [
+    `Shiksha Sathi — Coaching Note`,
+    `${date}${subj?' · '+subj:''}${grade?', '+grade:''}${topic?' · '+topic:''}`,
+    ``,
+    `✅ What worked`,
+    document.getElementById('note-strength').textContent.trim(),
+    ``,
+    `🔍 A pattern to notice`,
+    document.getElementById('note-pattern').textContent.trim(),
+    ``,
+    `📌 Try tomorrow`,
+    document.getElementById('note-try').textContent.trim(),
+    ``,
+    `💡 ${document.getElementById('note-tip').textContent.trim()}`,
+  ];
+  await copyToClipboard(lines.join('\n'), 'copy-note-btn', 'Copied!', 'Copy note');
+}
+
+async function copyAllTips() {
+  const sessions = JSON.parse(localStorage.getItem('ss_sessions')||'[]');
+  if (sessions.length===0) return;
+  const lines = [
+    `Shiksha Sathi — All Tips`,
+    ``,
+    ...sessions.map(s=>`${s.dateDisplay}${s.subject?' · '+s.subject:''}${s.grade?', '+s.grade:''}\n💡 ${s.tip||s.tryThis.substring(0,80)}`),
+  ];
+  await copyToClipboard(lines.join('\n\n'), 'copy-all-btn', 'Copied!', 'Copy all');
+}
+
+async function copySession(i) {
+  const sessions = JSON.parse(localStorage.getItem('ss_sessions')||'[]');
+  const s = sessions[i]; if (!s) return;
+  const lines = [
+    `Shiksha Sathi — ${s.dateDisplay}${s.subject?' · '+s.subject:''}${s.grade?', '+s.grade:''}${s.topic?' · '+s.topic:''}`,
+    ``,
+    `✅ What worked`,
+    s.strength,
+    ``,
+    `🔍 Pattern`,
+    s.pattern,
+    ``,
+    `📌 Try tomorrow`,
+    s.tryThis,
+    ``,
+    `💡 ${s.tip||''}`,
+  ];
+  await copyToClipboard(lines.join('\n'), `copy-session-${i}`, 'Copied!', 'Copy');
+}
+
+async function copyToClipboard(text, btnId, successLabel, originalLabel) {
+  try {
+    await navigator.clipboard.writeText(text);
+    const btn = document.getElementById(btnId);
+    if (btn) {
+      btn.textContent = successLabel;
+      setTimeout(()=>btn.textContent=originalLabel, 2000);
+    }
+  } catch(e) {
+    // fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn = document.getElementById(btnId);
+    if (btn) { btn.textContent = successLabel; setTimeout(()=>btn.textContent=originalLabel, 2000); }
+  }
 }
 
 // ═══════════════════════════════════
