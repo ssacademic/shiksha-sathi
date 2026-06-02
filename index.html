@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="theme-color" content="#F5F0E8"/>
-<title>Shiksha Sathi</title>
+<title>Shiksha Saathi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -186,7 +186,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 <!-- ══════ SCREEN 1 — Record ══════ -->
 <div class="screen active" id="screen-record">
   <div>
-    <p class="wordmark">Shiksha Sathi</p>
+    <p class="wordmark">Shiksha Saathi</p>
     <p class="tagline">Your daily teaching coach</p>
     <h1 id="screen1-heading">Let's talk about today's lesson</h1>
   </div>
@@ -297,7 +297,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     Back
   </div>
   <div>
-    <p class="wordmark">Shiksha Sathi</p>
+    <p class="wordmark">Shiksha Saathi</p>
     <p class="tagline">Your daily teaching coach</p>
     <h1>One moment before feedback</h1>
     <p class="subtext" style="margin-top:8px;">Your answer shapes the coaching note.</p>
@@ -322,12 +322,6 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <div class="rec-timer" id="reflect-timer" style="display:none">0:00</div>
   </div>
 
-  <!-- chips — quick shortcuts, below recorder -->
-  <div id="chips-wrap" style="display:none">
-    <p class="chips-label">Or pick what fits:</p>
-    <div class="chips-row" id="chips-row"></div>
-  </div>
-
   <!-- divider -->
   <div style="display:flex;align-items:center;gap:10px;margin-top:-4px;">
     <div style="flex:1;height:1px;background:var(--border);"></div>
@@ -335,7 +329,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <div style="flex:1;height:1px;background:var(--border);"></div>
   </div>
 
-  <!-- text answer — below divider -->
+  <!-- text answer -->
   <div style="display:flex;flex-direction:column;gap:8px;">
     <div style="display:flex;align-items:center;justify-content:space-between;">
       <p style="font-size:14px;font-weight:500;color:var(--ink);">Write your response</p>
@@ -347,6 +341,12 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
         style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
         oninput="onReflectTextInput()"></textarea>
     </div>
+  </div>
+
+  <!-- chips — below text box, as quick-pick shortcuts -->
+  <div id="chips-wrap" style="display:none">
+    <p class="chips-label">Or pick what fits:</p>
+    <div class="chips-row" id="chips-row"></div>
   </div>
 
   <button class="btn-primary" id="feedback-btn" disabled onclick="proceedToFeedback()">
@@ -364,7 +364,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     Back
   </div>
   <div>
-    <p class="wordmark">Shiksha Sathi</p>
+    <p class="wordmark">Shiksha Saathi</p>
     <p class="tagline">Your daily teaching coach</p>
     <h1>Your coaching note</h1>
   </div>
@@ -455,7 +455,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 <!-- ══════ SCREEN 4 — Journey ══════ -->
 <div class="screen" id="screen-history">
   <div>
-    <p class="wordmark">Shiksha Sathi</p>
+    <p class="wordmark">Shiksha Saathi</p>
     <h1>Your journey</h1>
   </div>
 
@@ -504,7 +504,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 <!-- ══════ SCREEN 5 — Settings ══════ -->
 <div class="screen" id="screen-settings">
   <div>
-    <p class="wordmark">Shiksha Sathi</p>
+    <p class="wordmark">Shiksha Saathi</p>
     <h1>Profile</h1>
   </div>
 
@@ -572,7 +572,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 
 <!-- ══════ ONBOARDING OVERLAY — first visit only ══════ -->
 <div class="onboarding" id="onboarding" style="display:none">
-  <p class="onboard-logo">Shiksha Sathi</p>
+  <p class="onboard-logo">Shiksha Saathi</p>
   <p class="onboard-tagline">Your daily teaching coach</p>
 
   <div class="onboard-steps">
@@ -580,7 +580,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       <div class="onboard-num">1</div>
       <div>
         <div class="onboard-step-title">Record your lesson</div>
-        <div class="onboard-step-desc">Tap record before class. Shiksha Sathi listens to the full lesson — you teach normally.</div>
+        <div class="onboard-step-desc">Tap record before class. Shiksha Saathi listens to the full lesson — you teach normally.</div>
       </div>
     </div>
     <div class="onboard-step">
@@ -736,23 +736,28 @@ function navTo(screenId, navId) {
   // If navigating away from feedback screen with unsaved note, warn
   const currentScreen = document.querySelector('.screen.active');
   if (currentScreen && currentScreen.id === 'screen-feedback') {
-    const noteVisible = document.getElementById('note-card').style.display === 'flex';
+    const noteVisible  = document.getElementById('note-card').style.display === 'flex';
     const alreadySaved = document.getElementById('save-btn').disabled;
     if (noteVisible && !alreadySaved && screenId !== 'screen-feedback') {
       const warn = document.getElementById('unsaved-warning');
       warn.style.display = 'block';
       warn.scrollIntoView({ behavior:'smooth', block:'center' });
+      // Wire leave button to hide warning then reset
       warn.querySelector('button:last-child').onclick = () => {
-        warn.style.display = 'none';
-        newSession();
+        hideUnsavedWarning();
+        state.lessonDone = false; // prevent loop in newSession→navTo
+        goTo('screen-record');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('nav-home').classList.add('active');
+        setTimeout(() => newSession(), 100);
       };
       return;
     }
   }
-  // If navigating back to record screen and a session was completed
-  // but not saved, reset so the UI is clean
+  // If navigating to record screen after a completed unsaved session, reset
   if (screenId === 'screen-record' && state.lessonDone && !state.saving) {
-    newSession();
+    state.lessonDone = false; // prevent infinite loop
+    setTimeout(() => newSession(), 50);
     return;
   }
   goTo(screenId);
@@ -927,22 +932,30 @@ function skipReflection() {
 }
 
 // ── Unsaved note warning ──
+function hideUnsavedWarning() {
+  document.getElementById('unsaved-warning').style.display = 'none';
+}
+
 function checkUnsavedNote() {
   const noteVisible  = document.getElementById('note-card').style.display === 'flex';
   const alreadySaved = document.getElementById('save-btn').disabled;
   if (noteVisible && !alreadySaved) {
     const warn = document.getElementById('unsaved-warning');
     warn.style.display = 'block';
-    // Scroll to warning so teacher sees it
     warn.scrollIntoView({ behavior:'smooth', block:'center' });
   } else {
+    hideUnsavedWarning();
     goTo('screen-reflect');
   }
 }
 
 function confirmLeaveNote() {
-  document.getElementById('unsaved-warning').style.display = 'none';
+  hideUnsavedWarning();
+  // Clear session state fully before navigating away
+  state.lessonDone = false; // prevents navTo reset loop
   goTo('screen-reflect');
+  // Full reset on a slight delay so navigation completes first
+  setTimeout(() => newSession(), 100);
 }
 
 async function showFeedbackScreen() {
@@ -1018,37 +1031,49 @@ async function callGemini(apiKey) {
   // Check if lesson was genuinely strong across all dimensions
   const allStrong = signals && Object.values(signals).every(s => s.score === 2);
 
-  const systemInstruction = `You are Shiksha Sathi — a teaching coach for Indian government school teachers.
+  const systemInstruction = `You are Shiksha Saathi — a teaching coach for Indian government school teachers.
 
-Your voice: direct, warm, specific. Like a respected senior teacher giving honest feedback over chai after school. Not an evaluator. Not a cheerleader. A thinking partner who notices things and asks the teacher to notice them too.
+Your voice: direct, warm, specific. Like a respected senior teacher giving honest feedback over chai after school. Not an evaluator. Not a cheerleader.
 
-Rules for every field:
-- Never start any field with "It's wonderful", "Great", "Fantastic", "As a teacher", "In today's lesson".
-- Never end any field with a question. Make statements.
-- Reference actual rubric evidence — name what you saw, not generic patterns.
-- Speak to the teacher as "you". Never "we".
-- No jargon. No formal academic language.
-- Respond ONLY with valid JSON. No markdown, no preamble, no explanation.`;
+CRITICAL RULES:
+1. "strength" and "pattern" must be about DIFFERENT teaching behaviours. Never describe the same action as both a strength and a problem.
+2. "strength" must come from a rubric dimension that scored 1 or 2 — NEVER from the weakest dimension.
+3. If ALL rubric dimensions scored 0 (no positive signals at all), do NOT invent a strength. Instead write: "You recorded this lesson and took time to reflect on it. That habit — stepping back to notice what happened — is the starting point for every teacher who improves."
+4. "pattern" is grounded in the WEAKEST dimension only. Name what it means for student learning. Never say the teacher "failed" — say what students experienced.
+5. Never start any field with "It's wonderful", "Great", "Fantastic", "As a teacher", "In today's lesson".
+6. Never end any field with a question. Statements only.
+7. Speak to the teacher as "you". Never "we".
+8. No jargon. No formal academic language.
+9. Respond ONLY with valid JSON. No markdown, no preamble.`;
+
+  // Find strongest dimension for the strength field
+  const strongestDim = signals
+    ? Object.entries(signals)
+        .filter(([,v]) => v.score > 0)
+        .sort((a,b) => b[1].score - a[1].score)[0]
+    : null;
 
   const userMessage = `Lesson context: ${subj}, ${grade}. Topic: ${topic}.
 
 ${signalBlock}
 
+Strongest dimension (use this for "strength"): ${strongestDim ? strongestDim[1].label + ' (score: ' + strongestDim[1].score + '/2, evidence: "' + (strongestDim[1].evidence||'detected') + '")' : 'NONE — no positive signals found, use the effort/reflection fallback'}
+
 Teacher's reflection (their answer to the question "${state.reflectionQuestion}"):
 ${state.reflectTranscript}
 
-${allStrong ? 'Note: rubric signals were strong across all dimensions — the lesson was generally good. For "pattern", name one area with room to grow as an invitation, not a critique.' : ''}
+${allStrong ? 'Note: all dimensions were strong. For "pattern", name one area for further growth as an invitation.' : ''}
 
-Write the coaching note in this exact JSON structure:
+Write the coaching note in this exact JSON:
 {
-  "strength": "One specific thing the teacher did, named precisely. Start with what they did, not a compliment. Reference actual evidence from the rubric. 2 sentences.",
-  "pattern": "The most important thing to notice, grounded in the weakest rubric dimension. Name what it means for students — not what the teacher did wrong. 2 sentences.",
-  "try": "One action specific enough that the teacher knows exactly what to do and say in the next lesson. Name the technique, the moment, the words if possible. 2 sentences.",
-  "tip": "The single most actionable takeaway. Start with an imperative verb. Maximum 15 words.",
+  "strength": "What the teacher did well — from the STRONGEST dimension only, with specific evidence. If no positive signals exist, write the reflection/effort acknowledgment. 2 sentences.",
+  "pattern": "From the WEAKEST dimension — what students experienced as a result. Not what the teacher did wrong. 2 sentences.",
+  "try": "One specific action for the next lesson. Name the moment, the words to say. Concrete enough to do tomorrow. 2 sentences.",
+  "tip": "Single most actionable takeaway. Imperative verb. Max 15 words.",
   "followups": [
-    "A question the teacher would ask about HOW to execute the tip in a large or mixed class. Max 10 words.",
-    "A question about what to do when the tip goes wrong or students don't respond. Max 10 words.",
-    "A question about adapting the tip to their specific subject or grade. Max 10 words."
+    "Question about HOW to execute the tip in a large or mixed class. Max 10 words.",
+    "Question about what to do if it goes wrong. Max 10 words.",
+    "Question about adapting to their subject or grade. Max 10 words."
   ]
 }`;
 
@@ -1167,8 +1192,7 @@ function fallbackNote() {
 function saveSession() {
   if (state.saving) return;
   state.saving = true;
-  // Hide unsaved warning immediately if showing
-  document.getElementById('unsaved-warning').style.display = 'none';
+  hideUnsavedWarning();
   const sessions = lsGetJSON('ss_sessions', []);
   sessions.unshift({
     date: new Date().toISOString(),
@@ -1652,16 +1676,21 @@ function toggleReflectText() {
 
 function onReflectTextInput() {
   const val = document.getElementById('reflect-text-input').value.trim();
+  const lbl = document.getElementById('reflect-rec-label');
   if (val.length > 5) {
     state.reflectTranscript = val;
     state.reflectDone = true;
     document.getElementById('feedback-btn').disabled = false;
-    // Update recorder label
-    const lbl = document.getElementById('reflect-rec-label');
     if (!state.reflectRecording) lbl.textContent = 'Response typed';
   } else {
-    if (!state.reflectRecording && !state.selectedChip) {
-      document.getElementById('feedback-btn').disabled = true;
+    // Text was cleared — reset reflect state unless voice already recorded
+    if (!state.reflectRecording) {
+      state.reflectTranscript = state.selectedChip || '';
+      state.reflectDone = !!state.selectedChip;
+      document.getElementById('feedback-btn').disabled = !state.selectedChip;
+      // Restore label only if voice hasn't been used
+      const voiceUsed = lbl.textContent === 'Recording saved';
+      if (!voiceUsed) lbl.textContent = 'Tap to answer';
     }
   }
 }
@@ -2265,7 +2294,7 @@ async function fetchFollowUpResponse(question) {
       const turnNum   = state.chatTurns;
       const isLastTurn = turnNum >= MAX_TURNS;
 
-      const systemPrompt = `You are Shiksha Sathi, a teaching coach for Indian school teachers.
+      const systemPrompt = `You are Shiksha Saathi, a teaching coach for Indian school teachers.
 
 The teacher just received this coaching note:
 ${noteContext}
@@ -2343,7 +2372,7 @@ async function copyNote() {
   const topic = state.sessionTopic;
   const date  = new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'2-digit'});
   const lines = [
-    `Shiksha Sathi — Coaching Note`,
+    `Shiksha Saathi — Coaching Note`,
     `${date}${subj?' · '+subj:''}${grade?', '+grade:''}${topic?' · '+topic:''}`,
     ``,
     `✅ What worked`,
@@ -2364,7 +2393,7 @@ async function copyAllTips() {
   const sessions = JSON.parse(localStorage.getItem('ss_sessions')||'[]');
   if (sessions.length===0) return;
   const lines = [
-    `Shiksha Sathi — All Tips`,
+    `Shiksha Saathi — All Tips`,
     ``,
     ...sessions.map(s=>`${s.dateDisplay}${s.subject?' · '+s.subject:''}${s.grade?', '+s.grade:''}\n💡 ${s.tip||s.tryThis.substring(0,80)}`),
   ];
@@ -2375,7 +2404,7 @@ async function copySession(i) {
   const sessions = JSON.parse(localStorage.getItem('ss_sessions')||'[]');
   const s = sessions[i]; if (!s) return;
   const lines = [
-    `Shiksha Sathi — ${s.dateDisplay}${s.subject?' · '+s.subject:''}${s.grade?', '+s.grade:''}${s.topic?' · '+s.topic:''}`,
+    `Shiksha Saathi — ${s.dateDisplay}${s.subject?' · '+s.subject:''}${s.grade?', '+s.grade:''}${s.topic?' · '+s.topic:''}`,
     ``,
     `✅ What worked`,
     s.strength,
