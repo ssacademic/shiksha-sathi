@@ -172,6 +172,11 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 .onboard-step-title{font-size:15px;font-weight:500;color:var(--ink);margin-bottom:3px;}
 .onboard-step-desc{font-size:13px;color:var(--ink2);line-height:1.5;}
 
+.offline-banner{background:#F0F0EE;border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:13px;color:var(--ink2);display:flex;align-items:flex-start;gap:8px;}
+.offline-banner svg{flex-shrink:0;margin-top:1px;color:var(--ink3);}
+.retry-banner{background:var(--teal-l);border:1px solid rgba(29,107,90,0.2);border-radius:10px;padding:12px 14px;display:none;flex-direction:column;gap:8px;}
+.retry-banner p{font-size:13px;color:var(--teal);}
+
 /* bottom nav */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--border);display:flex;padding:10px 0 20px;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;color:var(--ink3);font-size:11px;transition:color 0.15s;}
@@ -194,6 +199,11 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   <div class="api-banner" id="api-banner" style="display:none" onclick="navTo('screen-settings','nav-settings');showKeySection()">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     No API key — tap to add one. Coaching note will use a template for now.
+  </div>
+
+  <div class="offline-banner" id="offline-banner" style="display:none">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+    <span>You're offline — coaching note will use a template. Your input will be saved so you can get AI feedback when connected.</span>
   </div>
 
   <div class="card" style="display:flex;flex-direction:column;gap:14px;">
@@ -231,7 +241,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     </button>
     <div class="rec-label">
       <strong id="lesson-rec-label">Tap to start recording</strong>
-      <span id="lesson-rec-sub">Record your class — or describe what happened</span>
+      <span id="lesson-rec-sub">Record your class, or tell us what happened</span>
     </div>
     <div class="rec-timer" id="lesson-timer" style="display:none">0:00</div>
   </div>
@@ -303,8 +313,14 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <p class="subtext" style="margin-top:8px;">Your answer shapes the coaching note.</p>
   </div>
 
-  <div class="question-box">
+  <div class="question-box" id="question-box">
     <p id="reflection-question">"You taught a full lesson today — which moment felt most uncertain, and why?"</p>
+  </div>
+
+  <!-- shown while AI generates the question -->
+  <div id="question-loading" style="display:none;align-items:center;gap:10px;padding:4px 0;">
+    <div class="spinner" style="width:18px;height:18px;border-width:2px;"></div>
+    <span style="font-size:13px;color:var(--ink2);">Personalising your question…</span>
   </div>
 
   <div class="rec-area">
@@ -409,6 +425,12 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     </div>
   </div>
 
+  <!-- offline retry banner -->
+  <div class="retry-banner" id="retry-banner">
+    <p>📶 This note was generated offline using a template. Tap below for a personalised AI note — your lesson input is saved.</p>
+    <button onclick="retryWithAI()" style="padding:9px 14px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;align-self:flex-start;">Get AI coaching note</button>
+  </div>
+
   <!-- unsaved warning — at bottom, near save button -->
   <div id="unsaved-warning" style="display:none;background:var(--amber-l);border:1px solid rgba(200,121,26,0.25);border-radius:10px;padding:12px 14px;">
     <p style="font-size:13px;color:var(--amber);margin-bottom:10px;">Note not saved — save it before leaving?</p>
@@ -432,16 +454,16 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       <!-- suggested questions as chips -->
       <div id="followup-suggestions" style="display:flex;flex-direction:column;gap:7px;"></div>
 
-      <!-- open text input — visible from start -->
+      <!-- chat thread — above input so new messages appear above the box -->
+      <div class="chat-thread" id="chat-thread" style="display:none;max-height:280px;overflow-y:auto;"></div>
+
+      <!-- open text input — always at bottom -->
       <div class="chat-input-row" id="chat-input-row">
         <textarea class="chat-input" id="chat-input" rows="2" placeholder="Or ask your own question…" onkeydown="onChatKeydown(event)"></textarea>
         <button class="chat-send" id="chat-send" onclick="sendFollowUp()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
       </div>
-
-      <!-- chat thread — appears after first exchange -->
-      <div class="chat-thread" id="chat-thread" style="display:none;"></div>
 
       <div class="chat-limit" id="chat-limit" style="display:none;"></div>
     </div>
@@ -655,7 +677,51 @@ window.addEventListener('DOMContentLoaded', () => {
   checkMediaRecorderSupport();
   checkOnboarding();
   updateGreeting();
+  checkOffline();
+  // Listen for connectivity changes
+  window.addEventListener('online',  () => { checkOffline(); checkApiBanner(); });
+  window.addEventListener('offline', () => { checkOffline(); });
 });
+
+function checkOffline() {
+  const offline = !navigator.onLine;
+  document.getElementById('offline-banner').style.display = offline ? 'flex' : 'none';
+}
+
+// ── C1: Retry with AI after offline session ──
+async function retryWithAI() {
+  if (!navigator.onLine) {
+    document.getElementById('retry-banner').querySelector('p').textContent =
+      'Still offline — connect to the internet and try again.';
+    return;
+  }
+  const key = lsGet('ss_gemini_key');
+  if (!key) {
+    navTo('screen-settings','nav-settings');
+    showKeySection();
+    return;
+  }
+  // Hide retry banner, show spinner
+  document.getElementById('retry-banner').style.display = 'none';
+  document.getElementById('note-generating').style.display = 'flex';
+  document.getElementById('note-card').style.display = 'none';
+  document.getElementById('save-btn').disabled = true;
+
+  const note = await callGemini(key);
+  document.getElementById('note-strength').textContent = note.strength;
+  document.getElementById('note-pattern').textContent  = note.pattern;
+  document.getElementById('note-try').textContent      = note.try;
+  document.getElementById('note-tip').textContent      = note.tip || '';
+  state.coachingNote = note;
+  renderFollowUpSuggestions(note.followups);
+
+  document.getElementById('note-generating').style.display = 'none';
+  document.getElementById('note-card').style.display = 'flex';
+  document.getElementById('save-btn').disabled = false;
+  document.getElementById('copy-note-btn').style.display = 'block';
+  document.getElementById('note-error').style.display = 'none';
+  document.getElementById('note-no-key').style.display = 'none';
+}
 
 function updateGreeting() {
   const name = lsGet('ss_name');
@@ -874,7 +940,7 @@ function runDummyTranscription(type, blob) {
 // ═══════════════════════════════════
 //  TRANSITIONS
 // ═══════════════════════════════════
-function proceedToReflection() {
+async function proceedToReflection() {
   const subj  = document.getElementById('subject').value;
   const grd   = document.getElementById('grade').value;
   const topic = document.getElementById('topic').value.trim();
@@ -888,19 +954,80 @@ function proceedToReflection() {
   state.sessionSubject = subj;
   state.sessionGrade   = grd;
   state.sessionTopic   = topic;
-  // Pick reflection question targeting weakest rubric dimension
-  // Inject topic for specificity
-  const { question, dimId } = getReflectionQuestionAndDim(state.rubricSignals);
+
+  // Get fallback question immediately from question bank
+  const { question: fallbackQ, dimId } = getReflectionQuestionAndDim(state.rubricSignals);
   const topicPhrase = topic ? `in your ${topic} lesson` : 'today';
-  const questionWithTopic = question.replace(
-    /today'?s? lesson|today/i,
-    topicPhrase
-  ) || question;
-  state.reflectionQuestion = questionWithTopic;
+  const fallbackWithTopic = fallbackQ.replace(/today'?s? lesson|today/i, topicPhrase) || fallbackQ;
+
   state.weakestDim = dimId;
-  document.getElementById('reflection-question').textContent = `"${questionWithTopic}"`;
+
+  // Navigate to Screen 2 immediately with fallback question
+  document.getElementById('reflection-question').textContent = `"${fallbackWithTopic}"`;
+  state.reflectionQuestion = fallbackWithTopic;
   renderReflectionChips(dimId);
   goTo('screen-reflect');
+
+  // C2: Try to get an AI-generated question if online + key available
+  const key = lsGet('ss_gemini_key');
+  if (key && navigator.onLine && state.lessonTranscript) {
+    document.getElementById('question-box').style.display = 'none';
+    document.getElementById('question-loading').style.display = 'flex';
+
+    const aiQ = await generateAIQuestion(key, dimId);
+    if (aiQ) {
+      state.reflectionQuestion = aiQ;
+      document.getElementById('reflection-question').textContent = `"${aiQ}"`;
+    }
+    document.getElementById('question-loading').style.display = 'none';
+    document.getElementById('question-box').style.display = 'block';
+  }
+}
+
+// C2: Generate a targeted reflection question using AI
+async function generateAIQuestion(apiKey, dimId) {
+  const dimLabels = {
+    prior_review: 'connecting to prior knowledge',
+    small_steps:  'breaking explanation into small steps with practice',
+    cfu_quality:  'checking individual understanding',
+    cold_call:    'calling on specific students by name',
+    wait_time:    'giving students time to think before answering',
+    student_talk: 'getting students to talk and explain',
+    uptake:       'building on what students say',
+    back_row:     'reaching all students including quieter ones',
+  };
+  const dimLabel = dimLabels[dimId] || 'teaching effectiveness';
+  const excerpt  = state.lessonTranscript.substring(0, 300);
+
+  const prompt = `You are a teaching coach. A teacher described their lesson as:
+"${excerpt}"
+
+The weakest area detected was: ${dimLabel}.
+
+Write ONE specific reflection question (max 20 words) that:
+- References something the teacher actually mentioned above
+- Helps them notice what happened with: ${dimLabel}
+- Is warm, direct, not preachy
+
+Reply with ONLY the question. No preamble, no quotes.`;
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
+      { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          contents:[{role:'user', parts:[{text:prompt}]}],
+          generationConfig:{ temperature:0.7, maxOutputTokens:60 }
+        })
+      }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    const q = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    return (q && q.length > 10 && q.length < 120) ? q : null;
+  } catch(e) {
+    return null;
+  }
 }
 
 function proceedToFeedback() {
@@ -972,13 +1099,33 @@ async function showFeedbackScreen() {
   document.getElementById('note-card').style.display='none';
   document.getElementById('note-error').style.display='none';
   document.getElementById('note-no-key').style.display='none';
+  document.getElementById('retry-banner').style.display='none';
   document.getElementById('save-btn').disabled=true;
 
-  const key=localStorage.getItem('ss_gemini_key');
-  let note = key ? await callGemini(key) : (await delay(800), fallbackNote());
+  const key = lsGet('ss_gemini_key');
+  const isOffline = !navigator.onLine;
+  let note;
+
+  if (!key) {
+    note = await delay(800).then(() => fallbackNote());
+  } else if (isOffline) {
+    note = fallbackNote();
+    await delay(600);
+  } else {
+    note = await callGemini(key);
+  }
 
   // show appropriate warning
-  if (!key) document.getElementById('note-no-key').style.display='block';
+  if (!key) {
+    document.getElementById('note-no-key').style.display = 'block';
+    document.getElementById('retry-banner').style.display = 'none';
+  } else if (isOffline) {
+    document.getElementById('retry-banner').style.display = 'flex';
+    document.getElementById('note-no-key').style.display = 'none';
+  } else {
+    document.getElementById('retry-banner').style.display = 'none';
+    document.getElementById('note-no-key').style.display = 'none';
+  }
 
   document.getElementById('note-strength').textContent = note.strength;
   document.getElementById('note-pattern').textContent  = note.pattern;
@@ -1164,11 +1311,14 @@ function fallbackNote() {
     },
   };
 
-  // Find weakest dimension
+  // Find weakest dimension — rotate among ties
   let dimId = 'cfu_quality'; // default
   if (signals) {
-    const sorted = Object.entries(signals).sort((a,b) => a[1].score - b[1].score);
-    dimId = sorted[0][0];
+    const sorted  = Object.entries(signals).sort((a,b) => a[1].score - b[1].score);
+    const lowest  = sorted[0][1].score;
+    const tied    = sorted.filter(([,v]) => v.score === lowest);
+    const sessions = lsGetJSON('ss_sessions', []);
+    dimId = tied[sessions.length % tied.length][0];
   }
 
   const content = DIM_CONTENT[dimId] || DIM_CONTENT['cfu_quality'];
@@ -1218,7 +1368,7 @@ function saveSession() {
 function newSession() {
   Object.assign(state,{
     lessonRecording:false,reflectRecording:false,
-    lessonDone:false,reflectDone:false,
+    lessonDone:false,reflectDone:false,  // set false BEFORE navTo to prevent loop
     lessonSeconds:0,reflectSeconds:0,
     lessonMediaRecorder:null,reflectMediaRecorder:null,
     lessonTranscript:'',reflectTranscript:'',
@@ -1230,7 +1380,7 @@ function newSession() {
   const lb=document.getElementById('lesson-rec-btn');
   lb.className='rec-btn idle'; lb.innerHTML=micIcon();
   document.getElementById('lesson-rec-label').textContent='Tap to start recording';
-  document.getElementById('lesson-rec-sub').textContent='Record your full class period';
+  document.getElementById('lesson-rec-sub').textContent='Record your class, or tell us what happened';
   document.getElementById('lesson-timer').style.display='none';
   document.getElementById('lesson-status').style.display='none';
   document.getElementById('proceed-btn').disabled=true;
@@ -1311,10 +1461,11 @@ function renderJourney() {
   for (let i=6;i>=0;i--) {
     const d=new Date(); d.setDate(d.getDate()-i);
     const ds=d.toDateString();
-    const active=sessions.some(s=>new Date(s.date).toDateString()===ds);
+    const count=sessions.filter(s=>new Date(s.date).toDateString()===ds).length;
+    const height = count===0 ? 8 : count===1 ? 14 : count===2 ? 21 : 28;
     const div=document.createElement('div');
-    div.className='streak-day'+(active?' active':'');
-    div.style.cssText=`height:${active?28:10}px;flex:1;`;
+    div.className='streak-day'+(count>0?' active':'');
+    div.style.cssText=`height:${height}px;flex:1;`;
     bar.appendChild(div);
     const lbl=document.createElement('span');
     lbl.style.cssText='font-size:10px;color:var(--ink3);text-align:center;flex:1;';
@@ -1633,7 +1784,6 @@ function onLessonTextInput() {
   const topic = document.getElementById('topic').value.trim();
 
   if (text.length >= 20 && subj && grd && topic) {
-    // Commit the text as the lesson transcript immediately
     state.lessonTranscript = text;
     state.rubricSignals    = runRubricEngine(text);
     state.lessonDone       = true;
@@ -1651,12 +1801,21 @@ function onLessonTextInput() {
     document.getElementById('lesson-rec-label').textContent = 'Using typed description';
     document.getElementById('lesson-rec-sub').textContent   = 'Text input active';
     document.getElementById('proceed-btn').disabled = false;
-  } else if (state.lessonDone && state.lessonTranscript === text.slice(0, state.lessonTranscript.length)) {
-    // Teacher is editing — re-evaluate
-    if (text.length < 20 || !subj || !grd || !topic) {
+  } else {
+    // Text was cleared or incomplete — reset if text was the active input
+    // (don't reset if voice recording was used)
+    const wasTextInput = document.getElementById('lesson-rec-label').textContent === 'Using typed description';
+    if (wasTextInput && !state.lessonRecording) {
+      state.lessonDone       = false;
+      state.lessonTranscript = '';
+      state.rubricSignals    = null;
       document.getElementById('proceed-btn').disabled = true;
       document.getElementById('lesson-status').style.display = 'none';
-      state.lessonDone = false;
+      const recBtn = document.getElementById('lesson-rec-btn');
+      recBtn.className = 'rec-btn idle';
+      recBtn.innerHTML = micIcon();
+      document.getElementById('lesson-rec-label').textContent = 'Tap to start recording';
+      document.getElementById('lesson-rec-sub').textContent   = 'Record your class, or tell us what happened';
     }
   }
 }
@@ -2129,19 +2288,21 @@ const FALLBACK_QUESTIONS = [
 function getReflectionQuestionAndDim(signals) {
   const sessions = lsGetJSON('ss_sessions', []);
 
-  // Priority 1: target weakest rubric dimension
   if (signals) {
-    const entries = Object.entries(signals).sort((a,b)=>a[1].score-b[1].score);
-    const weakest = entries[0];
-    if (weakest[1].score < 2) {
-      const dimId = weakest[0];
+    const entries = Object.entries(signals).sort((a,b) => a[1].score - b[1].score);
+    const lowestScore = entries[0][1].score;
+
+    if (lowestScore < 2) {
+      // Find ALL dimensions tied at the lowest score — rotate among them
+      const tied = entries.filter(([,v]) => v.score === lowestScore);
+      const dimId = tied[sessions.length % tied.length][0];
       const bank  = REFLECTION_QUESTION_BANK[dimId];
-      const q = bank ? bank[sessions.length % bank.length] : FALLBACK_QUESTIONS[0];
+      const q = bank ? bank[Math.floor(sessions.length / tied.length) % bank.length] : FALLBACK_QUESTIONS[0];
       return { question: q, dimId };
     }
   }
 
-  // Priority 2: rotate across dimensions by session history
+  // All dimensions strong — rotate across all dimensions
   const dimKeys = Object.keys(REFLECTION_QUESTION_BANK);
   if (sessions.length > 0) {
     const dimIdx = sessions.length % dimKeys.length;
@@ -2268,7 +2429,8 @@ function addChatBubble(role, text) {
   div.className = 'chat-bubble ' + role;
   div.textContent = text;
   thread.appendChild(div);
-  thread.scrollTop = thread.scrollHeight;
+  // scroll to latest message
+  setTimeout(() => thread.scrollTop = thread.scrollHeight, 50);
   return div;
 }
 
