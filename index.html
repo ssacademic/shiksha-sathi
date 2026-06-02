@@ -188,7 +188,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   <div>
     <p class="wordmark">Shiksha Sathi</p>
     <p class="tagline">Your daily teaching coach</p>
-    <h1>Today's lesson</h1>
+    <h1 id="screen1-heading">Let's talk about today's lesson</h1>
   </div>
 
   <div class="api-banner" id="api-banner" style="display:none" onclick="navTo('screen-settings','nav-settings');showKeySection()">
@@ -200,7 +200,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <div class="field-row">
       <div class="field">
         <label>Subject</label>
-        <select id="subject" onchange="onContextChange()">
+        <select id="subject" onchange="onContextChange();onLessonTextInput()">
           <option value="">— pick —</option>
           <option>Maths</option><option>Science</option><option>Hindi</option>
           <option>English</option><option>Social Science</option><option>Other</option>
@@ -208,7 +208,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       </div>
       <div class="field">
         <label>Class</label>
-        <select id="grade" onchange="onContextChange()">
+        <select id="grade" onchange="onContextChange();onLessonTextInput()">
           <option value="">— pick —</option>
           <option>Class 3</option><option>Class 4</option><option>Class 5</option>
           <option>Class 6</option><option>Class 7</option><option>Class 8</option>
@@ -216,8 +216,8 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       </div>
     </div>
     <div class="field">
-      <label>Topic (optional)</label>
-      <input type="text" id="topic" placeholder="e.g. Fractions, Parts of a plant…"/>
+      <label>Topic</label>
+      <input type="text" id="topic" placeholder="e.g. Fractions, Photosynthesis, Past tense…" oninput="onLessonTextInput()"/>
     </div>
   </div>
 
@@ -231,7 +231,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     </button>
     <div class="rec-label">
       <strong id="lesson-rec-label">Tap to start recording</strong>
-      <span id="lesson-rec-sub">Record your full class period</span>
+      <span id="lesson-rec-sub">Record your class — or describe what happened</span>
     </div>
     <div class="rec-timer" id="lesson-timer" style="display:none">0:00</div>
   </div>
@@ -243,10 +243,31 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     </div>
   </div>
 
-  <!-- demo mode toggle -->
+  <!-- demo mode toggle — small, secondary -->
   <div style="display:flex;align-items:center;gap:8px;margin-top:-8px;">
-    <span style="font-size:12px;color:var(--ink3);">No audio? Use a</span>
-    <button onclick="toggleDemoMode()" id="demo-toggle-btn" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;padding:0;">sample lesson</button>
+    <span style="font-size:12px;color:var(--ink3);">Need a sample?</span>
+    <button onclick="toggleDemoMode()" id="demo-toggle-btn" style="font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;padding:0;">Use a demo lesson</button>
+  </div>
+
+  <!-- divider -->
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+    <span style="font-size:12px;color:var(--ink3);">or</span>
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+  </div>
+
+  <!-- text description — equal-weight option -->
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <p style="font-size:14px;font-weight:500;color:var(--ink);">Describe what happened in class</p>
+      <button onclick="toggleLessonText()" id="lesson-text-toggle-btn" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;">show / hide</button>
+    </div>
+    <div id="lesson-text-panel" style="display:flex;flex-direction:column;gap:8px;">
+      <textarea id="lesson-text-input" rows="4"
+        placeholder="What happened in class today? e.g. I started by asking about yesterday's lesson. Most students answered together. I explained fractions on the board for about 15 minutes. A few students at the back seemed lost. I asked 'everyone understood?' and moved on…"
+        style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
+        oninput="onLessonTextInput()"></textarea>
+    </div>
   </div>
   <div id="demo-panel" style="display:none;background:var(--teal-l);border:1px solid rgba(29,107,90,0.2);border-radius:10px;padding:14px;gap:10px;flex-direction:column;">
     <p style="font-size:12px;font-weight:500;color:var(--teal);text-transform:uppercase;letter-spacing:0.05em;">Demo mode — sample lesson</p>
@@ -305,6 +326,20 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   <div id="chips-wrap" style="display:none">
     <p class="chips-label">Or pick what fits your lesson today:</p>
     <div class="chips-row" id="chips-row"></div>
+  </div>
+
+  <!-- text answer option — equal weight -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <p style="font-size:14px;font-weight:500;color:var(--ink);">Or write your response</p>
+      <button onclick="toggleReflectText()" id="reflect-text-toggle" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;">show / hide</button>
+    </div>
+    <div id="reflect-text-panel" style="display:none;flex-direction:column;gap:6px;">
+      <textarea id="reflect-text-input" rows="3"
+        placeholder="Type your answer here…"
+        style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
+        oninput="onReflectTextInput()"></textarea>
+    </div>
   </div>
 
   <button class="btn-primary" id="feedback-btn" disabled onclick="proceedToFeedback()">
@@ -381,16 +416,16 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       <!-- suggested questions as chips -->
       <div id="followup-suggestions" style="display:flex;flex-direction:column;gap:7px;"></div>
 
-      <!-- chat thread -->
-      <div class="chat-thread" id="chat-thread" style="display:none;"></div>
-
-      <!-- input row — hidden after 3 turns -->
-      <div class="chat-input-row" id="chat-input-row" style="display:none;">
-        <textarea class="chat-input" id="chat-input" rows="2" placeholder="Ask anything about this coaching note…" onkeydown="onChatKeydown(event)"></textarea>
+      <!-- open text input — visible from start -->
+      <div class="chat-input-row" id="chat-input-row">
+        <textarea class="chat-input" id="chat-input" rows="2" placeholder="Or ask your own question…" onkeydown="onChatKeydown(event)"></textarea>
         <button class="chat-send" id="chat-send" onclick="sendFollowUp()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
       </div>
+
+      <!-- chat thread — appears after first exchange -->
+      <div class="chat-thread" id="chat-thread" style="display:none;"></div>
 
       <div class="chat-limit" id="chat-limit" style="display:none;"></div>
     </div>
@@ -603,7 +638,19 @@ window.addEventListener('DOMContentLoaded', () => {
   loadProfileDisplay();
   checkMediaRecorderSupport();
   checkOnboarding();
+  updateGreeting();
 });
+
+function updateGreeting() {
+  const name = lsGet('ss_name');
+  const heading = document.getElementById('screen1-heading');
+  if (!heading) return;
+  if (name) {
+    heading.textContent = `Hi ${name.split(' ')[0]} — let's talk about today's lesson`;
+  } else {
+    heading.textContent = `Hi — let's talk about today's lesson`;
+  }
+}
 
 function checkOnboarding() {
   const seen = lsGet('ss_onboarded');
@@ -670,6 +717,12 @@ function goTo(id) {
   window.scrollTo(0,0);
 }
 function navTo(screenId, navId) {
+  // If navigating back to record screen and a session was completed
+  // but not saved, reset so the UI is clean
+  if (screenId === 'screen-record' && state.lessonDone && !state.saving) {
+    newSession();
+    return; // newSession calls navTo itself at the end
+  }
   goTo(screenId);
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById(navId).classList.add('active');
@@ -785,19 +838,19 @@ function runDummyTranscription(type, blob) {
 //  TRANSITIONS
 // ═══════════════════════════════════
 function proceedToReflection() {
-  const subj = document.getElementById('subject').value;
-  const grd  = document.getElementById('grade').value;
-  if (!subj || !grd) {
-    // briefly highlight the fields
-    ['subject','grade'].forEach(id => {
+  const subj  = document.getElementById('subject').value;
+  const grd   = document.getElementById('grade').value;
+  const topic = document.getElementById('topic').value.trim();
+  if (!subj || !grd || !topic) {
+    ['subject','grade','topic'].forEach(id => {
       const el = document.getElementById(id);
-      if (!el.value) { el.style.borderColor='var(--red)'; setTimeout(()=>el.style.borderColor='',2000); }
+      if (!el.value.trim()) { el.style.borderColor='var(--red)'; setTimeout(()=>el.style.borderColor='',2000); }
     });
     return;
   }
   state.sessionSubject = subj;
   state.sessionGrade   = grd;
-  state.sessionTopic   = document.getElementById('topic').value||'';
+  state.sessionTopic   = topic;
   // Pick reflection question targeting weakest rubric dimension
   const { question, dimId } = getReflectionQuestionAndDim(state.rubricSignals);
   state.reflectionQuestion = question;
@@ -1091,7 +1144,9 @@ function newSession() {
   document.getElementById('followup-toggle').innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Ask a follow-up`;
   document.getElementById('chat-thread').innerHTML='';
   document.getElementById('chat-thread').style.display='none';
-  document.getElementById('chat-input-row').style.display='none';
+  document.getElementById('chat-input-row').style.display='flex';
+  document.getElementById('chat-input').value='';
+  document.getElementById('chat-input').placeholder='Or ask your own question…';
   document.getElementById('chat-limit').style.display='none';
   document.getElementById('followup-suggestions').innerHTML='';
 
@@ -1099,6 +1154,13 @@ function newSession() {
   document.getElementById('demo-panel').style.display='none';
   document.getElementById('demo-select').value='';
   document.getElementById('demo-toggle-btn').textContent='sample lesson';
+  // reset text input panels — lesson text shown open by default
+  document.getElementById('lesson-text-panel').style.display='flex';
+  document.getElementById('lesson-text-input').value='';
+  document.getElementById('lesson-text-toggle-btn').textContent='show / hide';
+  document.getElementById('reflect-text-panel').style.display='none';
+  document.getElementById('reflect-text-input').value='';
+  document.getElementById('reflect-text-toggle').textContent='show / hide';
 
   navTo('screen-record','nav-home');
   checkApiBanner();
@@ -1226,6 +1288,7 @@ function saveProfile() {
   if (name)   lsSet('ss_name', name);
   if (school) lsSet('ss_school', school);
   loadProfileDisplay();
+  updateGreeting();
   const btn = document.querySelector('#screen-settings .btn-primary');
   const orig = btn.textContent;
   // Show feedback even if fields were empty
@@ -1409,8 +1472,6 @@ weak: {
 //  DEMO MODE UI HANDLERS
 // ═══════════════════════════════════
 function onContextChange() {
-  // If a demo transcript is loaded but context fields changed,
-  // warn that the transcript no longer matches
   if (state.lessonDone && state.lessonTranscript) {
     const pill = document.getElementById('status-pill');
     const st   = document.getElementById('status-text');
@@ -1418,6 +1479,79 @@ function onContextChange() {
       pill.className = 'pill processing dot';
       pill.textContent = 'Context changed';
       st.textContent = 'Sample transcript may not match new subject/class';
+    }
+  }
+}
+
+// ── Screen 1 text input ──
+function toggleLessonText() {
+  const panel = document.getElementById('lesson-text-panel');
+  const btn   = document.getElementById('lesson-text-toggle-btn');
+  const show  = panel.style.display === 'none' || !panel.style.display;
+  panel.style.display = show ? 'flex' : 'none';
+  btn.textContent = show ? 'show / hide' : 'show / hide';
+}
+
+function onLessonTextInput() {
+  const text  = document.getElementById('lesson-text-input').value.trim();
+  const subj  = document.getElementById('subject').value;
+  const grd   = document.getElementById('grade').value;
+  const topic = document.getElementById('topic').value.trim();
+
+  if (text.length >= 20 && subj && grd && topic) {
+    // Commit the text as the lesson transcript immediately
+    state.lessonTranscript = text;
+    state.rubricSignals    = runRubricEngine(text);
+    state.lessonDone       = true;
+
+    document.getElementById('lesson-status').style.display = 'block';
+    const pill = document.getElementById('status-pill');
+    const st   = document.getElementById('status-text');
+    pill.className   = 'pill done-pill dot';
+    pill.textContent = 'Description ready';
+    st.textContent   = 'Ready to continue';
+
+    const recBtn = document.getElementById('lesson-rec-btn');
+    recBtn.className = 'rec-btn done';
+    recBtn.innerHTML = checkIcon();
+    document.getElementById('lesson-rec-label').textContent = 'Using typed description';
+    document.getElementById('lesson-rec-sub').textContent   = 'Text input active';
+    document.getElementById('proceed-btn').disabled = false;
+  } else if (state.lessonDone && state.lessonTranscript === text.slice(0, state.lessonTranscript.length)) {
+    // Teacher is editing — re-evaluate
+    if (text.length < 20 || !subj || !grd || !topic) {
+      document.getElementById('proceed-btn').disabled = true;
+      document.getElementById('lesson-status').style.display = 'none';
+      state.lessonDone = false;
+    }
+  }
+}
+
+// submitLessonText kept as no-op for safety (button removed but may be called elsewhere)
+function submitLessonText() { onLessonTextInput(); }
+
+// ── Screen 2 text input ──
+function toggleReflectText() {
+  const panel = document.getElementById('reflect-text-panel');
+  const btn   = document.getElementById('reflect-text-toggle');
+  const show  = panel.style.display === 'none' || !panel.style.display;
+  panel.style.display = show ? 'flex' : 'none';
+  btn.textContent = show ? 'hide' : 'Write your response';
+  if (show) document.getElementById('reflect-text-input').focus();
+}
+
+function onReflectTextInput() {
+  const val = document.getElementById('reflect-text-input').value.trim();
+  if (val.length > 5) {
+    state.reflectTranscript = val;
+    state.reflectDone = true;
+    document.getElementById('feedback-btn').disabled = false;
+    // Update recorder label
+    const lbl = document.getElementById('reflect-rec-label');
+    if (!state.reflectRecording) lbl.textContent = 'Response typed';
+  } else {
+    if (!state.reflectRecording && !state.selectedChip) {
+      document.getElementById('feedback-btn').disabled = true;
     }
   }
 }
@@ -1906,10 +2040,8 @@ function onChatKeydown(e) {
 }
 
 function submitFollowUp(question) {
-  // Called when a suggestion chip is tapped
   document.getElementById('followup-suggestions').style.display = 'none';
-  document.getElementById('chat-thread').style.display  = 'flex';
-  document.getElementById('chat-input-row').style.display = 'flex';
+  document.getElementById('chat-thread').style.display = 'flex';
   addChatBubble('teacher', question);
   fetchFollowUpResponse(question);
 }
@@ -1920,8 +2052,7 @@ function sendFollowUp() {
   if (!text) return;
   input.value = '';
   document.getElementById('followup-suggestions').style.display = 'none';
-  document.getElementById('chat-thread').style.display  = 'flex';
-  document.getElementById('chat-input-row').style.display = 'flex';
+  document.getElementById('chat-thread').style.display = 'flex';
   addChatBubble('teacher', text);
   fetchFollowUpResponse(text);
 }
