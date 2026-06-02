@@ -104,7 +104,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 .timeline-meta{font-size:12px;color:var(--ink3);}
 .timeline-title{font-size:14px;font-weight:500;color:var(--ink);margin-top:2px;}
 .timeline-preview{font-size:13px;color:var(--ink2);margin-top:3px;line-height:1.45;}
-.timeline-expanded{display:none;margin-top:10px;background:var(--bg);border-radius:10px;padding:14px;border:1px solid var(--border);}
+.timeline-expanded{display:none;margin-top:10px;background:var(--surface);border-radius:10px;padding:14px;border:1px solid var(--border);}
 .timeline-expanded.open{display:block;}
 .exp-section{margin-bottom:10px;}
 .exp-section:last-child{margin-bottom:0;}
@@ -582,8 +582,18 @@ function runDummyTranscription(type, blob) {
 //  TRANSITIONS
 // ═══════════════════════════════════
 function proceedToReflection() {
-  state.sessionSubject = document.getElementById('subject').value||'';
-  state.sessionGrade   = document.getElementById('grade').value||'';
+  const subj = document.getElementById('subject').value;
+  const grd  = document.getElementById('grade').value;
+  if (!subj || !grd) {
+    // briefly highlight the fields
+    ['subject','grade'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value) { el.style.borderColor='var(--red)'; setTimeout(()=>el.style.borderColor='',2000); }
+    });
+    return;
+  }
+  state.sessionSubject = subj;
+  state.sessionGrade   = grd;
   state.sessionTopic   = document.getElementById('topic').value||'';
   const qs = [
     "You taught a full lesson today — which moment felt most uncertain, and why?",
@@ -652,7 +662,7 @@ Teacher reflection (their answer to "${state.reflectionQuestion}"): ${state.refl
 
   try {
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite-preview-06-17:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
       { method:'POST', headers:{'Content-Type':'application/json'},
         body:JSON.stringify({contents:[{parts:[{text:prompt}]}], generationConfig:{temperature:0.7,maxOutputTokens:500}}) }
     );
@@ -698,6 +708,8 @@ function saveSession() {
   localStorage.setItem('ss_sessions',JSON.stringify(sessions));
   const btn=document.getElementById('save-btn');
   btn.textContent='Saved ✓'; btn.disabled=true;
+  // auto-reset after brief pause so teacher sees confirmation
+  setTimeout(()=>newSession(), 1500);
 }
 
 // ═══════════════════════════════════
