@@ -7,519 +7,438 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg:      #F5F0E8;
-    --surface: #FDFAF4;
-    --ink:     #1C1C1A;
-    --ink2:    #5A5850;
-    --ink3:    #9A9890;
-    --teal:    #1D6B5A;
-    --teal-l:  #E6F0ED;
-    --amber:   #C8791A;
-    --amber-l: #FDF3E3;
-    --red:     #B84040;
-    --red-l:   #FDEAEA;
-    --blue-l:  #EEF3FF;
-    --blue:    #3B5FBE;
-    --border:  rgba(28,28,26,0.12);
-    --radius:  14px;
-    --shadow:  0 2px 16px rgba(28,28,26,0.08);
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    height: 100%;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-  .app {
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 0 20px 40px;
-  }
-  .screen { display: none; flex-direction: column; gap: 24px; padding-top: 48px; animation: fadeIn 0.3s ease; }
-  .screen.active { display: flex; }
-  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+:root {
+  --bg:      #F5F0E8;
+  --surface: #FDFAF4;
+  --ink:     #1C1C1A;
+  --ink2:    #5A5850;
+  --ink3:    #9A9890;
+  --teal:    #1D6B5A;
+  --teal-l:  #E6F0ED;
+  --amber:   #C8791A;
+  --amber-l: #FDF3E3;
+  --red:     #B84040;
+  --red-l:   #FDEAEA;
+  --blue-l:  #EEF3FF;
+  --blue:    #3B5FBE;
+  --border:  rgba(28,28,26,0.12);
+  --radius:  14px;
+  --shadow:  0 2px 16px rgba(28,28,26,0.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+.app{min-height:100dvh;display:flex;flex-direction:column;max-width:480px;margin:0 auto;padding:0 20px 40px;}
+.screen{display:none;flex-direction:column;gap:24px;padding-top:48px;animation:fadeIn 0.3s ease;}
+.screen.active{display:flex;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.wordmark{font-family:'Lora',serif;font-size:13px;font-weight:500;letter-spacing:0.08em;color:var(--teal);text-transform:uppercase;margin-bottom:-8px;}
+h1{font-family:'Lora',serif;font-size:26px;font-weight:600;line-height:1.25;}
+h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
+.subtext{font-size:14px;color:var(--ink2);line-height:1.55;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-size:12px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink2);}
+.field select,.field input{appearance:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);outline:none;transition:border-color 0.15s;width:100%;}
+.field select:focus,.field input:focus{border-color:var(--teal);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.rec-area{display:flex;flex-direction:column;align-items:center;gap:14px;padding:28px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
+.rec-btn{width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s,box-shadow 0.15s;position:relative;}
+.rec-btn:active{transform:scale(0.95);}
+.rec-btn.idle{background:var(--teal);box-shadow:0 4px 20px rgba(29,107,90,0.35);}
+.rec-btn.idle:hover{box-shadow:0 6px 28px rgba(29,107,90,0.45);transform:translateY(-1px);}
+.rec-btn.recording{background:var(--red);box-shadow:0 4px 20px rgba(184,64,64,0.4);animation:pulse 1.4s ease-in-out infinite;}
+.rec-btn.done{background:#e8e4da;box-shadow:none;cursor:default;}
+@keyframes pulse{0%,100%{box-shadow:0 4px 20px rgba(184,64,64,0.4);}50%{box-shadow:0 4px 36px rgba(184,64,64,0.65);}}
+.rec-btn.recording::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--red);opacity:0;animation:ring 1.4s ease-out infinite;}
+@keyframes ring{0%{opacity:0.6;transform:scale(1);}100%{opacity:0;transform:scale(1.35);}}
+.rec-label{font-size:14px;color:var(--ink2);text-align:center;}
+.rec-label strong{color:var(--ink);display:block;font-size:15px;font-weight:500;}
+.rec-timer{font-family:'Lora',serif;font-size:22px;color:var(--red);letter-spacing:0.04em;}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:4px 10px;border-radius:20px;}
+.pill.processing{background:var(--amber-l);color:var(--amber);}
+.pill.done-pill{background:var(--teal-l);color:var(--teal);}
+.pill.error-pill{background:var(--red-l);color:var(--red);}
+.pill.dot::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.btn-primary{display:block;width:100%;padding:14px;background:var(--teal);color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;border:none;border-radius:10px;cursor:pointer;text-align:center;transition:background 0.15s,transform 0.1s;}
+.btn-primary:hover{background:#175a4a;}
+.btn-primary:active{transform:scale(0.98);}
+.btn-primary:disabled{background:var(--ink3);cursor:not-allowed;transform:none;}
+.btn-ghost{display:block;width:100%;padding:13px;background:transparent;color:var(--ink2);font-family:'DM Sans',sans-serif;font-size:14px;border:1px solid var(--border);border-radius:10px;cursor:pointer;text-align:center;transition:border-color 0.15s,color 0.15s;}
+.btn-ghost:hover{border-color:var(--teal);color:var(--teal);}
+.question-box{background:var(--teal-l);border-left:3px solid var(--teal);border-radius:0 var(--radius) var(--radius) 0;padding:16px 18px;}
+.question-box p{font-family:'Lora',serif;font-size:16px;color:var(--teal);line-height:1.5;font-style:italic;}
+.note-section{display:flex;flex-direction:column;gap:8px;}
+.note-tag{font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border-radius:4px;display:inline-block;align-self:flex-start;}
+.note-tag.strength{background:var(--teal-l);color:var(--teal);}
+.note-tag.pattern{background:var(--amber-l);color:var(--amber);}
+.note-tag.try{background:var(--blue-l);color:var(--blue);}
+.note-body{font-size:15px;color:var(--ink);line-height:1.65;}
+.note-sep{height:1px;background:var(--border);margin:4px 0;}
+.generating{display:flex;flex-direction:column;align-items:center;gap:12px;padding:32px 20px;text-align:center;}
+.spinner{width:32px;height:32px;border:3px solid var(--teal-l);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;}
+.info-tag{font-size:12px;padding:3px 10px;border-radius:20px;background:var(--bg);border:1px solid var(--border);color:var(--ink2);}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink2);cursor:pointer;margin-bottom:-8px;width:fit-content;}
+.back-link:hover{color:var(--teal);}
+.api-banner{background:var(--amber-l);border:1px solid rgba(200,121,26,0.25);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--amber);display:flex;align-items:center;gap:10px;cursor:pointer;}
 
-  .wordmark {
-    font-family: 'Lora', serif;
-    font-size: 13px; font-weight: 500;
-    letter-spacing: 0.08em;
-    color: var(--teal);
-    text-transform: uppercase;
-    margin-bottom: -8px;
-  }
-  h1 { font-family:'Lora',serif; font-size:26px; font-weight:600; line-height:1.25; }
-  h2 { font-family:'Lora',serif; font-size:20px; font-weight:500; }
-  .subtext { font-size:14px; color:var(--ink2); line-height:1.55; }
+/* journey */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;box-shadow:var(--shadow);}
+.stat-num{font-family:'Lora',serif;font-size:26px;font-weight:600;color:var(--teal);}
+.stat-label{font-size:11px;color:var(--ink3);margin-top:2px;line-height:1.3;}
+.streak-bar{display:flex;gap:4px;align-items:flex-end;height:32px;}
+.streak-day{width:16px;border-radius:3px 3px 0 0;background:var(--teal-l);transition:background 0.2s;}
+.streak-day.active{background:var(--teal);}
+.timeline-item{border-left:2px solid var(--teal-l);padding:0 0 20px 16px;position:relative;cursor:pointer;}
+.timeline-item:last-child{padding-bottom:0;border-left-color:transparent;}
+.timeline-item::before{content:'';position:absolute;left:-5px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--teal);border:2px solid var(--bg);}
+.timeline-meta{font-size:12px;color:var(--ink3);}
+.timeline-title{font-size:14px;font-weight:500;color:var(--ink);margin-top:2px;}
+.timeline-preview{font-size:13px;color:var(--ink2);margin-top:3px;line-height:1.45;}
+.timeline-expanded{display:none;margin-top:10px;background:var(--bg);border-radius:10px;padding:14px;border:1px solid var(--border);}
+.timeline-expanded.open{display:block;}
+.exp-section{margin-bottom:10px;}
+.exp-section:last-child{margin-bottom:0;}
+.exp-tag{font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;display:inline-block;margin-bottom:4px;}
+.exp-tag.s{background:var(--teal-l);color:var(--teal);}
+.exp-tag.p{background:var(--amber-l);color:var(--amber);}
+.exp-tag.t{background:var(--blue-l);color:var(--blue);}
+.exp-body{font-size:13px;color:var(--ink2);line-height:1.55;}
 
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
-  }
-  .field { display:flex; flex-direction:column; gap:6px; }
-  .field label { font-size:12px; font-weight:500; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink2); }
-  .field select, .field input {
-    appearance: none;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px; color: var(--ink);
-    outline: none;
-    transition: border-color 0.15s;
-    width: 100%;
-  }
-  .field select:focus, .field input:focus { border-color: var(--teal); }
-  .field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+/* settings */
+.profile-avatar{width:64px;height:64px;border-radius:50%;background:var(--teal-l);border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:24px;font-weight:600;color:var(--teal);}
+.profile-header{display:flex;align-items:center;gap:16px;padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:4px;}
+.profile-name{font-family:'Lora',serif;font-size:18px;font-weight:500;}
+.profile-school{font-size:13px;color:var(--ink2);}
+.setting-section{margin-top:16px;}
+.setting-section-title{font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;}
+.setting-row{display:flex;flex-direction:column;gap:6px;padding:12px 0;border-bottom:1px solid var(--border);}
+.setting-row:last-child{border-bottom:none;}
+.setting-label{font-size:14px;font-weight:500;color:var(--ink);}
+.setting-desc{font-size:13px;color:var(--ink3);}
+.key-input-wrap{position:relative;margin-top:6px;}
+.key-input-wrap input{padding-right:56px;font-family:monospace;font-size:13px;}
+.key-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:12px;color:var(--ink2);font-family:'DM Sans',sans-serif;}
+.key-status{font-size:13px;margin-top:5px;}
+.key-status.ok{color:var(--teal);}
+.key-status.err{color:var(--red);}
+.advanced-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:12px 0;border-bottom:1px solid var(--border);}
+.advanced-toggle span{font-size:14px;color:var(--ink2);}
+.advanced-toggle svg{transition:transform 0.2s;color:var(--ink3);}
+.advanced-toggle.open svg{transform:rotate(180deg);}
+.advanced-body{display:none;padding-top:4px;}
+.advanced-body.open{display:block;}
 
-  .rec-area {
-    display:flex; flex-direction:column; align-items:center; gap:14px;
-    padding:28px 20px;
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-  }
-  .rec-btn {
-    width:72px; height:72px; border-radius:50%; border:none; cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    transition:transform 0.15s, box-shadow 0.15s;
-    position:relative;
-  }
-  .rec-btn:active { transform:scale(0.95); }
-  .rec-btn.idle { background:var(--teal); box-shadow:0 4px 20px rgba(29,107,90,0.35); }
-  .rec-btn.idle:hover { box-shadow:0 6px 28px rgba(29,107,90,0.45); transform:translateY(-1px); }
-  .rec-btn.recording { background:var(--red); box-shadow:0 4px 20px rgba(184,64,64,0.4); animation:pulse 1.4s ease-in-out infinite; }
-  .rec-btn.done { background:#e8e4da; box-shadow:none; cursor:default; }
-  @keyframes pulse {
-    0%,100% { box-shadow:0 4px 20px rgba(184,64,64,0.4); }
-    50% { box-shadow:0 4px 36px rgba(184,64,64,0.65); }
-  }
-  .rec-btn.recording::after {
-    content:''; position:absolute; inset:-6px; border-radius:50%;
-    border:2px solid var(--red); opacity:0;
-    animation:ring 1.4s ease-out infinite;
-  }
-  @keyframes ring {
-    0% { opacity:0.6; transform:scale(1); }
-    100% { opacity:0; transform:scale(1.35); }
-  }
-  .rec-label { font-size:14px; color:var(--ink2); text-align:center; }
-  .rec-label strong { color:var(--ink); display:block; font-size:15px; font-weight:500; }
-  .rec-timer { font-family:'Lora',serif; font-size:22px; color:var(--red); letter-spacing:0.04em; }
-
-  .pill { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:4px 10px; border-radius:20px; }
-  .pill.processing { background:var(--amber-l); color:var(--amber); }
-  .pill.done-pill  { background:var(--teal-l);  color:var(--teal); }
-  .pill.error-pill { background:var(--red-l);   color:var(--red); }
-  .pill.dot::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
-
-  .btn-primary {
-    display:block; width:100%; padding:14px;
-    background:var(--teal); color:#fff;
-    font-family:'DM Sans',sans-serif; font-size:15px; font-weight:500;
-    border:none; border-radius:10px; cursor:pointer; text-align:center;
-    transition:background 0.15s, transform 0.1s;
-  }
-  .btn-primary:hover { background:#175a4a; }
-  .btn-primary:active { transform:scale(0.98); }
-  .btn-primary:disabled { background:var(--ink3); cursor:not-allowed; transform:none; }
-
-  .btn-ghost {
-    display:block; width:100%; padding:13px;
-    background:transparent; color:var(--ink2);
-    font-family:'DM Sans',sans-serif; font-size:14px;
-    border:1px solid var(--border); border-radius:10px;
-    cursor:pointer; text-align:center;
-    transition:border-color 0.15s, color 0.15s;
-  }
-  .btn-ghost:hover { border-color:var(--teal); color:var(--teal); }
-
-  .question-box {
-    background:var(--teal-l);
-    border-left:3px solid var(--teal);
-    border-radius:0 var(--radius) var(--radius) 0;
-    padding:16px 18px;
-  }
-  .question-box p {
-    font-family:'Lora',serif; font-size:16px;
-    color:var(--teal); line-height:1.5; font-style:italic;
-  }
-
-  .note-section { display:flex; flex-direction:column; gap:8px; }
-  .note-tag {
-    font-size:11px; font-weight:500; letter-spacing:0.07em;
-    text-transform:uppercase; padding:3px 8px; border-radius:4px;
-    display:inline-block; align-self:flex-start;
-  }
-  .note-tag.strength { background:var(--teal-l);  color:var(--teal);  }
-  .note-tag.pattern  { background:var(--amber-l); color:var(--amber); }
-  .note-tag.try      { background:var(--blue-l);  color:var(--blue);  }
-  .note-body { font-size:15px; color:var(--ink); line-height:1.65; }
-  .note-sep { height:1px; background:var(--border); margin:4px 0; }
-
-  /* generating state */
-  .generating {
-    display:flex; flex-direction:column; align-items:center;
-    gap:12px; padding:32px 20px; text-align:center;
-  }
-  .spinner {
-    width:32px; height:32px; border:3px solid var(--teal-l);
-    border-top-color:var(--teal); border-radius:50%;
-    animation:spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform:rotate(360deg); } }
-
-  .history-item { display:flex; align-items:flex-start; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); }
-  .history-item:last-child { border-bottom:none; }
-  .history-dot { width:10px; height:10px; border-radius:50%; background:var(--teal); margin-top:5px; flex-shrink:0; }
-  .history-meta { font-size:12px; color:var(--ink3); }
-  .history-text { font-size:14px; color:var(--ink2); margin-top:2px; }
-
-  .back-link {
-    display:inline-flex; align-items:center; gap:6px;
-    font-size:13px; color:var(--ink2); cursor:pointer;
-    margin-bottom:-8px; width:fit-content;
-  }
-  .back-link:hover { color:var(--teal); }
-
-  /* settings */
-  .key-input-wrap { position:relative; }
-  .key-input-wrap input { padding-right:72px; font-family:monospace; font-size:13px; }
-  .key-toggle {
-    position:absolute; right:10px; top:50%; transform:translateY(-50%);
-    background:none; border:none; cursor:pointer;
-    font-size:12px; color:var(--ink2); font-family:'DM Sans',sans-serif;
-  }
-  .key-status { font-size:13px; margin-top:6px; }
-  .key-status.ok  { color:var(--teal); }
-  .key-status.err { color:var(--red); }
-
-  .setting-row {
-    display:flex; flex-direction:column; gap:6px;
-    padding:14px 0; border-bottom:1px solid var(--border);
-  }
-  .setting-row:last-child { border-bottom:none; }
-  .setting-label { font-size:12px; font-weight:500; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink2); }
-  .setting-desc  { font-size:13px; color:var(--ink3); }
-
-  .tag-row { display:flex; gap:8px; flex-wrap:wrap; }
-  .info-tag { font-size:12px; padding:3px 10px; border-radius:20px; background:var(--bg); border:1px solid var(--border); color:var(--ink2); }
-
-  .bottom-nav {
-    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
-    width:100%; max-width:480px;
-    background:var(--surface); border-top:1px solid var(--border);
-    display:flex; padding:10px 0 20px;
-  }
-  .nav-item {
-    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
-    cursor:pointer; padding:6px 0; color:var(--ink3); font-size:11px;
-    transition:color 0.15s;
-  }
-  .nav-item.active { color:var(--teal); }
-  .nav-item svg { width:22px; height:22px; }
-  .spacer-nav { height:72px; }
-
-  /* api key warning banner */
-  .api-banner {
-    background:var(--amber-l); border:1px solid rgba(200,121,26,0.25);
-    border-radius:10px; padding:12px 14px;
-    font-size:13px; color:var(--amber);
-    display:flex; align-items:center; gap:10px; cursor:pointer;
-  }
-  .api-banner svg { flex-shrink:0; }
+/* bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--border);display:flex;padding:10px 0 20px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;color:var(--ink3);font-size:11px;transition:color 0.15s;}
+.nav-item.active{color:var(--teal);}
+.nav-item svg{width:22px;height:22px;}
+.spacer-nav{height:72px;}
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- ══════════════════════════════════
-       SCREEN 1 — Record lesson
-       ══════════════════════════════════ -->
-  <div class="screen active" id="screen-record">
-    <div>
-      <p class="wordmark">Shiksha Sathi</p>
-      <h1>Today's<br/>lesson</h1>
-    </div>
+<!-- ══════ SCREEN 1 — Record ══════ -->
+<div class="screen active" id="screen-record">
+  <div>
+    <p class="wordmark">Shiksha Sathi</p>
+    <h1>Today's<br/>lesson</h1>
+  </div>
 
-    <!-- api key warning (shown if no key saved) -->
-    <div class="api-banner" id="api-banner" style="display:none" onclick="navTo('screen-settings','nav-settings')">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      No API key set — tap to add one in Settings. Coaching note will use a fallback template.
-    </div>
+  <div class="api-banner" id="api-banner" style="display:none" onclick="navTo('screen-settings','nav-settings');showKeySection()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    No API key — tap to add one. Coaching note will use a template for now.
+  </div>
 
-    <div class="card" style="display:flex;flex-direction:column;gap:14px;">
-      <div class="field-row">
-        <div class="field">
-          <label>Subject</label>
-          <select id="subject">
-            <option value="">— pick —</option>
-            <option>Maths</option>
-            <option>Science</option>
-            <option>Hindi</option>
-            <option>English</option>
-            <option>Social Science</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Class</label>
-          <select id="grade">
-            <option value="">— pick —</option>
-            <option>Class 4</option>
-            <option>Class 5</option>
-            <option>Class 6</option>
-            <option>Class 7</option>
-            <option>Class 8</option>
-          </select>
-        </div>
+  <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+    <div class="field-row">
+      <div class="field">
+        <label>Subject</label>
+        <select id="subject">
+          <option value="">— pick —</option>
+          <option>Maths</option><option>Science</option><option>Hindi</option>
+          <option>English</option><option>Social Science</option><option>Other</option>
+        </select>
       </div>
       <div class="field">
-        <label>Topic (optional)</label>
-        <input type="text" id="topic" placeholder="e.g. Fractions, Parts of a plant…"/>
+        <label>Class</label>
+        <select id="grade">
+          <option value="">— pick —</option>
+          <option>Class 3</option><option>Class 4</option><option>Class 5</option>
+          <option>Class 6</option><option>Class 7</option><option>Class 8</option>
+        </select>
       </div>
     </div>
-
-    <div class="rec-area">
-      <button class="rec-btn idle" id="lesson-rec-btn" onclick="toggleLessonRecording()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
-          <rect x="9" y="2" width="6" height="12" rx="3"/>
-          <path d="M5 10a7 7 0 0014 0"/>
-          <line x1="12" y1="21" x2="12" y2="17"/>
-          <line x1="8" y1="21" x2="16" y2="21"/>
-        </svg>
-      </button>
-      <div class="rec-label">
-        <strong id="lesson-rec-label">Tap to start recording</strong>
-        <span id="lesson-rec-sub">Record your full class period</span>
-      </div>
-      <div class="rec-timer" id="lesson-timer" style="display:none">0:00</div>
+    <div class="field">
+      <label>Topic (optional)</label>
+      <input type="text" id="topic" placeholder="e.g. Fractions, Parts of a plant…"/>
     </div>
+  </div>
 
-    <div id="lesson-status" style="display:none">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <span class="pill dot" id="status-pill">Transcribing…</span>
-        <span class="subtext" id="status-text">This takes a moment</span>
-      </div>
-    </div>
-
-    <button class="btn-primary" id="proceed-btn" disabled onclick="proceedToReflection()">
-      Continue to reflection →
+  <div class="rec-area">
+    <button class="rec-btn idle" id="lesson-rec-btn" onclick="toggleLessonRecording()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
+        <rect x="9" y="2" width="6" height="12" rx="3"/>
+        <path d="M5 10a7 7 0 0014 0"/>
+        <line x1="12" y1="21" x2="12" y2="17"/><line x1="8" y1="21" x2="16" y2="21"/>
+      </svg>
     </button>
-    <div class="spacer-nav"></div>
+    <div class="rec-label">
+      <strong id="lesson-rec-label">Tap to start recording</strong>
+      <span id="lesson-rec-sub">Record your full class period</span>
+    </div>
+    <div class="rec-timer" id="lesson-timer" style="display:none">0:00</div>
   </div>
 
-
-  <!-- ══════════════════════════════════
-       SCREEN 2 — Reflection
-       ══════════════════════════════════ -->
-  <div class="screen" id="screen-reflect">
-    <div class="back-link" onclick="goTo('screen-record')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
-      Back
+  <div id="lesson-status" style="display:none">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="pill dot" id="status-pill">Transcribing…</span>
+      <span class="subtext" id="status-text">This takes a moment</span>
     </div>
-    <div>
-      <p class="wordmark">Shiksha Sathi</p>
-      <h1>One moment<br/>before feedback</h1>
-      <p class="subtext" style="margin-top:8px;">Your answer shapes the coaching note.</p>
-    </div>
+  </div>
 
-    <div class="question-box">
-      <p id="reflection-question">"You taught a full lesson today — which moment felt most uncertain, and why?"</p>
-    </div>
+  <button class="btn-primary" id="proceed-btn" disabled onclick="proceedToReflection()">
+    Continue to reflection →
+  </button>
+  <div class="spacer-nav"></div>
+</div>
 
-    <div class="rec-area">
-      <button class="rec-btn idle" id="reflect-rec-btn" onclick="toggleReflectRecording()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
-          <rect x="9" y="2" width="6" height="12" rx="3"/>
-          <path d="M5 10a7 7 0 0014 0"/>
-          <line x1="12" y1="21" x2="12" y2="17"/>
-          <line x1="8" y1="21" x2="16" y2="21"/>
-        </svg>
-      </button>
-      <div class="rec-label">
-        <strong id="reflect-rec-label">Tap to answer</strong>
-        <span>Speak freely, 30–60 seconds</span>
-      </div>
-      <div class="rec-timer" id="reflect-timer" style="display:none">0:00</div>
-    </div>
 
-    <button class="btn-primary" id="feedback-btn" disabled onclick="proceedToFeedback()">
-      Get my coaching note →
+<!-- ══════ SCREEN 2 — Reflect ══════ -->
+<div class="screen" id="screen-reflect">
+  <div class="back-link" onclick="goTo('screen-record')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
+    Back
+  </div>
+  <div>
+    <p class="wordmark">Shiksha Sathi</p>
+    <h1>One moment<br/>before feedback</h1>
+    <p class="subtext" style="margin-top:8px;">Your answer shapes the coaching note.</p>
+  </div>
+
+  <div class="question-box">
+    <p id="reflection-question">"You taught a full lesson today — which moment felt most uncertain, and why?"</p>
+  </div>
+
+  <div class="rec-area">
+    <button class="rec-btn idle" id="reflect-rec-btn" onclick="toggleReflectRecording()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
+        <rect x="9" y="2" width="6" height="12" rx="3"/>
+        <path d="M5 10a7 7 0 0014 0"/>
+        <line x1="12" y1="21" x2="12" y2="17"/><line x1="8" y1="21" x2="16" y2="21"/>
+      </svg>
     </button>
-    <button class="btn-ghost" onclick="skipReflection()">Skip — just show the note</button>
-    <div class="spacer-nav"></div>
+    <div class="rec-label">
+      <strong id="reflect-rec-label">Tap to answer</strong>
+      <span>Speak freely, 30–60 seconds</span>
+    </div>
+    <div class="rec-timer" id="reflect-timer" style="display:none">0:00</div>
   </div>
 
+  <button class="btn-primary" id="feedback-btn" disabled onclick="proceedToFeedback()">
+    Get my coaching note →
+  </button>
+  <button class="btn-ghost" onclick="skipReflection()">Skip — just show the note</button>
+  <div class="spacer-nav"></div>
+</div>
 
-  <!-- ══════════════════════════════════
-       SCREEN 3 — Coaching note
-       ══════════════════════════════════ -->
-  <div class="screen" id="screen-feedback">
-    <div class="back-link" onclick="goTo('screen-reflect')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
-      Back
-    </div>
-    <div>
-      <p class="wordmark">Shiksha Sathi</p>
-      <h1>Your coaching<br/>note</h1>
-    </div>
 
-    <div class="tag-row" id="session-tags"></div>
-
-    <!-- loading state -->
-    <div class="card generating" id="note-generating" style="display:none">
-      <div class="spinner"></div>
-      <p class="subtext">Writing your coaching note…</p>
-    </div>
-
-    <!-- the note (hidden while loading) -->
-    <div class="card" id="note-card" style="display:flex;flex-direction:column;gap:16px;">
-      <div class="note-section">
-        <span class="note-tag strength">What worked</span>
-        <p class="note-body" id="note-strength">—</p>
-      </div>
-      <div class="note-sep"></div>
-      <div class="note-section">
-        <span class="note-tag pattern">A pattern to notice</span>
-        <p class="note-body" id="note-pattern">—</p>
-      </div>
-      <div class="note-sep"></div>
-      <div class="note-section">
-        <span class="note-tag try">Try tomorrow</span>
-        <p class="note-body" id="note-try">—</p>
-      </div>
-    </div>
-
-    <!-- error state -->
-    <div id="note-error" style="display:none">
-      <span class="pill error-pill dot">Could not reach Gemini — showing fallback note</span>
-    </div>
-
-    <button class="btn-primary" id="save-btn" onclick="saveSession()">Save this note ✓</button>
-    <button class="btn-ghost" onclick="newSession()">Start a new session</button>
-    <div class="spacer-nav"></div>
+<!-- ══════ SCREEN 3 — Coaching note ══════ -->
+<div class="screen" id="screen-feedback">
+  <div class="back-link" onclick="goTo('screen-reflect')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
+    Back
+  </div>
+  <div>
+    <p class="wordmark">Shiksha Sathi</p>
+    <h1>Your coaching<br/>note</h1>
   </div>
 
+  <div class="tag-row" id="session-tags"></div>
 
-  <!-- ══════════════════════════════════
-       SCREEN 4 — Journey / History
-       ══════════════════════════════════ -->
-  <div class="screen" id="screen-history">
-    <div>
-      <p class="wordmark">Shiksha Sathi</p>
-      <h1>Your journey</h1>
-      <p class="subtext" style="margin-top:6px;">Patterns across your sessions.</p>
-    </div>
-    <div class="card" id="history-list"></div>
-    <div class="spacer-nav"></div>
+  <div class="card generating" id="note-generating" style="display:none">
+    <div class="spinner"></div>
+    <p class="subtext">Writing your coaching note…</p>
   </div>
 
+  <div class="card" id="note-card" style="display:none;flex-direction:column;gap:16px;">
+    <div class="note-section">
+      <span class="note-tag strength">What worked</span>
+      <p class="note-body" id="note-strength"></p>
+    </div>
+    <div class="note-sep"></div>
+    <div class="note-section">
+      <span class="note-tag pattern">A pattern to notice</span>
+      <p class="note-body" id="note-pattern"></p>
+    </div>
+    <div class="note-sep"></div>
+    <div class="note-section">
+      <span class="note-tag try">Try tomorrow</span>
+      <p class="note-body" id="note-try"></p>
+    </div>
+  </div>
 
-  <!-- ══════════════════════════════════
-       SCREEN 5 — Settings
-       ══════════════════════════════════ -->
-  <div class="screen" id="screen-settings">
-    <div>
-      <p class="wordmark">Shiksha Sathi</p>
-      <h1>Settings</h1>
+  <div id="note-error" style="display:none;margin-top:-8px;">
+    <span class="pill error-pill dot">Gemini unreachable — showing template note</span>
+  </div>
+
+  <button class="btn-primary" id="save-btn" disabled onclick="saveSession()">Save this note ✓</button>
+  <button class="btn-ghost" onclick="newSession()">Start a new session</button>
+  <div class="spacer-nav"></div>
+</div>
+
+
+<!-- ══════ SCREEN 4 — Journey ══════ -->
+<div class="screen" id="screen-history">
+  <div>
+    <p class="wordmark">Shiksha Sathi</p>
+    <h1>Your journey</h1>
+  </div>
+
+  <!-- stats row -->
+  <div class="stats-row" id="stats-row">
+    <div class="stat-box">
+      <div class="stat-num" id="stat-total">0</div>
+      <div class="stat-label">sessions<br/>total</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="stat-month">0</div>
+      <div class="stat-label">this<br/>month</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="stat-streak">0</div>
+      <div class="stat-label">day<br/>streak</div>
+    </div>
+  </div>
+
+  <!-- last 7 days dots -->
+  <div class="card" style="padding:16px 20px;">
+    <p style="font-size:12px;color:var(--ink3);margin-bottom:10px;letter-spacing:0.04em;text-transform:uppercase;font-weight:500;">Last 7 days</p>
+    <div class="streak-bar" id="streak-bar"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;" id="streak-labels"></div>
+  </div>
+
+  <!-- timeline -->
+  <div id="timeline-wrap">
+    <p style="font-size:12px;color:var(--ink3);letter-spacing:0.04em;text-transform:uppercase;font-weight:500;margin-bottom:12px;">Session log</p>
+    <div id="timeline-list"></div>
+  </div>
+
+  <div class="spacer-nav"></div>
+</div>
+
+
+<!-- ══════ SCREEN 5 — Settings ══════ -->
+<div class="screen" id="screen-settings">
+  <div>
+    <p class="wordmark">Shiksha Sathi</p>
+    <h1>Profile</h1>
+  </div>
+
+  <div class="card">
+    <!-- profile header -->
+    <div class="profile-header">
+      <div class="profile-avatar" id="avatar-initials">?</div>
+      <div>
+        <div class="profile-name" id="profile-name-display">Your name</div>
+        <div class="profile-school" id="profile-school-display">School not set</div>
+      </div>
     </div>
 
-    <div class="card" style="display:flex;flex-direction:column;gap:0;">
-
+    <!-- profile fields -->
+    <div class="setting-section">
       <div class="setting-row">
-        <span class="setting-label">Gemini API Key</span>
-        <span class="setting-desc">Used to generate your coaching note. Stored only on this device — never sent to anyone else.</span>
-        <div class="key-input-wrap" style="margin-top:8px;">
-          <input type="password" id="api-key-input" placeholder="Paste your key here…" autocomplete="off" spellcheck="false"/>
-          <button class="key-toggle" id="key-toggle-btn" onclick="toggleKeyVisibility()">Show</button>
+        <span class="setting-label">Name</span>
+        <div class="field" style="margin-top:6px;">
+          <input type="text" id="profile-name" placeholder="Your name…"/>
         </div>
-        <div class="key-status" id="key-status"></div>
-        <button class="btn-primary" style="margin-top:10px;" onclick="saveApiKey()">Save key</button>
       </div>
-
       <div class="setting-row">
-        <span class="setting-label">Get a free key</span>
-        <span class="setting-desc">Go to <strong>aistudio.google.com</strong> → sign in with Google → "Get API key" → "Create API key". Free, no credit card needed.</span>
+        <span class="setting-label">School</span>
+        <div class="field" style="margin-top:6px;">
+          <input type="text" id="profile-school" placeholder="School name…"/>
+        </div>
       </div>
-
-      <div class="setting-row">
-        <span class="setting-label">Clear all data</span>
-        <span class="setting-desc">Deletes your saved session history from this device.</span>
-        <button class="btn-ghost" style="margin-top:8px;" onclick="clearAllData()">Clear history</button>
+      <div class="setting-row" style="border-bottom:none;">
+        <button class="btn-primary" onclick="saveProfile()">Save profile</button>
       </div>
-
     </div>
-    <div class="spacer-nav"></div>
+
+    <!-- advanced toggle -->
+    <div class="advanced-toggle" id="advanced-toggle" onclick="toggleAdvanced()">
+      <span>Advanced settings</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="advanced-body" id="advanced-body">
+      <div class="setting-section">
+        <div class="setting-section-title">Gemini API Key</div>
+        <div class="setting-row">
+          <span class="setting-desc">Used to generate coaching notes. Stored only on this device — never uploaded anywhere.</span>
+          <div class="key-input-wrap">
+            <input type="password" id="api-key-input" placeholder="Paste your key here…" autocomplete="off" spellcheck="false"/>
+            <button class="key-toggle" id="key-toggle-btn" onclick="toggleKeyVisibility()">Show</button>
+          </div>
+          <div class="key-status" id="key-status"></div>
+          <button class="btn-primary" style="margin-top:10px;" onclick="saveApiKey()">Save key</button>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label" style="font-size:13px;">Get a free key</span>
+          <span class="setting-desc">Visit <strong>aistudio.google.com</strong> → sign in with Google → "Get API key" → "Create API key". Free, no card needed.</span>
+        </div>
+        <div class="setting-row" style="border-bottom:none;">
+          <span class="setting-label" style="font-size:13px;">Clear all data</span>
+          <span class="setting-desc">Removes saved sessions from this device.</span>
+          <button class="btn-ghost" style="margin-top:8px;" onclick="clearAllData()">Clear history</button>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <div class="spacer-nav"></div>
+</div>
 
 </div><!-- /app -->
-
 
 <!-- bottom nav -->
 <nav class="bottom-nav">
   <div class="nav-item active" id="nav-home" onclick="navTo('screen-record','nav-home')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M3 12L12 4l9 8"/><path d="M9 21V12h6v9"/>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 4l9 8"/><path d="M9 21V12h6v9"/></svg>
     Record
   </div>
-  <div class="nav-item" id="nav-history" onclick="navTo('screen-history','nav-history');renderHistory()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-    </svg>
+  <div class="nav-item" id="nav-history" onclick="navTo('screen-history','nav-history');renderJourney()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     Journey
   </div>
   <div class="nav-item" id="nav-settings" onclick="navTo('screen-settings','nav-settings');loadSettingsScreen()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     Settings
   </div>
 </nav>
 
-
 <script>
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 //  STATE
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 const state = {
-  lessonRecording: false,
-  reflectRecording: false,
-  lessonDone: false,
-  reflectDone: false,
-  lessonSeconds: 0,
-  reflectSeconds: 0,
-  lessonInterval: null,
-  reflectInterval: null,
-  lessonMediaRecorder: null,
-  reflectMediaRecorder: null,
-  lessonTranscript: '',   // filled by (dummy) transcription
-  reflectTranscript: '',  // filled by (dummy) transcription
-  sessionSubject: '',
-  sessionGrade: '',
-  sessionTopic: '',
-  reflectionQuestion: '',
+  lessonRecording:false, reflectRecording:false,
+  lessonDone:false, reflectDone:false,
+  lessonSeconds:0, reflectSeconds:0,
+  lessonInterval:null, reflectInterval:null,
+  lessonMediaRecorder:null, reflectMediaRecorder:null,
+  lessonTranscript:'', reflectTranscript:'',
+  sessionSubject:'', sessionGrade:'', sessionTopic:'', reflectionQuestion:'',
 };
 
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 //  INIT
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
   checkApiBanner();
+  loadProfileDisplay();
 });
 
 function checkApiBanner() {
@@ -527,332 +446,227 @@ function checkApiBanner() {
   document.getElementById('api-banner').style.display = key ? 'none' : 'flex';
 }
 
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 //  NAVIGATION
-// ══════════════════════════════════════════
-function goTo(screenId) {
+// ═══════════════════════════════════
+function goTo(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(screenId).classList.add('active');
+  document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
 }
-
 function navTo(screenId, navId) {
   goTo(screenId);
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById(navId).classList.add('active');
 }
 
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 //  LESSON RECORDING
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 async function toggleLessonRecording() {
-  const btn   = document.getElementById('lesson-rec-btn');
-  const label = document.getElementById('lesson-rec-label');
-  const sub   = document.getElementById('lesson-rec-sub');
-  const timer = document.getElementById('lesson-timer');
+  const btn=document.getElementById('lesson-rec-btn'),
+        lbl=document.getElementById('lesson-rec-label'),
+        sub=document.getElementById('lesson-rec-sub'),
+        tmr=document.getElementById('lesson-timer');
   if (state.lessonDone) return;
 
   if (!state.lessonRecording) {
-    // START
     state.lessonRecording = true;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({audio:true});
       state.lessonMediaRecorder = new MediaRecorder(stream);
       const chunks = [];
       state.lessonMediaRecorder.ondataavailable = e => chunks.push(e.data);
-      state.lessonMediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
-        runDummyTranscription('lesson', blob);
-      };
+      state.lessonMediaRecorder.onstop = () => runDummyTranscription('lesson', new Blob(chunks,{type:'audio/webm'}));
       state.lessonMediaRecorder.start();
-    } catch(e) {
-      // No mic (Claude preview / file://) — go straight to dummy
-      console.warn('Mic unavailable, demo mode');
-      // will call runDummyTranscription on stop
-    }
-
+    } catch(e) { console.warn('No mic, demo mode'); }
     state.lessonSeconds = 0;
-    btn.className = 'rec-btn recording';
-    btn.innerHTML = stopIcon();
-    label.textContent = 'Recording…';
-    sub.textContent = 'Tap to stop when done';
-    timer.style.display = 'block';
-    state.lessonInterval = setInterval(() => {
-      state.lessonSeconds++;
-      timer.textContent = formatTime(state.lessonSeconds);
-    }, 1000);
-
+    btn.className='rec-btn recording'; btn.innerHTML=stopIcon();
+    lbl.textContent='Recording…'; sub.textContent='Tap to stop when done';
+    tmr.style.display='block';
+    state.lessonInterval = setInterval(()=>{ state.lessonSeconds++; tmr.textContent=fmt(state.lessonSeconds); },1000);
   } else {
-    // STOP
-    clearInterval(state.lessonInterval);
-    state.lessonRecording = false;
-    if (state.lessonMediaRecorder && state.lessonMediaRecorder.state !== 'inactive') {
-      state.lessonMediaRecorder.stop();
-      state.lessonMediaRecorder.stream.getTracks().forEach(t => t.stop());
-    } else {
-      runDummyTranscription('lesson', null);
-    }
-    btn.className = 'rec-btn done';
-    btn.innerHTML = checkIcon();
-    label.textContent = 'Recording saved';
-    sub.textContent = `Duration: ${formatTime(state.lessonSeconds)}`;
+    clearInterval(state.lessonInterval); state.lessonRecording=false;
+    if (state.lessonMediaRecorder && state.lessonMediaRecorder.state!=='inactive') {
+      state.lessonMediaRecorder.stop(); state.lessonMediaRecorder.stream.getTracks().forEach(t=>t.stop());
+    } else { runDummyTranscription('lesson',null); }
+    btn.className='rec-btn done'; btn.innerHTML=checkIcon();
+    lbl.textContent='Recording saved'; sub.textContent=`Duration: ${fmt(state.lessonSeconds)}`;
   }
 }
 
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 //  REFLECT RECORDING
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 async function toggleReflectRecording() {
-  const btn   = document.getElementById('reflect-rec-btn');
-  const label = document.getElementById('reflect-rec-label');
-  const timer = document.getElementById('reflect-timer');
+  const btn=document.getElementById('reflect-rec-btn'),
+        lbl=document.getElementById('reflect-rec-label'),
+        tmr=document.getElementById('reflect-timer');
   if (state.reflectDone) return;
 
   if (!state.reflectRecording) {
     state.reflectRecording = true;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({audio:true});
       state.reflectMediaRecorder = new MediaRecorder(stream);
-      const chunks = [];
+      const chunks=[];
       state.reflectMediaRecorder.ondataavailable = e => chunks.push(e.data);
-      state.reflectMediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
-        runDummyTranscription('reflect', blob);
-      };
+      state.reflectMediaRecorder.onstop = () => runDummyTranscription('reflect', new Blob(chunks,{type:'audio/webm'}));
       state.reflectMediaRecorder.start();
-    } catch(e) {
-      console.warn('Mic unavailable, demo mode');
-    }
-
-    state.reflectSeconds = 0;
-    btn.className = 'rec-btn recording';
-    btn.innerHTML = stopIcon();
-    label.textContent = 'Recording…';
-    timer.style.display = 'block';
-    state.reflectInterval = setInterval(() => {
-      state.reflectSeconds++;
-      timer.textContent = formatTime(state.reflectSeconds);
-      if (state.reflectSeconds >= 90) stopReflectRecording();
-    }, 1000);
-
-  } else {
-    stopReflectRecording();
-  }
+    } catch(e) { console.warn('No mic, demo mode'); }
+    state.reflectSeconds=0;
+    btn.className='rec-btn recording'; btn.innerHTML=stopIcon();
+    lbl.textContent='Recording…'; tmr.style.display='block';
+    state.reflectInterval = setInterval(()=>{
+      state.reflectSeconds++; tmr.textContent=fmt(state.reflectSeconds);
+      if (state.reflectSeconds>=90) stopReflect();
+    },1000);
+  } else { stopReflect(); }
 }
 
-function stopReflectRecording() {
-  clearInterval(state.reflectInterval);
-  state.reflectRecording = false;
-  const btn   = document.getElementById('reflect-rec-btn');
-  const label = document.getElementById('reflect-rec-label');
-  if (state.reflectMediaRecorder && state.reflectMediaRecorder.state !== 'inactive') {
-    state.reflectMediaRecorder.stop();
-    state.reflectMediaRecorder.stream.getTracks().forEach(t => t.stop());
-  } else {
-    runDummyTranscription('reflect', null);
-  }
-  btn.className = 'rec-btn done';
-  btn.innerHTML = checkIcon();
-  label.textContent = 'Response saved';
+function stopReflect() {
+  clearInterval(state.reflectInterval); state.reflectRecording=false;
+  const btn=document.getElementById('reflect-rec-btn');
+  if (state.reflectMediaRecorder && state.reflectMediaRecorder.state!=='inactive') {
+    state.reflectMediaRecorder.stop(); state.reflectMediaRecorder.stream.getTracks().forEach(t=>t.stop());
+  } else { runDummyTranscription('reflect',null); }
+  btn.className='rec-btn done'; btn.innerHTML=checkIcon();
+  document.getElementById('reflect-rec-label').textContent='Response saved';
 }
 
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 //  DUMMY TRANSCRIPTION
-//  Replace this whole function with Whisper WASM later.
-//  It receives the blob (ignored for now) and sets a
-//  plausible dummy transcript in state, then unlocks UI.
-// ══════════════════════════════════════════
+//  — swap this for real Whisper WASM later —
+// ═══════════════════════════════════
 function runDummyTranscription(type, blob) {
-  if (type === 'lesson') {
-    const pill = document.getElementById('status-pill');
-    const statusText = document.getElementById('status-text');
-    document.getElementById('lesson-status').style.display = 'block';
-    pill.className = 'pill processing dot';
-    pill.textContent = 'Transcribing…';
-    statusText.textContent = 'Processing your audio';
-
-    setTimeout(() => {
-      // Dummy lesson transcript — replace with real Whisper output
-      state.lessonTranscript = `Teacher started the lesson on ${state.sessionTopic || 'the topic'}. 
-        Opened with a quick question to the whole class about yesterday's content. 
-        Most students answered together in chorus. Teacher explained the new concept 
-        for about 15 minutes with some examples on the board. Asked "everyone understood?" 
-        at the end. A few students in the back row seemed disengaged. 
-        No individual students were cold-called by name during the lesson. 
-        Ended with a group activity.`;
-
-      state.lessonDone = true;
-      pill.className = 'pill done-pill dot';
-      pill.textContent = 'Transcribed';
-      statusText.textContent = 'Ready to continue';
-      document.getElementById('proceed-btn').disabled = false;
-    }, 2000);
-
+  if (type==='lesson') {
+    const pill=document.getElementById('status-pill'), st=document.getElementById('status-text');
+    document.getElementById('lesson-status').style.display='block';
+    pill.className='pill processing dot'; pill.textContent='Transcribing…';
+    st.textContent='Processing your audio';
+    setTimeout(()=>{
+      state.lessonTranscript = `Teacher started the lesson on ${state.sessionTopic||'the topic'}. Opened with a quick question to the whole class about yesterday's content. Most students answered together in chorus. Teacher explained the new concept for about 15 minutes with examples on the board. Asked "everyone understood?" at the end. A few students in the back row seemed disengaged. No individual students were cold-called by name. Ended with a group activity.`;
+      state.lessonDone=true;
+      pill.className='pill done-pill dot'; pill.textContent='Transcribed';
+      st.textContent='Ready to continue';
+      document.getElementById('proceed-btn').disabled=false;
+    },2000);
   } else {
-    // reflect
-    setTimeout(() => {
-      state.reflectTranscript = `I felt uncertain during the explanation part. 
-        The students in the back row were not following and I wasn't sure 
-        if my examples were clear enough. I think I moved too fast.`;
-      state.reflectDone = true;
-      document.getElementById('feedback-btn').disabled = false;
-    }, 800);
+    setTimeout(()=>{
+      state.reflectTranscript = `I felt uncertain during the explanation part. The students in the back row were not following and I wasn't sure if my examples were clear enough. I think I moved too fast.`;
+      state.reflectDone=true;
+      document.getElementById('feedback-btn').disabled=false;
+    },800);
   }
 }
 
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 //  TRANSITIONS
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 function proceedToReflection() {
-  state.sessionSubject = document.getElementById('subject').value || '';
-  state.sessionGrade   = document.getElementById('grade').value  || '';
-  state.sessionTopic   = document.getElementById('topic').value  || '';
-
-  // Pick a reflection question (dummy — later comes from rubric signal)
-  const questions = [
+  state.sessionSubject = document.getElementById('subject').value||'';
+  state.sessionGrade   = document.getElementById('grade').value||'';
+  state.sessionTopic   = document.getElementById('topic').value||'';
+  const qs = [
     "You taught a full lesson today — which moment felt most uncertain, and why?",
     "Think about when you asked questions. Who answered? Who stayed quiet?",
     "Was there a point where you felt you lost the class? What was happening then?",
     "How much did students talk compared to you today?",
     "If you taught this lesson again tomorrow, what one thing would you change first?",
   ];
-  state.reflectionQuestion = questions[Math.floor(Math.random() * questions.length)];
+  state.reflectionQuestion = qs[Math.floor(Math.random()*qs.length)];
   document.getElementById('reflection-question').textContent = `"${state.reflectionQuestion}"`;
   goTo('screen-reflect');
 }
 
-function proceedToFeedback() { showFeedbackScreen(); }
-function skipReflection()    { state.reflectTranscript = '(skipped)'; showFeedbackScreen(); }
+function proceedToFeedback()  { showFeedbackScreen(); }
+function skipReflection()     { state.reflectTranscript='(teacher skipped reflection)'; showFeedbackScreen(); }
 
 async function showFeedbackScreen() {
-  // fill context tags
-  const tags = document.getElementById('session-tags');
-  tags.innerHTML = '';
-  [state.sessionSubject, state.sessionGrade, state.sessionTopic].filter(Boolean).forEach(t => {
-    const s = document.createElement('span');
-    s.className = 'info-tag'; s.textContent = t;
-    tags.appendChild(s);
+  // context tags
+  const tags=document.getElementById('session-tags');
+  tags.innerHTML='';
+  [state.sessionSubject,state.sessionGrade,state.sessionTopic].filter(Boolean).forEach(t=>{
+    const s=document.createElement('span'); s.className='info-tag'; s.textContent=t; tags.appendChild(s);
   });
-
   goTo('screen-feedback');
 
-  // show loading, hide note card
-  document.getElementById('note-generating').style.display = 'flex';
-  document.getElementById('note-card').style.display = 'none';
-  document.getElementById('note-error').style.display = 'none';
-  document.getElementById('save-btn').disabled = true;
+  // show spinner
+  document.getElementById('note-generating').style.display='flex';
+  document.getElementById('note-card').style.display='none';
+  document.getElementById('note-error').style.display='none';
+  document.getElementById('save-btn').disabled=true;
 
-  const key = localStorage.getItem('ss_gemini_key');
-  let note;
-  if (key) {
-    note = await callGemini(key);
-  } else {
-    note = fallbackNote();
-    await delay(900); // small pause so it doesn't feel instant
-  }
+  const key=localStorage.getItem('ss_gemini_key');
+  let note = key ? await callGemini(key) : (await delay(800), fallbackNote());
 
-  // render note
   document.getElementById('note-strength').textContent = note.strength;
   document.getElementById('note-pattern').textContent  = note.pattern;
   document.getElementById('note-try').textContent      = note.try;
-
-  document.getElementById('note-generating').style.display = 'none';
-  document.getElementById('note-card').style.display = 'flex';
-  document.getElementById('save-btn').disabled = false;
+  document.getElementById('note-generating').style.display='none';
+  document.getElementById('note-card').style.display='flex';
+  document.getElementById('save-btn').disabled=false;
 }
 
-// ══════════════════════════════════════════
-//  GEMINI API CALL
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
+//  GEMINI CALL
+// ═══════════════════════════════════
 async function callGemini(apiKey) {
-  const subject = state.sessionSubject || 'a subject';
-  const grade   = state.sessionGrade   || 'a class';
-  const topic   = state.sessionTopic   || 'a topic';
+  const subj = state.sessionSubject||'a subject';
+  const grade= state.sessionGrade||'a class';
+  const topic= state.sessionTopic||'a topic';
 
-  const systemPrompt = `You are Shiksha Sathi, a warm and practical teaching coach for Indian school teachers.
-Your job is to give a short, specific, and actionable coaching note based on what a teacher shares about their lesson.
-You follow principles from Rosenshine's Principles of Instruction and Teach Like a Champion.
+  const prompt = `You are Shiksha Sathi, a warm and practical teaching coach for Indian school teachers.
+Give a short, specific, actionable coaching note based on what the teacher shares.
+Use principles from Rosenshine's Principles of Instruction and Teach Like a Champion.
 
-Key principles to watch for:
-- Daily review / prior knowledge activation
-- Checking for understanding (CFU) — quality vs choral responses
-- Wait time after questions
-- Cold-calling individual students by name
-- Pace of explanation — small steps vs rushing
-- Student talk ratio vs teacher talk
-- Engagement of all students, especially back row / quieter ones
+Watch for: daily review / prior knowledge activation, checking for understanding (CFU quality vs choral responses), wait time, cold-calling by name, pacing, student talk ratio, back-row engagement.
 
-Always respond in this exact JSON format, nothing else:
-{
-  "strength": "One specific thing the teacher did well, 2-3 sentences.",
-  "pattern": "One pattern to notice — something that might be limiting learning, explained gently, 2-3 sentences.",
-  "try": "One very concrete, small action to try in the very next lesson. Specific enough that the teacher knows exactly what to do. 2-3 sentences."
-}
+Respond ONLY in this JSON format, nothing else, no markdown:
+{"strength":"2-3 sentences on one specific thing the teacher did well.","pattern":"2-3 sentences on one pattern limiting learning, explained gently.","try":"2-3 sentences: one very concrete small action for the very next lesson."}
 
-Keep language warm, practical, non-judgmental. Avoid jargon. Write as a supportive colleague, not an evaluator.`;
+Tone: warm, practical, non-judgmental. Like a supportive colleague, not an evaluator. Avoid jargon.
 
-  const userMessage = `Subject: ${subject}, ${grade}
-Topic: ${topic}
-
-Lesson transcript (auto-generated, may be rough):
-${state.lessonTranscript}
-
-Teacher's own reflection (their answer to: "${state.reflectionQuestion}"):
-${state.reflectTranscript}
-
-Write the coaching note.`;
+Subject: ${subj}, ${grade}. Topic: ${topic}.
+Lesson transcript: ${state.lessonTranscript}
+Teacher reflection (their answer to "${state.reflectionQuestion}"): ${state.reflectTranscript}`;
 
   try {
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: systemPrompt + '\n\n' + userMessage }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 600 }
-        })
-      }
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite-preview-06-17:generateContent?key=${apiKey}`,
+      { method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({contents:[{parts:[{text:prompt}]}], generationConfig:{temperature:0.7,maxOutputTokens:500}}) }
     );
-
-    if (!res.ok) throw new Error(`API error ${res.status}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    const raw  = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-    // strip markdown code fences if present
-    const clean = raw.replace(/```json|```/g, '').trim();
+    const raw  = data.candidates?.[0]?.content?.parts?.[0]?.text||'';
+    const clean= raw.replace(/```json|```/g,'').trim();
     const parsed = JSON.parse(clean);
-
     if (parsed.strength && parsed.pattern && parsed.try) return parsed;
-    throw new Error('Unexpected response shape');
-
+    throw new Error('Bad shape');
   } catch(err) {
-    console.error('Gemini error:', err);
-    document.getElementById('note-error').style.display = 'block';
+    console.error('Gemini error:',err);
+    document.getElementById('note-error').style.display='block';
     return fallbackNote();
   }
 }
 
-// ══════════════════════════════════════════
-//  FALLBACK NOTE (no key / API error)
-// ══════════════════════════════════════════
 function fallbackNote() {
-  const subject = state.sessionSubject || 'your subject';
-  const topic   = state.sessionTopic   || 'today\'s topic';
   return {
-    strength: `You completed a full lesson on ${topic} and took the time to reflect — that habit alone puts you ahead of most. Recording and reviewing your own teaching is a powerful first step toward growth.`,
-    pattern:  `Think about how many students actually responded individually during the lesson. If most answers came from the whole class together, it's worth asking: do you know which individual students understood, and which didn't?`,
-    try:      `In your next lesson, after explaining something, pause for 5 seconds — then say one student's name and ask them to explain it back. Just one student, one time. Notice what you learn from that single exchange.`
+    strength:`You completed a full lesson and took time to reflect — that habit alone is valuable. Recording and reviewing your own teaching is a meaningful first step toward growth.`,
+    pattern:`Think about how many students responded individually. If most answers came from the whole class together, it's worth asking: do you know which individual students understood, and which didn't?`,
+    try:`In your next lesson, after explaining something, pause for 5 seconds — then say one student's name and ask them to explain it back. Just one student, one time. Notice what you learn from that single exchange.`
   };
 }
 
-// ══════════════════════════════════════════
-//  SESSION SAVE
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
+//  SAVE SESSION
+// ═══════════════════════════════════
 function saveSession() {
-  const sessions = JSON.parse(localStorage.getItem('ss_sessions') || '[]');
+  const sessions = JSON.parse(localStorage.getItem('ss_sessions')||'[]');
   sessions.unshift({
-    date:     new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'2-digit' }),
+    date: new Date().toISOString(),
+    dateDisplay: new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'2-digit'}),
     subject:  state.sessionSubject,
     grade:    state.sessionGrade,
     topic:    state.sessionTopic,
@@ -860,131 +674,207 @@ function saveSession() {
     pattern:  document.getElementById('note-pattern').textContent.trim(),
     tryThis:  document.getElementById('note-try').textContent.trim(),
   });
-  localStorage.setItem('ss_sessions', JSON.stringify(sessions));
-  const btn = document.getElementById('save-btn');
-  btn.textContent = 'Saved ✓';
-  btn.disabled = true;
+  localStorage.setItem('ss_sessions',JSON.stringify(sessions));
+  const btn=document.getElementById('save-btn');
+  btn.textContent='Saved ✓'; btn.disabled=true;
 }
 
+// ═══════════════════════════════════
+//  NEW SESSION — full reset
+// ═══════════════════════════════════
 function newSession() {
-  // reset state
-  Object.assign(state, {
-    lessonRecording:false, reflectRecording:false,
-    lessonDone:false, reflectDone:false,
-    lessonSeconds:0, reflectSeconds:0,
-    lessonMediaRecorder:null, reflectMediaRecorder:null,
-    lessonTranscript:'', reflectTranscript:'',
-    sessionSubject:'', sessionGrade:'', sessionTopic:'', reflectionQuestion:''
+  Object.assign(state,{
+    lessonRecording:false,reflectRecording:false,
+    lessonDone:false,reflectDone:false,
+    lessonSeconds:0,reflectSeconds:0,
+    lessonMediaRecorder:null,reflectMediaRecorder:null,
+    lessonTranscript:'',reflectTranscript:'',
+    sessionSubject:'',sessionGrade:'',sessionTopic:'',reflectionQuestion:''
   });
-  // reset lesson recorder UI
-  const lb = document.getElementById('lesson-rec-btn');
-  lb.className = 'rec-btn idle'; lb.innerHTML = micIcon();
-  document.getElementById('lesson-rec-label').textContent = 'Tap to start recording';
-  document.getElementById('lesson-rec-sub').textContent   = 'Record your full class period';
-  document.getElementById('lesson-timer').style.display   = 'none';
-  document.getElementById('lesson-status').style.display  = 'none';
-  document.getElementById('proceed-btn').disabled = true;
-  // reset reflect recorder UI
-  const rb = document.getElementById('reflect-rec-btn');
-  rb.className = 'rec-btn idle'; rb.innerHTML = micIcon();
-  document.getElementById('reflect-rec-label').textContent = 'Tap to answer';
-  document.getElementById('reflect-timer').style.display   = 'none';
-  document.getElementById('feedback-btn').disabled = true;
-  // reset form
-  ['subject','grade','topic'].forEach(id => document.getElementById(id).value = '');
-  // reset save btn
-  const sb = document.getElementById('save-btn');
-  sb.textContent = 'Save this note ✓'; sb.disabled = false;
+  // lesson rec
+  const lb=document.getElementById('lesson-rec-btn');
+  lb.className='rec-btn idle'; lb.innerHTML=micIcon();
+  document.getElementById('lesson-rec-label').textContent='Tap to start recording';
+  document.getElementById('lesson-rec-sub').textContent='Record your full class period';
+  document.getElementById('lesson-timer').style.display='none';
+  document.getElementById('lesson-status').style.display='none';
+  document.getElementById('proceed-btn').disabled=true;
+  // reflect rec
+  const rb=document.getElementById('reflect-rec-btn');
+  rb.className='rec-btn idle'; rb.innerHTML=micIcon();
+  document.getElementById('reflect-rec-label').textContent='Tap to answer';
+  document.getElementById('reflect-timer').style.display='none';
+  document.getElementById('feedback-btn').disabled=true;
+  // form
+  ['subject','grade','topic'].forEach(id=>document.getElementById(id).value='');
+  // save btn
+  const sb=document.getElementById('save-btn');
+  sb.textContent='Save this note ✓'; sb.disabled=false;
 
   navTo('screen-record','nav-home');
   checkApiBanner();
 }
 
-// ══════════════════════════════════════════
-//  HISTORY
-// ══════════════════════════════════════════
-function renderHistory() {
-  const list = document.getElementById('history-list');
-  const sessions = JSON.parse(localStorage.getItem('ss_sessions') || '[]');
-  if (sessions.length === 0) {
-    list.innerHTML = `<p class="subtext" style="text-align:center;padding:24px 0;">No sessions yet.<br/>Record your first lesson to get started.</p>`;
+// ═══════════════════════════════════
+//  JOURNEY / STATS
+// ═══════════════════════════════════
+function renderJourney() {
+  const sessions = JSON.parse(localStorage.getItem('ss_sessions')||'[]');
+  const now = new Date();
+  const thisMonth = now.getMonth();
+  const thisYear  = now.getFullYear();
+
+  // stats
+  const monthCount = sessions.filter(s=>{
+    const d=new Date(s.date); return d.getMonth()===thisMonth && d.getFullYear()===thisYear;
+  }).length;
+  document.getElementById('stat-total').textContent  = sessions.length;
+  document.getElementById('stat-month').textContent  = monthCount;
+
+  // streak — consecutive days with at least one session
+  let streak=0;
+  if (sessions.length>0) {
+    const daySet = new Set(sessions.map(s=>new Date(s.date).toDateString()));
+    const check  = new Date();
+    while (daySet.has(check.toDateString())) {
+      streak++;
+      check.setDate(check.getDate()-1);
+    }
+  }
+  document.getElementById('stat-streak').textContent = streak;
+
+  // 7-day bar
+  const bar    = document.getElementById('streak-bar');
+  const labels = document.getElementById('streak-labels');
+  bar.innerHTML=''; labels.innerHTML='';
+  const days=['Su','Mo','Tu','We','Th','Fr','Sa'];
+  for (let i=6;i>=0;i--) {
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const ds=d.toDateString();
+    const active=sessions.some(s=>new Date(s.date).toDateString()===ds);
+    const div=document.createElement('div');
+    div.className='streak-day'+(active?' active':'');
+    div.style.cssText=`height:${active?28:10}px;flex:1;`;
+    bar.appendChild(div);
+    const lbl=document.createElement('span');
+    lbl.style.cssText='font-size:10px;color:var(--ink3);text-align:center;flex:1;';
+    lbl.textContent=days[d.getDay()];
+    labels.appendChild(lbl);
+  }
+
+  // timeline
+  const tl=document.getElementById('timeline-list');
+  if (sessions.length===0) {
+    tl.innerHTML=`<p class="subtext" style="text-align:center;padding:24px 0;">No sessions yet.<br/>Record your first lesson to get started.</p>`;
     return;
   }
-  list.innerHTML = sessions.map(s => `
-    <div class="history-item">
-      <div class="history-dot"></div>
-      <div style="flex:1">
-        <div class="history-meta">${s.date}${s.subject ? ' · '+s.subject : ''}${s.grade ? ', '+s.grade : ''}</div>
-        ${s.topic ? `<div class="history-meta" style="margin-top:1px;">${s.topic}</div>` : ''}
-        <div class="history-text" style="margin-top:4px;">${s.tryThis.substring(0,100)}…</div>
+  tl.innerHTML=sessions.map((s,i)=>`
+    <div class="timeline-item" onclick="toggleExpand(${i})">
+      <div class="timeline-meta">${s.dateDisplay}${s.subject?' · '+s.subject:''}${s.grade?', '+s.grade:''}</div>
+      ${s.topic?`<div class="timeline-title">${s.topic}</div>`:'<div class="timeline-title">Lesson</div>'}
+      <div class="timeline-preview">${s.tryThis.substring(0,80)}…</div>
+      <div class="timeline-expanded" id="exp-${i}">
+        <div class="exp-section">
+          <span class="exp-tag s">What worked</span>
+          <div class="exp-body">${s.strength}</div>
+        </div>
+        <div class="exp-section">
+          <span class="exp-tag p">Pattern</span>
+          <div class="exp-body">${s.pattern}</div>
+        </div>
+        <div class="exp-section">
+          <span class="exp-tag t">Try tomorrow</span>
+          <div class="exp-body">${s.tryThis}</div>
+        </div>
       </div>
     </div>`).join('');
 }
 
-// ══════════════════════════════════════════
-//  SETTINGS
-// ══════════════════════════════════════════
+function toggleExpand(i) {
+  const el=document.getElementById(`exp-${i}`);
+  el.classList.toggle('open');
+}
+
+// ═══════════════════════════════════
+//  SETTINGS / PROFILE
+// ═══════════════════════════════════
 function loadSettingsScreen() {
-  const key = localStorage.getItem('ss_gemini_key') || '';
-  const input = document.getElementById('api-key-input');
-  input.value = key;
+  const name   = localStorage.getItem('ss_name')||'';
+  const school = localStorage.getItem('ss_school')||'';
+  document.getElementById('profile-name').value   = name;
+  document.getElementById('profile-school').value = school;
+  loadProfileDisplay();
+  const key=localStorage.getItem('ss_gemini_key')||'';
+  document.getElementById('api-key-input').value=key;
   document.getElementById('key-status').textContent = key ? '✓ Key saved on this device' : '';
-  document.getElementById('key-status').className = 'key-status ' + (key ? 'ok' : '');
+  document.getElementById('key-status').className   = 'key-status '+(key?'ok':'');
+}
+
+function loadProfileDisplay() {
+  const name   = localStorage.getItem('ss_name')||'Your name';
+  const school = localStorage.getItem('ss_school')||'School not set';
+  document.getElementById('profile-name-display').textContent   = name;
+  document.getElementById('profile-school-display').textContent = school;
+  const initials = name.split(' ').filter(Boolean).map(w=>w[0].toUpperCase()).slice(0,2).join('') || '?';
+  document.getElementById('avatar-initials').textContent = initials;
+}
+
+function saveProfile() {
+  const name   = document.getElementById('profile-name').value.trim();
+  const school = document.getElementById('profile-school').value.trim();
+  if (name)   localStorage.setItem('ss_name',name);
+  if (school) localStorage.setItem('ss_school',school);
+  loadProfileDisplay();
+  const btn=document.querySelector('#screen-settings .btn-primary');
+  const orig=btn.textContent; btn.textContent='Saved ✓';
+  setTimeout(()=>btn.textContent=orig,1500);
 }
 
 function saveApiKey() {
-  const key = document.getElementById('api-key-input').value.trim();
-  const status = document.getElementById('key-status');
-  if (!key) {
-    status.textContent = 'Please paste a key first.';
-    status.className = 'key-status err';
-    return;
-  }
-  if (!key.startsWith('AIza')) {
-    status.textContent = 'That doesn\'t look like a Gemini key (should start with AIza…).';
-    status.className = 'key-status err';
-    return;
-  }
-  localStorage.setItem('ss_gemini_key', key);
-  status.textContent = '✓ Key saved on this device';
-  status.className = 'key-status ok';
+  const key=document.getElementById('api-key-input').value.trim();
+  const status=document.getElementById('key-status');
+  if (!key) { status.textContent='Paste a key first.'; status.className='key-status err'; return; }
+  if (!key.startsWith('AIza')) { status.textContent='Doesn\'t look like a Gemini key (should start with AIza…).'; status.className='key-status err'; return; }
+  localStorage.setItem('ss_gemini_key',key);
+  status.textContent='✓ Key saved on this device'; status.className='key-status ok';
   checkApiBanner();
 }
 
 function toggleKeyVisibility() {
-  const input = document.getElementById('api-key-input');
-  const btn   = document.getElementById('key-toggle-btn');
-  if (input.type === 'password') { input.type = 'text';     btn.textContent = 'Hide'; }
-  else                           { input.type = 'password'; btn.textContent = 'Show'; }
+  const inp=document.getElementById('api-key-input'), btn=document.getElementById('key-toggle-btn');
+  inp.type = inp.type==='password' ? 'text' : 'password';
+  btn.textContent = inp.type==='password' ? 'Show' : 'Hide';
+}
+
+function toggleAdvanced() {
+  document.getElementById('advanced-toggle').classList.toggle('open');
+  document.getElementById('advanced-body').classList.toggle('open');
+}
+
+function showKeySection() {
+  loadSettingsScreen();
+  // open advanced section automatically when coming from banner
+  document.getElementById('advanced-toggle').classList.add('open');
+  document.getElementById('advanced-body').classList.add('open');
 }
 
 function clearAllData() {
   if (!confirm('Delete all saved sessions from this device?')) return;
   localStorage.removeItem('ss_sessions');
-  renderHistory();
+  renderJourney();
   alert('History cleared.');
 }
 
-// ══════════════════════════════════════════
+// ═══════════════════════════════════
 //  UTILS
-// ══════════════════════════════════════════
-function formatTime(s) { return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }
-function delay(ms)     { return new Promise(r => setTimeout(r, ms)); }
-
+// ═══════════════════════════════════
+function fmt(s) { return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }
+function delay(ms) { return new Promise(r=>setTimeout(r,ms)); }
 function micIcon() {
-  return `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
-    <rect x="9" y="2" width="6" height="12" rx="3"/>
-    <path d="M5 10a7 7 0 0014 0"/>
-    <line x1="12" y1="21" x2="12" y2="17"/>
-    <line x1="8" y1="21" x2="16" y2="21"/>
-  </svg>`;
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="21" x2="12" y2="17"/><line x1="8" y1="21" x2="16" y2="21"/></svg>`;
 }
-function stopIcon() {
-  return `<svg viewBox="0 0 24 24" fill="#fff" width="28" height="28"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
-}
-function checkIcon() {
-  return `<svg viewBox="0 0 24 24" fill="none" stroke="#9A9890" stroke-width="2" width="28" height="28"><polyline points="20 6 9 17 4 12"/></svg>`;
-}
+function stopIcon()  { return `<svg viewBox="0 0 24 24" fill="#fff" width="28" height="28"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`; }
+function checkIcon() { return `<svg viewBox="0 0 24 24" fill="none" stroke="#9A9890" stroke-width="2" width="28" height="28"><polyline points="20 6 9 17 4 12"/></svg>`; }
 </script>
 </body>
 </html>
