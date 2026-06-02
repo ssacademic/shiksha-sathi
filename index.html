@@ -182,6 +182,38 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;color:var(--ink3);font-size:11px;transition:color 0.15s;}
 .nav-item.active{color:var(--teal);}
 .nav-item svg{width:22px;height:22px;}
+/* settings sheet */
+.sheet-overlay{position:fixed;inset:0;background:rgba(28,28,26,0.4);z-index:200;opacity:0;transition:opacity 0.25s;pointer-events:none;}
+.sheet-overlay.open{opacity:1;pointer-events:all;}
+.sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:var(--surface);border-radius:18px 18px 0 0;z-index:201;transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);max-height:88vh;overflow-y:auto;padding:0 0 40px;}
+.sheet.open{transform:translateX(-50%) translateY(0);}
+.sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 20px;flex-shrink:0;}
+.sheet-title{font-family:'Lora',serif;font-size:20px;font-weight:500;padding:0 20px 16px;color:var(--ink);}
+.sheet-body{padding:0 20px;}
+/* gear button */
+.gear-btn{position:absolute;top:48px;right:20px;width:36px;height:36px;background:none;border:1px solid var(--border);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink3);transition:color 0.15s,border-color 0.15s;}
+.gear-btn:hover{color:var(--teal);border-color:var(--teal);}
+/* tip talk */
+.tiptalk-lock{display:flex;flex-direction:column;align-items:center;gap:12px;padding:40px 20px;text-align:center;}
+.tiptalk-lock-icon{font-size:36px;}
+.tiptalk-progress{height:6px;background:var(--border);border-radius:3px;overflow:hidden;width:100%;max-width:200px;}
+.tiptalk-progress-fill{height:100%;background:var(--teal);border-radius:3px;transition:width 0.4s;}
+/* self-rating */
+.rating-section{margin-bottom:20px;}
+.rating-section-title{font-size:12px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px;}
+.rating-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
+.rating-row:last-child{border-bottom:none;}
+.rating-label{font-size:14px;color:var(--ink);flex:1;}
+.stars{display:flex;gap:4px;}
+.star{font-size:20px;cursor:pointer;line-height:1;transition:transform 0.1s;color:var(--border);}
+.star.active{color:#E8A020;}
+.star:hover{transform:scale(1.2);}
+.goals-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.goal-chip{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--ink2);cursor:pointer;transition:all 0.15s;}
+.goal-chip.selected{background:var(--teal);color:#fff;border-color:var(--teal);}
+/* tip talk chat */
+.tiptalk-thread{display:flex;flex-direction:column;gap:10px;max-height:300px;overflow-y:auto;margin-bottom:10px;}
+
 .spacer-nav{height:72px;}
 </style>
 </head>
@@ -190,13 +222,16 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 
 <!-- ══════ SCREEN 1 — Record ══════ -->
 <div class="screen active" id="screen-record">
-  <div>
+  <div style="position:relative;">
     <p class="wordmark">Shiksha Saathi</p>
     <p class="tagline">Your daily teaching coach</p>
     <h1 id="screen1-heading">Let's talk about today's lesson</h1>
+    <button class="gear-btn" onclick="openSettings()" title="Settings">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
   </div>
 
-  <div class="api-banner" id="api-banner" style="display:none" onclick="navTo('screen-settings','nav-settings');showKeySection()">
+  <div class="api-banner" id="api-banner" style="display:none" onclick="openSettings();showKeySection()">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     No API key — tap to add one. Coaching note will use a template for now.
   </div>
@@ -419,7 +454,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   </div>
 
   <div id="note-no-key" style="display:none;margin-top:-8px;">
-    <div class="api-banner" onclick="navTo('screen-settings','nav-settings');showKeySection()" style="font-size:13px;">
+    <div class="api-banner" onclick="openSettings();showKeySection()" style="font-size:13px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       This is a template note, not AI-generated — no API key set. Tap to add one in Settings.
     </div>
@@ -523,15 +558,67 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 </div>
 
 
-<!-- ══════ SCREEN 5 — Settings ══════ -->
-<div class="screen" id="screen-settings">
+<!-- ══════ SCREEN 5 — Tip Talk ══════ -->
+<div class="screen" id="screen-tiptalk">
   <div>
     <p class="wordmark">Shiksha Saathi</p>
-    <h1>Profile</h1>
+    <h1>Tip Talk</h1>
+    <p class="subtext" style="margin-top:6px;">Your coaching patterns, all in one place.</p>
   </div>
 
-  <div class="card">
-    <!-- profile header -->
+  <!-- locked state -->
+  <div class="tiptalk-lock" id="tiptalk-lock">
+    <div class="tiptalk-lock-icon">💬</div>
+    <h2 style="font-family:'Lora',serif;font-size:18px;">Unlocks after 5 sessions</h2>
+    <p class="subtext">Complete a few more lessons to unlock a conversation about your teaching patterns.</p>
+    <div class="tiptalk-progress">
+      <div class="tiptalk-progress-fill" id="tiptalk-progress-fill" style="width:0%"></div>
+    </div>
+    <p style="font-size:12px;color:var(--ink3);" id="tiptalk-progress-label">0 of 5 sessions</p>
+  </div>
+
+  <!-- unlocked state -->
+  <div id="tiptalk-unlocked" style="display:none;flex-direction:column;gap:20px;">
+
+    <!-- self-rating -->
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <h2 style="font-size:16px;">Rate yourself</h2>
+        <span style="font-size:12px;color:var(--ink3);" id="rating-month-label"></span>
+      </div>
+      <div id="rating-rows"></div>
+      <div style="margin-top:14px;">
+        <p style="font-size:13px;color:var(--ink2);margin-bottom:8px;font-weight:500;">Focus areas this month (pick up to 3):</p>
+        <div class="goals-row" id="goals-row"></div>
+      </div>
+      <button class="btn-primary" style="margin-top:14px;" onclick="saveRatings()">Save ratings</button>
+    </div>
+
+    <!-- chat -->
+    <div class="card" style="display:flex;flex-direction:column;gap:12px;">
+      <h2 style="font-size:16px;">Ask about your patterns</h2>
+      <p class="subtext">Ask anything about your teaching journey — patterns, progress, what to focus on next.</p>
+      <div class="tiptalk-thread" id="tiptalk-thread"></div>
+      <div id="tiptalk-starters" style="display:flex;flex-direction:column;gap:6px;"></div>
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="tiptalk-input" rows="2" placeholder="Ask about your teaching patterns…" onkeydown="onTiptalkKeydown(event)"></textarea>
+        <button class="chat-send" id="tiptalk-send" onclick="sendTiptalk()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="spacer-nav"></div>
+</div>
+
+
+<!-- ══════ SETTINGS SHEET ══════ -->
+<div class="sheet-overlay" id="settings-overlay" onclick="closeSettings()"></div>
+<div class="sheet" id="settings-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Profile &amp; Settings</div>
+  <div class="sheet-body">
     <div class="profile-header">
       <div class="profile-avatar" id="avatar-initials">?</div>
       <div>
@@ -539,27 +626,19 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
         <div class="profile-school" id="profile-school-display">School not set</div>
       </div>
     </div>
-
-    <!-- profile fields -->
-    <div class="setting-section">
+    <div class="setting-section" style="margin-top:16px;">
       <div class="setting-row">
         <span class="setting-label">Name</span>
-        <div class="field" style="margin-top:6px;">
-          <input type="text" id="profile-name" placeholder="Your name…"/>
-        </div>
+        <div class="field" style="margin-top:6px;"><input type="text" id="profile-name" placeholder="Your name…"/></div>
       </div>
       <div class="setting-row">
         <span class="setting-label">School</span>
-        <div class="field" style="margin-top:6px;">
-          <input type="text" id="profile-school" placeholder="School name…"/>
-        </div>
+        <div class="field" style="margin-top:6px;"><input type="text" id="profile-school" placeholder="School name…"/></div>
       </div>
       <div class="setting-row" style="border-bottom:none;">
         <button class="btn-primary" onclick="saveProfile()">Save profile</button>
       </div>
     </div>
-
-    <!-- advanced toggle -->
     <div class="advanced-toggle" id="advanced-toggle" onclick="toggleAdvanced()">
       <span>Advanced settings</span>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -568,7 +647,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       <div class="setting-section">
         <div class="setting-section-title">Gemini API Key</div>
         <div class="setting-row">
-          <span class="setting-desc">Used to generate coaching notes. Stored only on this device — never uploaded anywhere.</span>
+          <span class="setting-desc">Stored only on this device — never uploaded anywhere.</span>
           <div class="key-input-wrap">
             <input type="password" id="api-key-input" placeholder="Paste your key here…" autocomplete="off" spellcheck="false"/>
             <button class="key-toggle" id="key-toggle-btn" onclick="toggleKeyVisibility()">Show</button>
@@ -578,18 +657,15 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
         </div>
         <div class="setting-row">
           <span class="setting-label" style="font-size:13px;">Get a free key</span>
-          <span class="setting-desc">Visit <strong>aistudio.google.com</strong> → sign in with Google → "Get API key" → "Create API key". Free, no card needed.</span>
+          <span class="setting-desc">Visit <strong>aistudio.google.com</strong> → sign in with Google → "Get API key" → "Create API key".</span>
         </div>
         <div class="setting-row" style="border-bottom:none;">
           <span class="setting-label" style="font-size:13px;">Clear all data</span>
-          <span class="setting-desc">Removes saved sessions from this device.</span>
           <button class="btn-ghost" style="margin-top:8px;" onclick="clearAllData()">Clear history</button>
         </div>
       </div>
     </div>
   </div>
-
-  <div class="spacer-nav"></div>
 </div>
 
 <!-- ══════ ONBOARDING OVERLAY — first visit only ══════ -->
@@ -641,9 +717,9 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     Journey
   </div>
-  <div class="nav-item" id="nav-settings" onclick="navTo('screen-settings','nav-settings');loadSettingsScreen()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    Settings
+  <div class="nav-item" id="nav-tiptalk" onclick="navTo('screen-tiptalk','nav-tiptalk');renderTiptalk()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Tip Talk
   </div>
 </nav>
 
@@ -697,7 +773,7 @@ async function retryWithAI() {
   }
   const key = lsGet('ss_gemini_key');
   if (!key) {
-    navTo('screen-settings','nav-settings');
+    openSettings();
     showKeySection();
     return;
   }
@@ -1002,14 +1078,19 @@ async function generateAIQuestion(apiKey, dimId) {
   const prompt = `You are a teaching coach. A teacher described their lesson as:
 "${excerpt}"
 
-The weakest area detected was: ${dimLabel}.
+The weakest area detected in this lesson was: ${dimLabel}.
 
-Write ONE specific reflection question (max 20 words) that:
-- References something the teacher actually mentioned above
-- Helps them notice what happened with: ${dimLabel}
-- Is warm, direct, not preachy
+Write ONE open reflection question (max 20 words) that:
+- Opens with "What" or "How" or "When" — never a leading "Why didn't you..." or "Could you have..."
+- Invites the teacher to describe what actually happened — not what they should have done
+- References something specific from their description above
+- Does NOT imply they failed or suggest a solution
+- Sounds like a curious colleague asking, not an evaluator judging
 
-Reply with ONLY the question. No preamble, no quotes.`;
+Bad example: "When they didn't respond, how could you have given more thinking time?" (too leading, implies failure)
+Good example: "What happened in the moments after you asked a question — how did students respond?" (open, observational)
+
+Reply with ONLY the question. No preamble, no quotes, no explanation.`;
 
   try {
     const res = await fetch(
@@ -1323,8 +1404,19 @@ function fallbackNote() {
 
   const content = DIM_CONTENT[dimId] || DIM_CONTENT['cfu_quality'];
 
+  const STRENGTH_BY_DIM = {
+    prior_review: `You completed the lesson and reflected on it after. That act of pausing to think about what happened — rather than just moving on — is where real improvement starts.`,
+    small_steps:  `You taught through the full content of the lesson. Covering the material is the foundation — the next layer is how you pace it for students to absorb.`,
+    cfu_quality:  `You kept the lesson moving and finished the planned content. That sense of momentum matters, and building check-ins into it will make it even more effective.`,
+    cold_call:    `You engaged the class and kept them with you through the lesson. The questions you asked show you were thinking about their understanding throughout.`,
+    wait_time:    `You asked questions during the lesson — that itself is more than many teachers do. The quality of what you get back from those questions is the next thing to work on.`,
+    student_talk: `You explained the content clearly enough to get through it. The explanation phase was present — the student practice phase is what comes next.`,
+    uptake:       `You responded to what students said during the lesson, keeping the dialogue going. Building on those responses more explicitly is the natural next step.`,
+    back_row:     `You noticed what was happening in the classroom as you taught. That observational awareness — even when you couldn't act on everything — is a real teaching asset.`,
+  };
+
   return {
-    strength: `You completed a full lesson and took time to reflect on it. That habit — stepping back and noticing what happened — is the foundation of every teacher who gets better over time. Most don't do it.`,
+    strength: STRENGTH_BY_DIM[dimId] || `You completed a full lesson and took time to reflect on it. That habit — stepping back and noticing what happened — is the foundation of every teacher who gets better over time.`,
     pattern:  content.pattern,
     try:      content.try,
     tip:      content.tip,
@@ -1395,6 +1487,8 @@ function newSession() {
   // form
   ['subject','grade','topic'].forEach(id=>document.getElementById(id).value='');
   // save btn
+  document.getElementById('note-card').style.display='none';
+  document.getElementById('note-generating').style.display='none';
   const sb=document.getElementById('save-btn');
   sb.textContent='Save this note ✓'; sb.disabled=false;
   document.getElementById('followup-wrap').style.display='none';
@@ -1443,12 +1537,18 @@ function renderJourney() {
 
   // streak — consecutive days with at least one session
   let streak=0;
-  if (sessions.length>0) {
-    const daySet = new Set(sessions.map(s=>new Date(s.date).toDateString()));
-    const check  = new Date();
+  if (sessions.length > 0) {
+    const daySet  = new Set(sessions.map(s => new Date(s.date).toDateString()));
+    const today   = new Date();
+    const check   = new Date();
+    // If no session yet today, start counting from yesterday
+    // (don't punish mid-day — streak can still be maintained today)
+    if (!daySet.has(today.toDateString())) {
+      check.setDate(check.getDate() - 1);
+    }
     while (daySet.has(check.toDateString())) {
       streak++;
-      check.setDate(check.getDate()-1);
+      check.setDate(check.getDate() - 1);
     }
   }
   document.getElementById('stat-streak').textContent = streak;
@@ -1544,18 +1644,45 @@ function toggleExpand(i) {
 // ═══════════════════════════════════
 //  SETTINGS / PROFILE
 // ═══════════════════════════════════
-function loadSettingsScreen() {
+// ═══════════════════════════════════
+//  SETTINGS SHEET
+// ═══════════════════════════════════
+function openSettings() {
+  loadSettingsSheet();
+  document.getElementById('settings-overlay').classList.add('open');
+  document.getElementById('settings-sheet').classList.add('open');
+}
+
+function closeSettings() {
+  document.getElementById('settings-overlay').classList.remove('open');
+  document.getElementById('settings-sheet').classList.remove('open');
+}
+
+function loadSettingsSheet() {
   const name   = lsGet('ss_name');
   const school = lsGet('ss_school');
   document.getElementById('profile-name').value   = name;
   document.getElementById('profile-school').value = school;
   loadProfileDisplay();
   const key = lsGet('ss_gemini_key');
-  document.getElementById('api-key-input').value=key;
+  document.getElementById('api-key-input').value  = key;
   document.getElementById('key-status').textContent = key ? '✓ Key saved on this device' : '';
   document.getElementById('key-status').className   = 'key-status '+(key?'ok':'');
   document.getElementById('advanced-toggle').classList.remove('open');
   document.getElementById('advanced-body').classList.remove('open');
+}
+
+// kept for compatibility
+function loadSettingsScreen() { loadSettingsSheet(); }
+
+function showKeySection() {
+  openSettings();
+  document.getElementById('advanced-toggle').classList.add('open');
+  document.getElementById('advanced-body').classList.add('open');
+  // scroll sheet to key input
+  setTimeout(() => {
+    document.getElementById('api-key-input').scrollIntoView({ behavior:'smooth', block:'center' });
+  }, 350);
 }
 
 function loadProfileDisplay() {
@@ -1574,7 +1701,7 @@ function saveProfile() {
   if (school) lsSet('ss_school', school);
   loadProfileDisplay();
   updateGreeting();
-  const btn = document.querySelector('#screen-settings .btn-primary');
+  const btn = document.querySelector('#settings-sheet .btn-primary');
   const orig = btn.textContent;
   // Show feedback even if fields were empty
   btn.textContent = (name || school) ? 'Saved ✓' : 'Nothing to save — fill in your name first';
@@ -1602,12 +1729,7 @@ function toggleAdvanced() {
   document.getElementById('advanced-body').classList.toggle('open');
 }
 
-function showKeySection() {
-  loadSettingsScreen();
-  // open advanced section automatically when coming from banner
-  document.getElementById('advanced-toggle').classList.add('open');
-  document.getElementById('advanced-body').classList.add('open');
-}
+// showKeySection defined above in settings sheet section
 
 function clearAllData() {
   // Use a custom in-page confirm to avoid blocked confirm() in WebViews
@@ -2600,6 +2722,214 @@ async function copyToClipboard(text, btnId, successLabel, originalLabel) {
     const btn = document.getElementById(btnId);
     if (btn) { btn.textContent = successLabel; setTimeout(()=>btn.textContent=originalLabel, 2000); }
   }
+}
+
+// ═══════════════════════════════════
+//  TIP TALK
+// ═══════════════════════════════════
+const TIPTALK_UNLOCK_COUNT = 5;
+const DIM_NAMES = {
+  prior_review: 'Prior knowledge review',
+  small_steps:  'Small steps & practice',
+  cfu_quality:  'Checking understanding',
+  cold_call:    'Cold-calling by name',
+  wait_time:    'Wait time',
+  student_talk: 'Student talk',
+  uptake:       'Uptake of responses',
+  back_row:     'Reaching all students',
+};
+const TIPTALK_STARTERS = [
+  "What teaching pattern shows up most in my sessions?",
+  "Which dimension should I focus on this month?",
+  "How have I been doing on cold-calling students?",
+  "What's one thing I keep struggling with?",
+];
+
+let tiptalkHistory = [];
+
+function renderTiptalk() {
+  const sessions = lsGetJSON('ss_sessions', []);
+  const count    = sessions.length;
+  const locked   = count < TIPTALK_UNLOCK_COUNT;
+
+  document.getElementById('tiptalk-lock').style.display     = locked ? 'flex' : 'none';
+  document.getElementById('tiptalk-unlocked').style.display = locked ? 'none' : 'flex';
+
+  if (locked) {
+    const pct = Math.min(100, Math.round((count / TIPTALK_UNLOCK_COUNT) * 100));
+    document.getElementById('tiptalk-progress-fill').style.width = pct + '%';
+    document.getElementById('tiptalk-progress-label').textContent =
+      `${count} of ${TIPTALK_UNLOCK_COUNT} sessions`;
+    return;
+  }
+
+  // Render self-rating
+  const now = new Date();
+  const monthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  document.getElementById('rating-month-label').textContent =
+    now.toLocaleString('en-IN',{month:'long', year:'numeric'});
+
+  const saved = lsGetJSON('ss_ratings', {});
+  const ratings = saved[monthKey] || {};
+  const goals   = lsGetJSON('ss_goals', []);
+
+  // Rating rows
+  const rr = document.getElementById('rating-rows');
+  rr.innerHTML = Object.entries(DIM_NAMES).map(([id, label]) => {
+    const val = ratings[id] || 0;
+    const stars = [1,2,3,4,5].map(n =>
+      `<span class="star${n<=val?' active':''}" onclick="setRating('${id}',${n})">${n<=val?'★':'☆'}</span>`
+    ).join('');
+    return `<div class="rating-row">
+      <span class="rating-label">${label}</span>
+      <div class="stars" id="stars-${id}">${stars}</div>
+    </div>`;
+  }).join('');
+
+  // Goals chips
+  const gr = document.getElementById('goals-row');
+  gr.innerHTML = Object.entries(DIM_NAMES).map(([id, label]) =>
+    `<button class="goal-chip${goals.includes(id)?' selected':''}" onclick="toggleGoal('${id}',this)">${label}</button>`
+  ).join('');
+
+  // Chat starters (only if no messages yet)
+  if (tiptalkHistory.length === 0) {
+    const st = document.getElementById('tiptalk-starters');
+    st.innerHTML = TIPTALK_STARTERS.map(q =>
+      `<button class="followup-chip" onclick="sendTiptalkQuestion('${q.replace(/'/g,"\\'")}')">${q}</button>`
+    ).join('');
+  }
+}
+
+function setRating(dimId, val) {
+  const now = new Date();
+  const monthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  const saved = lsGetJSON('ss_ratings', {});
+  if (!saved[monthKey]) saved[monthKey] = {};
+  saved[monthKey][dimId] = val;
+  lsSet('ss_ratings', JSON.stringify(saved));
+
+  // Update star display
+  const container = document.getElementById('stars-' + dimId);
+  if (container) {
+    container.innerHTML = [1,2,3,4,5].map(n =>
+      `<span class="star${n<=val?' active':''}" onclick="setRating('${dimId}',${n})">${n<=val?'★':'☆'}</span>`
+    ).join('');
+  }
+}
+
+function toggleGoal(dimId, btn) {
+  const goals = lsGetJSON('ss_goals', []);
+  const idx   = goals.indexOf(dimId);
+  if (idx >= 0) {
+    goals.splice(idx, 1);
+    btn.classList.remove('selected');
+  } else {
+    if (goals.length >= 3) {
+      // Max 3 — flash warning
+      btn.style.borderColor = 'var(--red)';
+      setTimeout(() => btn.style.borderColor = '', 1000);
+      return;
+    }
+    goals.push(dimId);
+    btn.classList.add('selected');
+  }
+  lsSet('ss_goals', JSON.stringify(goals));
+}
+
+function saveRatings() {
+  const btn = document.querySelector('#screen-tiptalk .btn-primary');
+  const orig = btn.textContent;
+  btn.textContent = 'Saved ✓';
+  setTimeout(() => btn.textContent = orig, 1500);
+}
+
+function onTiptalkKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendTiptalk(); }
+}
+
+function sendTiptalkQuestion(q) {
+  document.getElementById('tiptalk-starters').style.display = 'none';
+  addTiptalkBubble('teacher', q);
+  fetchTiptalkResponse(q);
+}
+
+function sendTiptalk() {
+  const input = document.getElementById('tiptalk-input');
+  const text  = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  document.getElementById('tiptalk-starters').style.display = 'none';
+  addTiptalkBubble('teacher', text);
+  fetchTiptalkResponse(text);
+}
+
+function addTiptalkBubble(role, text) {
+  const thread = document.getElementById('tiptalk-thread');
+  thread.style.display = 'flex';
+  const div = document.createElement('div');
+  div.className = 'chat-bubble ' + role;
+  div.textContent = text;
+  thread.appendChild(div);
+  setTimeout(() => thread.scrollTop = thread.scrollHeight, 50);
+  return div;
+}
+
+async function fetchTiptalkResponse(question) {
+  const key = lsGet('ss_gemini_key');
+  const typing = addTiptalkBubble('coach', '…');
+  document.getElementById('tiptalk-send').disabled = true;
+  document.getElementById('tiptalk-input').disabled = true;
+
+  let response = '';
+
+  if (!key || !navigator.onLine) {
+    response = "Add a Gemini API key in Settings (tap ⚙ on the main screen) to get AI responses here.";
+  } else {
+    try {
+      const sessions = lsGetJSON('ss_sessions', []);
+      const goals    = lsGetJSON('ss_goals', []);
+      const monthKey = new Date().getFullYear() + '-' + String(new Date().getMonth()+1).padStart(2,'0');
+      const ratings  = (lsGetJSON('ss_ratings', {}))[monthKey] || {};
+
+      const context = `Teacher's session history (${sessions.length} sessions):
+Tips from recent sessions:
+${sessions.slice(0,10).map(s => `- ${s.dateDisplay} (${s.subject||'?'}, ${s.grade||'?'}): ${s.tip}`).join('\n')}
+
+Self-ratings this month (1-5): ${Object.entries(ratings).map(([k,v])=>`${DIM_NAMES[k]}: ${v}/5`).join(', ') || 'not rated yet'}
+Focus goals: ${goals.map(g=>DIM_NAMES[g]).join(', ') || 'none set'}`;
+
+      const systemPrompt = `You are Shiksha Saathi, a teaching coach. You have access to a teacher's session history and self-ratings.
+Help them understand their teaching patterns, celebrate progress, and identify focus areas.
+Be specific — reference actual tips and patterns from their history.
+Voice: warm, direct, like a thoughtful mentor. Maximum 4 sentences.`;
+
+      tiptalkHistory.push({ role:'user', parts:[{text: question}] });
+
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${key}`,
+        { method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            system_instruction: { parts:[{text: systemPrompt + '\n\n' + context}] },
+            contents: tiptalkHistory,
+            generationConfig: { temperature:0.7, maxOutputTokens:250 }
+          })
+        }
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      response = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'Could not get a response.';
+      tiptalkHistory.push({ role:'model', parts:[{text: response}] });
+    } catch(e) {
+      response = "Couldn't reach the coaching service — try again in a moment.";
+      tiptalkHistory.pop(); // remove failed user message
+    }
+  }
+
+  typing.textContent = response;
+  document.getElementById('tiptalk-send').disabled = false;
+  document.getElementById('tiptalk-input').disabled = false;
+  document.getElementById('tiptalk-input').focus();
 }
 
 // ═══════════════════════════════════
