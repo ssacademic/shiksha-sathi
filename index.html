@@ -75,6 +75,13 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 .note-body{font-size:15px;color:var(--ink);line-height:1.65;}
 .note-sep{height:1px;background:var(--border);margin:4px 0;}
 .generating{display:flex;flex-direction:column;align-items:center;gap:12px;padding:32px 20px;text-align:center;}
+.tip-box{background:var(--amber-l);border:1px solid rgba(200,121,26,0.2);border-radius:10px;padding:12px 16px;display:flex;align-items:flex-start;gap:10px;}
+.tip-box-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.tip-box-text{font-size:14px;color:var(--amber);line-height:1.5;font-weight:500;}
+.quick-rev-item{padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;}
+.quick-rev-item:last-child{border-bottom:none;}
+.quick-rev-meta{font-size:11px;color:var(--ink3);white-space:nowrap;padding-top:2px;}
+.quick-rev-tip{font-size:13px;color:var(--ink);line-height:1.45;}
 .spinner{width:32px;height:32px;border:3px solid var(--teal-l);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .tag-row{display:flex;gap:8px;flex-wrap:wrap;}
@@ -280,6 +287,11 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       <span class="note-tag try">Try tomorrow</span>
       <p class="note-body" id="note-try"></p>
     </div>
+    <div class="note-sep"></div>
+    <div class="tip-box">
+      <span class="tip-box-icon">💡</span>
+      <span class="tip-box-text" id="note-tip">—</span>
+    </div>
   </div>
 
   <div id="note-error" style="display:none;margin-top:-8px;">
@@ -320,6 +332,12 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <p style="font-size:12px;color:var(--ink3);margin-bottom:10px;letter-spacing:0.04em;text-transform:uppercase;font-weight:500;">Last 7 days</p>
     <div class="streak-bar" id="streak-bar"></div>
     <div style="display:flex;justify-content:space-between;margin-top:6px;" id="streak-labels"></div>
+  </div>
+
+  <!-- quick revisions -->
+  <div id="quick-rev-wrap">
+    <p style="font-size:12px;color:var(--ink3);letter-spacing:0.04em;text-transform:uppercase;font-weight:500;margin-bottom:10px;">Quick revision — all tips</p>
+    <div class="card" id="quick-rev-list" style="display:flex;flex-direction:column;gap:0;padding:8px 16px;"></div>
   </div>
 
   <!-- timeline -->
@@ -603,6 +621,7 @@ async function showFeedbackScreen() {
   document.getElementById('note-strength').textContent = note.strength;
   document.getElementById('note-pattern').textContent  = note.pattern;
   document.getElementById('note-try').textContent      = note.try;
+  document.getElementById('note-tip').textContent      = note.tip||'';
   document.getElementById('note-generating').style.display='none';
   document.getElementById('note-card').style.display='flex';
   document.getElementById('save-btn').disabled=false;
@@ -623,7 +642,7 @@ Use principles from Rosenshine's Principles of Instruction and Teach Like a Cham
 Watch for: daily review / prior knowledge activation, checking for understanding (CFU quality vs choral responses), wait time, cold-calling by name, pacing, student talk ratio, back-row engagement.
 
 Respond ONLY in this JSON format, nothing else, no markdown:
-{"strength":"2-3 sentences on one specific thing the teacher did well.","pattern":"2-3 sentences on one pattern limiting learning, explained gently.","try":"2-3 sentences: one very concrete small action for the very next lesson."}
+{"strength":"2-3 sentences on one specific thing the teacher did well.","pattern":"2-3 sentences on one pattern limiting learning, explained gently.","try":"2-3 sentences: one very concrete small action for the very next lesson.","tip":"One sentence, max 15 words, imperative verb, the single most actionable takeaway. Example: 'Cold-call one student by name after your next explanation.'"}
 
 Tone: warm, practical, non-judgmental. Like a supportive colleague, not an evaluator. Avoid jargon.
 
@@ -655,7 +674,8 @@ function fallbackNote() {
   return {
     strength:`You completed a full lesson and took time to reflect — that habit alone is valuable. Recording and reviewing your own teaching is a meaningful first step toward growth.`,
     pattern:`Think about how many students responded individually. If most answers came from the whole class together, it's worth asking: do you know which individual students understood, and which didn't?`,
-    try:`In your next lesson, after explaining something, pause for 5 seconds — then say one student's name and ask them to explain it back. Just one student, one time. Notice what you learn from that single exchange.`
+    try:`In your next lesson, after explaining something, pause for 5 seconds — then say one student's name and ask them to explain it back. Just one student, one time. Notice what you learn from that single exchange.`,
+    tip:`Pause after your next explanation and cold-call one student by name.`
   };
 }
 
@@ -673,6 +693,7 @@ function saveSession() {
     strength: document.getElementById('note-strength').textContent.trim(),
     pattern:  document.getElementById('note-pattern').textContent.trim(),
     tryThis:  document.getElementById('note-try').textContent.trim(),
+    tip:      document.getElementById('note-tip').textContent.trim(),
   });
   localStorage.setItem('ss_sessions',JSON.stringify(sessions));
   const btn=document.getElementById('save-btn');
@@ -762,17 +783,26 @@ function renderJourney() {
     labels.appendChild(lbl);
   }
 
-  // timeline
-  const tl=document.getElementById('timeline-list');
+  // quick revisions list
+  const qr=document.getElementById('quick-rev-list');
   if (sessions.length===0) {
-    tl.innerHTML=`<p class="subtext" style="text-align:center;padding:24px 0;">No sessions yet.<br/>Record your first lesson to get started.</p>`;
+    qr.innerHTML=`<p class="subtext" style="padding:12px 0;text-align:center;">No tips yet — complete a session to see them here.</p>`;
+    document.getElementById('timeline-list').innerHTML=`<p class="subtext" style="text-align:center;padding:24px 0;">No sessions yet.<br/>Record your first lesson to get started.</p>`;
     return;
   }
+  qr.innerHTML=sessions.map(s=>`
+    <div class="quick-rev-item">
+      <span class="quick-rev-meta">${s.dateDisplay}<br/>${s.subject||''}</span>
+      <span class="quick-rev-tip">${s.tip||s.tryThis.substring(0,80)+'…'}</span>
+    </div>`).join('');
+
+  // timeline
+  const tl=document.getElementById('timeline-list');
   tl.innerHTML=sessions.map((s,i)=>`
     <div class="timeline-item" onclick="toggleExpand(${i})">
       <div class="timeline-meta">${s.dateDisplay}${s.subject?' · '+s.subject:''}${s.grade?', '+s.grade:''}</div>
       ${s.topic?`<div class="timeline-title">${s.topic}</div>`:'<div class="timeline-title">Lesson</div>'}
-      <div class="timeline-preview">${s.tryThis.substring(0,80)}…</div>
+      <div class="timeline-preview">${s.tip||s.tryThis.substring(0,80)+'…'}</div>
       <div class="timeline-expanded" id="exp-${i}">
         <div class="exp-section">
           <span class="exp-tag s">What worked</span>
