@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shiksha Sahai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  /* ── tokens ── */
+  :root {
+    --bg:       #F5F0E8;
+    --surface:  #FDFAF4;
+    --ink:      #1C1C1A;
+    --ink2:     #5A5850;
+    --ink3:     #9A9890;
+    --teal:     #1D6B5A;
+    --teal-l:   #E6F0ED;
+    --amber:    #C8791A;
+    --amber-l:  #FDF3E3;
+    --red:      #B84040;
+    --red-l:    #FDEAEA;
+    --border:   rgba(28,28,26,0.12);
+    --radius:   14px;
+    --shadow:   0 2px 16px rgba(28,28,26,0.08);
+  }
+
+  /* ── reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── layout ── */
+  .app {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+  }
+
+  /* ── screens ── */
+  .screen { display: none; flex-direction: column; gap: 24px; padding-top: 48px; animation: fadeIn 0.3s ease; }
+  .screen.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── wordmark ── */
+  .wordmark {
+    font-family: 'Lora', serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: -8px;
+  }
+
+  /* ── headings ── */
+  h1 {
+    font-family: 'Lora', serif;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  h2 {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .subtext { font-size: 14px; color: var(--ink2); line-height: 1.55; }
+
+  /* ── card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  /* ── form fields ── */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink2); }
+  .field select, .field input {
+    appearance: none;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field select:focus, .field input:focus { border-color: var(--teal); }
+
+  /* ── row of fields ── */
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* ── record button ── */
+  .rec-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 28px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .rec-btn {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+  }
+  .rec-btn:active { transform: scale(0.95); }
+  .rec-btn.idle   { background: var(--teal); box-shadow: 0 4px 20px rgba(29,107,90,0.35); }
+  .rec-btn.idle:hover { box-shadow: 0 6px 28px rgba(29,107,90,0.45); transform: translateY(-1px); }
+  .rec-btn.recording { background: var(--red); box-shadow: 0 4px 20px rgba(184,64,64,0.4); animation: pulse 1.4s ease-in-out infinite; }
+  .rec-btn.done { background: #e8e4da; box-shadow: none; cursor: default; }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 4px 20px rgba(184,64,64,0.4); }
+    50% { box-shadow: 0 4px 36px rgba(184,64,64,0.65); }
+  }
+  .rec-btn svg { width: 28px; height: 28px; }
+  .rec-label { font-size: 14px; color: var(--ink2); text-align: center; }
+  .rec-label strong { color: var(--ink); display: block; font-size: 15px; font-weight: 500; }
+  .rec-timer { font-family: 'Lora', serif; font-size: 22px; color: var(--red); letter-spacing: 0.04em; }
+
+  /* ── ripple ring (recording indicator) ── */
+  .rec-btn.recording::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid var(--red);
+    opacity: 0;
+    animation: ring 1.4s ease-out infinite;
+  }
+  @keyframes ring {
+    0% { opacity: 0.6; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.35); }
+  }
+
+  /* ── status pill ── */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .pill.processing { background: var(--amber-l); color: var(--amber); }
+  .pill.done-pill  { background: var(--teal-l);  color: var(--teal);  }
+  .pill.dot::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* ── divider ── */
+  .divider { display: flex; align-items: center; gap: 12px; color: var(--ink3); font-size: 13px; }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── primary button ── */
+  .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: var(--teal);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-primary:hover { background: #175a4a; }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { background: var(--ink3); cursor: not-allowed; transform: none; }
+
+  /* ── ghost button ── */
+  .btn-ghost {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    background: transparent;
+    color: var(--ink2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* ── reflection question box ── */
+  .question-box {
+    background: var(--teal-l);
+    border-left: 3px solid var(--teal);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 16px 18px;
+  }
+  .question-box p {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    color: var(--teal);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* ── coaching note sections ── */
+  .note-section { display: flex; flex-direction: column; gap: 8px; }
+  .note-tag {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    align-self: flex-start;
+  }
+  .note-tag.strength { background: var(--teal-l); color: var(--teal); }
+  .note-tag.pattern  { background: var(--amber-l); color: var(--amber); }
+  .note-tag.try      { background: #EEF3FF; color: #3B5FBE; }
+  .note-body {
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.65;
+  }
+  .note-sep { height: 1px; background: var(--border); margin: 4px 0; }
+
+  /* ── session history ── */
+  .history-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .history-item:last-child { border-bottom: none; }
+  .history-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--teal);
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .history-meta { font-size: 12px; color: var(--ink3); }
+  .history-text { font-size: 14px; color: var(--ink2); margin-top: 2px; }
+
+  /* ── back link ── */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--ink2);
+    cursor: pointer;
+    margin-bottom: -8px;
+    width: fit-content;
+  }
+  .back-link:hover { color: var(--teal); }
+
+  /* ── bottom nav ── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding: 10px 0 20px;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    padding: 6px 0;
+    color: var(--ink3);
+    font-size: 11px;
+    transition: color 0.15s;
+  }
+  .nav-item.active { color: var(--teal); }
+  .nav-item svg { width: 22px; height: 22px; }
+
+  /* ── extras ── */
+  .spacer-nav { height: 72px; }
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .info-tag {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--ink2);
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ════════════════════════════════
+       SCREEN 1 — Record lesson
+       ════════════════════════════════ -->
+  <div class="screen active" id="screen-record">
+    <div>
+      <p class="wordmark">Shiksha Sahai</p>
+      <h1>Today's<br/>lesson</h1>
+    </div>
+
+    <!-- context fields -->
+    <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+      <div class="field-row">
+        <div class="field">
+          <label>Subject</label>
+          <select id="subject">
+            <option value="">— pick —</option>
+            <option>Maths</option>
+            <option>Science</option>
+            <option>Hindi</option>
+            <option>English</option>
+            <option>Social Science</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Class</label>
+          <select id="grade">
+            <option value="">— pick —</option>
+            <option>Class 4</option>
+            <option>Class 5</option>
+            <option>Class 6</option>
+            <option>Class 7</option>
+            <option>Class 8</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Topic (optional)</label>
+        <input type="text" id="topic" placeholder="e.g. Fractions, Parts of a plant…"/>
+      </div>
+    </div>
+
+    <!-- recorder -->
+    <div class="rec-area" id="lesson-rec-area">
+      <button class="rec-btn idle" id="lesson-rec-btn" onclick="toggleLessonRecording()">
+        <!-- mic icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="2" width="6" height="12" rx="3"/>
+          <path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="21" x2="12" y2="17"/>
+          <line x1="8" y1="21" x2="16" y2="21"/>
+        </svg>
+      </button>
+      <div class="rec-label">
+        <strong id="lesson-rec-label">Tap to start recording</strong>
+        <span id="lesson-rec-sub">Record your full class period</span>
+      </div>
+      <div class="rec-timer" id="lesson-timer" style="display:none">0:00</div>
+    </div>
+
+    <!-- status: shows after recording done -->
+    <div id="lesson-status" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <span class="pill processing dot" id="status-pill">Transcribing…</span>
+        <span class="subtext" id="status-text">This takes a moment</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="proceed-btn" disabled onclick="proceedToReflection()">
+      Continue to reflection →
+    </button>
+
+    <div class="spacer-nav"></div>
+  </div>
+
+
+  <!-- ════════════════════════════════
+       SCREEN 2 — Reflection
+       ════════════════════════════════ -->
+  <div class="screen" id="screen-reflect">
+    <div class="back-link" onclick="goTo('screen-record')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
+      Back
+    </div>
+
+    <div>
+      <p class="wordmark">Shiksha Sahai</p>
+      <h1>One moment<br/>before feedback</h1>
+      <p class="subtext" style="margin-top:8px;">Your answer shapes the coaching note you'll receive.</p>
+    </div>
+
+    <!-- the generated reflection question -->
+    <div class="question-box">
+      <p id="reflection-question">
+        "You mentioned the back row wasn't following — what do you think was happening there?"
+      </p>
+    </div>
+
+    <!-- reflection recorder -->
+    <div class="rec-area" id="reflect-rec-area">
+      <button class="rec-btn idle" id="reflect-rec-btn" onclick="toggleReflectRecording()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="2" width="6" height="12" rx="3"/>
+          <path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="21" x2="12" y2="17"/>
+          <line x1="8" y1="21" x2="16" y2="21"/>
+        </svg>
+      </button>
+      <div class="rec-label">
+        <strong id="reflect-rec-label">Tap to answer</strong>
+        <span>Speak freely, 30–60 seconds</span>
+      </div>
+      <div class="rec-timer" id="reflect-timer" style="display:none">0:00</div>
+    </div>
+
+    <button class="btn-primary" id="feedback-btn" disabled onclick="proceedToFeedback()">
+      Get my coaching note →
+    </button>
+    <button class="btn-ghost" onclick="skipReflection()">Skip — just show the note</button>
+
+    <div class="spacer-nav"></div>
+  </div>
+
+
+  <!-- ════════════════════════════════
+       SCREEN 3 — Coaching note
+       ════════════════════════════════ -->
+  <div class="screen" id="screen-feedback">
+    <div class="back-link" onclick="goTo('screen-reflect')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
+      Back
+    </div>
+
+    <div>
+      <p class="wordmark">Shiksha Sahai</p>
+      <h1>Your coaching<br/>note</h1>
+    </div>
+
+    <!-- context tags -->
+    <div class="tag-row" id="session-tags">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- the note card -->
+    <div class="card" id="note-card" style="display:flex;flex-direction:column;gap:16px;">
+
+      <div class="note-section">
+        <span class="note-tag strength">What worked</span>
+        <p class="note-body" id="note-strength">
+          You opened with a strong recall question — asking three students by name
+          about yesterday's content before introducing new material. That's exactly
+          the kind of daily review that builds long-term retention.
+        </p>
+      </div>
+
+      <div class="note-sep"></div>
+
+      <div class="note-section">
+        <span class="note-tag pattern">A pattern to notice</span>
+        <p class="note-body" id="note-pattern">
+          Most responses stayed choral — the whole class answering together.
+          That makes it hard to know which individual students actually understood.
+          Checking for understanding was thin after your main explanation.
+        </p>
+      </div>
+
+      <div class="note-sep"></div>
+
+      <div class="note-section">
+        <span class="note-tag try">Try tomorrow</span>
+        <p class="note-body" id="note-try">
+          After your next explanation, pause for 5 seconds — then cold-call
+          one student by name before moving on. Just one. It takes 20 seconds
+          and tells you far more than "everyone understood?"
+        </p>
+      </div>
+    </div>
+
+    <!-- save / next -->
+    <button class="btn-primary" onclick="saveSession()">Save this note ✓</button>
+    <button class="btn-ghost" onclick="newSession()">Start a new session</button>
+
+    <div class="spacer-nav"></div>
+  </div>
+
+
+  <!-- ════════════════════════════════
+       SCREEN 4 — History / Journey
+       ════════════════════════════════ -->
+  <div class="screen" id="screen-history">
+    <div>
+      <p class="wordmark">Shiksha Sahai</p>
+      <h1>Your journey</h1>
+      <p class="subtext" style="margin-top:6px;">Patterns across your sessions.</p>
+    </div>
+
+    <div class="card" id="history-list">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="spacer-nav"></div>
+  </div>
+
+</div><!-- /app -->
+
+
+<!-- ── bottom nav ── -->
+<nav class="bottom-nav">
+  <div class="nav-item active" id="nav-home" onclick="navTo('screen-record','nav-home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 12L12 4l9 8"/><path d="M9 21V12h6v9"/>
+    </svg>
+    Record
+  </div>
+  <div class="nav-item" id="nav-history" onclick="navTo('screen-history','nav-history')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
+    Journey
+  </div>
+</nav>
+
+
+<script>
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+const state = {
+  lessonRecording: false,
+  lessonDone: false,
+  reflectDone: false,
+  lessonSeconds: 0,
+  reflectSeconds: 0,
+  lessonInterval: null,
+  reflectInterval: null,
+  lessonMediaRecorder: null,
+  reflectMediaRecorder: null,
+  lessonAudioBlob: null,
+  reflectAudioBlob: null,
+  sessionSubject: '',
+  sessionGrade: '',
+  sessionTopic: '',
+};
+
+// ══════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════
+function goTo(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function navTo(screenId, navId) {
+  goTo(screenId);
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(navId).classList.add('active');
+  if (screenId === 'screen-history') renderHistory();
+}
+
+// ══════════════════════════════════════════
+//  LESSON RECORDING
+// ══════════════════════════════════════════
+async function toggleLessonRecording() {
+  const btn = document.getElementById('lesson-rec-btn');
+  const label = document.getElementById('lesson-rec-label');
+  const sub = document.getElementById('lesson-rec-sub');
+  const timer = document.getElementById('lesson-timer');
+
+  if (state.lessonDone) return;
+
+  if (!state.lessonRecording) {
+    // START
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      state.lessonMediaRecorder = new MediaRecorder(stream);
+      const chunks = [];
+      state.lessonMediaRecorder.ondataavailable = e => chunks.push(e.data);
+      state.lessonMediaRecorder.onstop = () => {
+        state.lessonAudioBlob = new Blob(chunks, { type: 'audio/webm' });
+        onLessonRecordingComplete();
+      };
+      state.lessonMediaRecorder.start();
+    } catch(e) {
+      // Demo fallback: no mic access (e.g. file:// or blocked)
+      console.warn('Mic not available, using demo mode:', e.message);
+      state.lessonAudioBlob = null; // will use dummy transcript
+    }
+
+    state.lessonRecording = true;
+    state.lessonSeconds = 0;
+    btn.className = 'rec-btn recording';
+    // swap to stop icon
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="#fff" width="28" height="28"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
+    label.textContent = 'Recording…';
+    sub.textContent = 'Tap to stop when done';
+    timer.style.display = 'block';
+
+    state.lessonInterval = setInterval(() => {
+      state.lessonSeconds++;
+      timer.textContent = formatTime(state.lessonSeconds);
+    }, 1000);
+
+  } else {
+    // STOP
+    clearInterval(state.lessonInterval);
+    state.lessonRecording = false;
+    if (state.lessonMediaRecorder && state.lessonMediaRecorder.state !== 'inactive') {
+      state.lessonMediaRecorder.stop();
+      state.lessonMediaRecorder.stream.getTracks().forEach(t => t.stop());
+    } else {
+      onLessonRecordingComplete(); // demo fallback
+    }
+    btn.className = 'rec-btn done';
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#9A9890" stroke-width="2" width="28" height="28"><polyline points="20 6 9 17 4 12"/></svg>`;
+    label.textContent = 'Recording saved';
+    sub.textContent = `Duration: ${formatTime(state.lessonSeconds)}`;
+  }
+}
+
+function onLessonRecordingComplete() {
+  state.lessonDone = true;
+  document.getElementById('lesson-status').style.display = 'block';
+
+  // Simulate transcription (replace with real Whisper WASM later)
+  const pill = document.getElementById('status-pill');
+  const statusText = document.getElementById('status-text');
+  pill.className = 'pill processing dot';
+  pill.textContent = 'Transcribing…';
+  statusText.textContent = 'Processing your audio';
+
+  setTimeout(() => {
+    pill.className = 'pill done-pill dot';
+    pill.textContent = 'Transcribed';
+    statusText.textContent = 'Ready to continue';
+    document.getElementById('proceed-btn').disabled = false;
+  }, 2200); // simulates Whisper processing time
+}
+
+// ══════════════════════════════════════════
+//  REFLECT RECORDING
+// ══════════════════════════════════════════
+async function toggleReflectRecording() {
+  const btn = document.getElementById('reflect-rec-btn');
+  const label = document.getElementById('reflect-rec-label');
+  const timer = document.getElementById('reflect-timer');
+
+  if (state.reflectDone) return;
+
+  if (!state.reflectRecording) {
+    state.reflectRecording = true;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      state.reflectMediaRecorder = new MediaRecorder(stream);
+      const chunks = [];
+      state.reflectMediaRecorder.ondataavailable = e => chunks.push(e.data);
+      state.reflectMediaRecorder.onstop = () => {
+        state.reflectAudioBlob = new Blob(chunks, { type: 'audio/webm' });
+      };
+      state.reflectMediaRecorder.start();
+    } catch(e) {
+      console.warn('Mic not available, demo mode');
+    }
+
+    state.reflectSeconds = 0;
+    btn.className = 'rec-btn recording';
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="#fff" width="28" height="28"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
+    label.textContent = 'Recording…';
+    timer.style.display = 'block';
+
+    state.reflectInterval = setInterval(() => {
+      state.reflectSeconds++;
+      timer.textContent = formatTime(state.reflectSeconds);
+      // auto-stop at 90s
+      if (state.reflectSeconds >= 90) stopReflectRecording();
+    }, 1000);
+
+  } else {
+    stopReflectRecording();
+  }
+}
+
+function stopReflectRecording() {
+  clearInterval(state.reflectInterval);
+  state.reflectRecording = false;
+  state.reflectDone = true;
+  const btn = document.getElementById('reflect-rec-btn');
+  const label = document.getElementById('reflect-rec-label');
+  if (state.reflectMediaRecorder && state.reflectMediaRecorder.state !== 'inactive') {
+    state.reflectMediaRecorder.stop();
+    state.reflectMediaRecorder.stream.getTracks().forEach(t => t.stop());
+  }
+  btn.className = 'rec-btn done';
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#9A9890" stroke-width="2" width="28" height="28"><polyline points="20 6 9 17 4 12"/></svg>`;
+  label.textContent = 'Response saved';
+  document.getElementById('feedback-btn').disabled = false;
+}
+
+// ══════════════════════════════════════════
+//  TRANSITIONS
+// ══════════════════════════════════════════
+function proceedToReflection() {
+  state.sessionSubject = document.getElementById('subject').value || 'Lesson';
+  state.sessionGrade   = document.getElementById('grade').value || '';
+  state.sessionTopic   = document.getElementById('topic').value || '';
+
+  // Generate a dummy reflection question (replace with rubric logic later)
+  const questions = [
+    "You taught a full lesson today — which moment felt most uncertain, and why?",
+    "Think about when you asked questions. Who answered? Who stayed quiet?",
+    "Was there a point where you felt you lost the class? What was happening then?",
+    "How much did students talk compared to you today? What does that tell you?",
+    "If you taught this lesson again tomorrow, what one thing would you change first?",
+  ];
+  const q = questions[Math.floor(Math.random() * questions.length)];
+  document.getElementById('reflection-question').textContent = `"${q}"`;
+
+  goTo('screen-reflect');
+}
+
+function proceedToFeedback() {
+  showFeedbackScreen();
+}
+
+function skipReflection() {
+  showFeedbackScreen();
+}
+
+function showFeedbackScreen() {
+  // Fill context tags
+  const tags = document.getElementById('session-tags');
+  tags.innerHTML = '';
+  const items = [state.sessionSubject, state.sessionGrade, state.sessionTopic].filter(Boolean);
+  items.forEach(t => {
+    const span = document.createElement('span');
+    span.className = 'info-tag';
+    span.textContent = t;
+    tags.appendChild(span);
+  });
+
+  // Dummy coaching note — replace with Gemini API call later
+  // (content already set in HTML as default, but we could vary by subject here)
+  goTo('screen-feedback');
+}
+
+// ══════════════════════════════════════════
+//  SESSION SAVE
+// ══════════════════════════════════════════
+function saveSession() {
+  const sessions = JSON.parse(localStorage.getItem('ss_sessions') || '[]');
+  sessions.unshift({
+    date: new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short' }),
+    subject: state.sessionSubject,
+    grade: state.sessionGrade,
+    topic: state.sessionTopic,
+    strength: document.getElementById('note-strength').textContent.trim(),
+    pattern:  document.getElementById('note-pattern').textContent.trim(),
+    tryThis:  document.getElementById('note-try').textContent.trim(),
+  });
+  localStorage.setItem('ss_sessions', JSON.stringify(sessions));
+
+  const btn = document.querySelector('#screen-feedback .btn-primary');
+  btn.textContent = 'Saved ✓';
+  btn.disabled = true;
+}
+
+function newSession() {
+  // reset state
+  state.lessonDone = false;
+  state.reflectDone = false;
+  state.lessonSeconds = 0;
+  state.reflectSeconds = 0;
+  state.lessonAudioBlob = null;
+  state.reflectAudioBlob = null;
+
+  // reset UI
+  const lbtn = document.getElementById('lesson-rec-btn');
+  lbtn.className = 'rec-btn idle';
+  lbtn.innerHTML = micIcon();
+  document.getElementById('lesson-rec-label').textContent = 'Tap to start recording';
+  document.getElementById('lesson-rec-sub').textContent = 'Record your full class period';
+  document.getElementById('lesson-timer').style.display = 'none';
+  document.getElementById('lesson-status').style.display = 'none';
+  document.getElementById('proceed-btn').disabled = true;
+
+  const rbtn = document.getElementById('reflect-rec-btn');
+  rbtn.className = 'rec-btn idle';
+  rbtn.innerHTML = micIcon();
+  document.getElementById('reflect-rec-label').textContent = 'Tap to answer';
+  document.getElementById('reflect-timer').style.display = 'none';
+  document.getElementById('feedback-btn').disabled = true;
+
+  document.getElementById('subject').value = '';
+  document.getElementById('grade').value = '';
+  document.getElementById('topic').value = '';
+
+  document.querySelector('#screen-feedback .btn-primary').disabled = false;
+  document.querySelector('#screen-feedback .btn-primary').textContent = 'Save this note ✓';
+
+  goTo('screen-record');
+  navTo('screen-record','nav-home');
+}
+
+// ══════════════════════════════════════════
+//  HISTORY SCREEN
+// ══════════════════════════════════════════
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  const sessions = JSON.parse(localStorage.getItem('ss_sessions') || '[]');
+
+  if (sessions.length === 0) {
+    list.innerHTML = `<p class="subtext" style="text-align:center;padding:24px 0;">No sessions yet.<br/>Record your first lesson to get started.</p>`;
+    return;
+  }
+
+  list.innerHTML = sessions.map(s => `
+    <div class="history-item">
+      <div class="history-dot"></div>
+      <div>
+        <div class="history-meta">${s.date} · ${[s.subject, s.grade].filter(Boolean).join(', ')}</div>
+        ${s.topic ? `<div class="history-meta">${s.topic}</div>` : ''}
+        <div class="history-text">${s.tryThis.substring(0, 90)}…</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════
+function formatTime(s) {
+  return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+}
+
+function micIcon() {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
+    <rect x="9" y="2" width="6" height="12" rx="3"/>
+    <path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="21" x2="12" y2="17"/>
+    <line x1="8" y1="21" x2="16" y2="21"/>
+  </svg>`;
+}
+</script>
+</body>
+</html>
