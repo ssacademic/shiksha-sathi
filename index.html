@@ -264,7 +264,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     </div>
     <div id="lesson-text-panel" style="display:flex;flex-direction:column;gap:8px;">
       <textarea id="lesson-text-input" rows="4"
-        placeholder="What happened in class today? e.g. I started by asking about yesterday's lesson. Most students answered together. I explained fractions on the board for about 15 minutes. A few students at the back seemed lost. I asked 'everyone understood?' and moved on…"
+        placeholder="What did you teach today? How did it go? e.g. Taught fractions, back row was lost, finished rushed."
         style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
         oninput="onLessonTextInput()"></textarea>
     </div>
@@ -307,27 +307,6 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <p id="reflection-question">"You taught a full lesson today — which moment felt most uncertain, and why?"</p>
   </div>
 
-  <!-- text answer — shown first, open by default -->
-  <div style="display:flex;flex-direction:column;gap:8px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;">
-      <p style="font-size:14px;font-weight:500;color:var(--ink);">Write your response</p>
-      <button onclick="toggleReflectText()" id="reflect-text-toggle" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;">show / hide</button>
-    </div>
-    <div id="reflect-text-panel" style="display:flex;flex-direction:column;gap:6px;">
-      <textarea id="reflect-text-input" rows="3"
-        placeholder="Type your answer here…"
-        style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
-        oninput="onReflectTextInput()"></textarea>
-    </div>
-  </div>
-
-  <!-- divider -->
-  <div style="display:flex;align-items:center;gap:10px;margin-top:-8px;">
-    <div style="flex:1;height:1px;background:var(--border);"></div>
-    <span style="font-size:12px;color:var(--ink3);">or speak</span>
-    <div style="flex:1;height:1px;background:var(--border);"></div>
-  </div>
-
   <div class="rec-area">
     <button class="rec-btn idle" id="reflect-rec-btn" onclick="toggleReflectRecording()">
       <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
@@ -343,10 +322,31 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <div class="rec-timer" id="reflect-timer" style="display:none">0:00</div>
   </div>
 
-  <!-- chips — below recorder, as quick shortcuts -->
+  <!-- chips — quick shortcuts, below recorder -->
   <div id="chips-wrap" style="display:none">
     <p class="chips-label">Or pick what fits:</p>
     <div class="chips-row" id="chips-row"></div>
+  </div>
+
+  <!-- divider -->
+  <div style="display:flex;align-items:center;gap:10px;margin-top:-4px;">
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+    <span style="font-size:12px;color:var(--ink3);">or write</span>
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+  </div>
+
+  <!-- text answer — below divider -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <p style="font-size:14px;font-weight:500;color:var(--ink);">Write your response</p>
+      <button onclick="toggleReflectText()" id="reflect-text-toggle" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;">show / hide</button>
+    </div>
+    <div id="reflect-text-panel" style="display:flex;flex-direction:column;gap:6px;">
+      <textarea id="reflect-text-input" rows="3"
+        placeholder="Type your answer here…"
+        style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
+        oninput="onReflectTextInput()"></textarea>
+    </div>
   </div>
 
   <button class="btn-primary" id="feedback-btn" disabled onclick="proceedToFeedback()">
@@ -362,15 +362,6 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   <div class="back-link" onclick="checkUnsavedNote()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
     Back
-  </div>
-
-  <!-- unsaved warning — shown inline, not a modal -->
-  <div id="unsaved-warning" style="display:none;background:var(--amber-l);border:1px solid rgba(200,121,26,0.25);border-radius:10px;padding:12px 14px;display:none;">
-    <p style="font-size:13px;color:var(--amber);margin-bottom:10px;">Note not saved — save it before leaving?</p>
-    <div style="display:flex;gap:8px;">
-      <button onclick="saveSession()" style="flex:1;padding:9px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Save &amp; leave</button>
-      <button onclick="confirmLeaveNote()" style="flex:1;padding:9px;background:none;color:var(--amber);border:1px solid rgba(200,121,26,0.4);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Leave without saving</button>
-    </div>
   </div>
   <div>
     <p class="wordmark">Shiksha Sathi</p>
@@ -415,6 +406,15 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <div class="api-banner" onclick="navTo('screen-settings','nav-settings');showKeySection()" style="font-size:13px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       This is a template note, not AI-generated — no API key set. Tap to add one in Settings.
+    </div>
+  </div>
+
+  <!-- unsaved warning — at bottom, near save button -->
+  <div id="unsaved-warning" style="display:none;background:var(--amber-l);border:1px solid rgba(200,121,26,0.25);border-radius:10px;padding:12px 14px;">
+    <p style="font-size:13px;color:var(--amber);margin-bottom:10px;">Note not saved — save it before leaving?</p>
+    <div style="display:flex;gap:8px;">
+      <button onclick="saveSession()" style="flex:1;padding:9px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Save &amp; leave</button>
+      <button onclick="confirmLeaveNote()" style="flex:1;padding:9px;background:none;color:var(--amber);border:1px solid rgba(200,121,26,0.4);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Leave without saving</button>
     </div>
   </div>
 
@@ -741,11 +741,10 @@ function navTo(screenId, navId) {
     if (noteVisible && !alreadySaved && screenId !== 'screen-feedback') {
       const warn = document.getElementById('unsaved-warning');
       warn.style.display = 'block';
-      // Update leave button to go to intended destination
+      warn.scrollIntoView({ behavior:'smooth', block:'center' });
       warn.querySelector('button:last-child').onclick = () => {
         warn.style.display = 'none';
         newSession();
-        // newSession calls navTo internally — so just proceed
       };
       return;
     }
@@ -929,12 +928,13 @@ function skipReflection() {
 
 // ── Unsaved note warning ──
 function checkUnsavedNote() {
-  const noteVisible = document.getElementById('note-card').style.display === 'flex';
+  const noteVisible  = document.getElementById('note-card').style.display === 'flex';
   const alreadySaved = document.getElementById('save-btn').disabled;
   if (noteVisible && !alreadySaved) {
-    // Show inline warning
     const warn = document.getElementById('unsaved-warning');
-    warn.style.display = warn.style.display === 'block' ? 'none' : 'block';
+    warn.style.display = 'block';
+    // Scroll to warning so teacher sees it
+    warn.scrollIntoView({ behavior:'smooth', block:'center' });
   } else {
     goTo('screen-reflect');
   }
@@ -1165,8 +1165,10 @@ function fallbackNote() {
 //  SAVE SESSION
 // ═══════════════════════════════════
 function saveSession() {
-  if (state.saving) return; // race condition guard
+  if (state.saving) return;
   state.saving = true;
+  // Hide unsaved warning immediately if showing
+  document.getElementById('unsaved-warning').style.display = 'none';
   const sessions = lsGetJSON('ss_sessions', []);
   sessions.unshift({
     date: new Date().toISOString(),
@@ -1303,15 +1305,29 @@ function renderJourney() {
     document.getElementById('timeline-list').innerHTML=`<p class="subtext" style="text-align:center;padding:24px 0;">No sessions yet.<br/>Record your first lesson to get started.</p>`;
     return;
   }
-  qr.innerHTML=sessions.map(s=>`
+  qr.innerHTML = sessions.slice(0, 6).map(s=>`
     <div class="quick-rev-item">
       <span class="quick-rev-meta">${s.dateDisplay}<br/>${s.subject||''}</span>
       <span class="quick-rev-tip">${s.tip||s.tryThis.substring(0,80)+'…'}</span>
     </div>`).join('');
+  if (sessions.length > 6) {
+    const moreBtn = document.createElement('button');
+    moreBtn.style.cssText = 'font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:\'DM Sans\',sans-serif;padding:8px 0 4px;text-align:center;width:100%;';
+    moreBtn.textContent = `Show ${sessions.length - 6} more tips`;
+    moreBtn.onclick = () => {
+      qr.innerHTML = sessions.map(s=>`
+        <div class="quick-rev-item">
+          <span class="quick-rev-meta">${s.dateDisplay}<br/>${s.subject||''}</span>
+          <span class="quick-rev-tip">${s.tip||s.tryThis.substring(0,80)+'…'}</span>
+        </div>`).join('');
+    };
+    qr.appendChild(moreBtn);
+  }
 
-  // timeline
+  // timeline — show first 6, with see-more
   const tl=document.getElementById('timeline-list');
-  tl.innerHTML=sessions.map((s,i)=>`
+  const visibleSessions = sessions.slice(0, 6);
+  const renderSession = (s, i) => `
     <div class="timeline-item" onclick="toggleExpand(${i})">
       <div class="timeline-meta">${s.dateDisplay}${s.subject?' · '+s.subject:''}${s.grade?', '+s.grade:''}</div>
       ${s.topic?`<div class="timeline-title">${s.topic}</div>`:'<div class="timeline-title">Lesson</div>'}
@@ -1331,7 +1347,18 @@ function renderJourney() {
         </div>
         <button id="copy-session-${i}" onclick="event.stopPropagation();copySession(${i})" style="margin-top:10px;font-size:12px;color:var(--teal);background:none;border:1px solid var(--teal-l);border-radius:6px;padding:4px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;">Copy</button>
       </div>
-    </div>`).join('');
+    </div>`;
+
+  tl.innerHTML = visibleSessions.map(renderSession).join('');
+  if (sessions.length > 6) {
+    const tlBtn = document.createElement('button');
+    tlBtn.style.cssText = 'font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:\'DM Sans\',sans-serif;padding:8px 0;width:100%;text-align:center;';
+    tlBtn.textContent = `Show ${sessions.length - 6} older sessions`;
+    tlBtn.onclick = () => {
+      tl.innerHTML = sessions.map(renderSession).join('');
+    };
+    tl.appendChild(tlBtn);
+  }
 }
 
 function toggleExpand(i) {
@@ -1730,20 +1757,25 @@ function runRubricEngine(text) {
       label: 'Small steps with practice breaks',
       strong: [
         /\b(try (this|one|it) (yourself|now|first)|now you (try|do|practice))\b/,
-        /\b(work (on this|individually|it out)|solve (this|one|it)\b)/,
+        /\b(work (on this|individually|it out)|solve (this|one|it))\b/,
         /\b(write (it|this|your answer) (down|in your notebook))\b/,
         /\b(practice (this|now)|let's practice|your turn now)\b/,
         /\b(first.*then we|step by step|one thing at a time)\b/,
+        /\b(gave (them |students )?(a |one )?(sum|problem|question|exercise) to (try|solve|do))\b/,
         // Hindi
-        /\b(ab tum karo|khud karo|likho|try karo|practice karo)\b/,
+        /\b(ab tum karo|khud karo|likho|try karo|practice karo|ek sawal karo)\b/,
       ],
       weak: [
         /\b(write these (questions|problems|examples)|copy (this|these|the))\b/,
         /\b(do these (questions|sums|problems)|solve these)\b/,
+        /\b(gave (them |students )?(some )?(sums|questions|problems))\b/,
       ],
       absent: [
         /\b(method one.*method two|case one.*case two)\b/,
-        /\b(two methods|three methods|multiple (ways|methods|cases))\b.*\b(same (time|lesson|class))\b/,
+        /\b(finished (the |whole |entire |full )?(portion|chapter|topic|syllabus))\b/,
+        /\b(somehow finished|managed to finish|completed (the |whole )?portion)\b/,
+        /\b(poora chapter (khatam|complete)|poora (syllabus|topic)|khatam kiya)\b/,
+        /\b(covered (everything|it all)|rushed through)\b/,
       ],
     },
 
@@ -1766,20 +1798,31 @@ function runRubricEngine(text) {
         /\b(understood\?|everyone understood|is that clear|any (doubts|questions|confusion))\b/,
         /\b(clear\?|okay\?|sab samajh aaya|ho gaya\?)\b/,
         /\b(right class\?|correct class\?|yes class)\b/,
+        // Free text weak CFU
+        /\b(asked (if they|the class|them) understood|checked (if|whether) (they|students) understood)\b/,
+        /\b(all (said|nodded|answered) yes|thumbs up|everyone agreed|everyone said yes)\b/,
+        /\b(gave notes to copy|just copied|only copied)\b/,
       ],
       absent: [],
     },
 
     // ── 4. COLD CALL BY NAME ──────────────────────────────
     // TLAC: call on students regardless of hand-raising
-    // Handled by regex separately below — student Name: patterns
+    // Named-call handled by regex below — also detect free text "asked Rahul"
     cold_call: {
       label: 'Cold-calling by name',
-      strong:  [], // handled by named-call regex
-      weak:    [/\bone student\b/, /\bask (a|one|any) student\b/],
+      strong:  [], // handled by named-call regex below
+      weak:    [
+        /\bone student\b/,
+        /\bask (a|one|any) student\b/,
+        // Free text: "asked Rahul", "called on Priya" — Name not followed by colon
+        /\b(asked|called on|asked)\s+[A-Z][a-z]{2,12}\b/,
+      ],
       absent:  [
         /\b(class together|everyone together|all together|sabhi|sab log)\b/,
         /\b(class:|students:|all:)\b/,
+        /\b(kids (kept |were |started )?(shouting|calling out|yelling))\b/,
+        /\b(students (were |kept )?(shouting|calling out))\b/,
       ],
     },
 
@@ -1854,10 +1897,11 @@ function runRubricEngine(text) {
       label: 'Reaching all students (equity)',
       strong: [
         /\b(back (row|of the class)|back (benches|bench))\b/,
+        // Free text: "students at the back", "back of the class"
+        /\b(students? (at|in) the back|at the back (of|were|was|seemed))\b/,
         /\b(circulate|walks (around|to)|went (to|over to|around))\b/,
         /\b(quieter students|weaker students|those who (haven't|didn't|don't))\b/,
         /\b(show me what you have|check (your|their) work individually)\b/,
-        // Names being checked individually (caught also by cold call)
         /\b(what (have you|did you) (got|written|done)\?)\b/,
         // Hindi
         /\b(peeche wale|peeche baithe|kamazon|jo samajh nahi|ghoomna)\b/,
@@ -1865,6 +1909,7 @@ function runRubricEngine(text) {
       weak: [
         /\b(quiet (at the|in the) back|stop (talking|chatting) (at the |in the )?back)\b/,
         /\b(pay attention (at the back|everyone)|back row (listen|focus))\b/,
+        /\b(some students (at|in) the back|back (students|kids) (were|seemed))\b/,
         /\b(aye peeche|chup raho peeche)\b/,
       ],
       absent: [
@@ -1883,7 +1928,8 @@ function runRubricEngine(text) {
     'When','There','These','That','This','What','Here','Well','Just',
     'Tell','Hindi','Math','Maths','One','Two','Three','Four','Five',
     'Six','Seven','Eight','Nine','Ten','Case','Method','Step','Part',
-    'Note','Next','Last','First','Also','Then','After','Before'
+    'Note','Next','Last','First','Also','Then','After','Before',
+    'Asked','Called','Taught','Gave','Took','Said','Told','Made'
   ]);
 
   for (const [id, dim] of Object.entries(dims)) {
@@ -1891,23 +1937,25 @@ function runRubricEngine(text) {
     let evidence = null;
     let absenceEvidence = null;
 
-    // ── Cold call: special named-student regex ──
+    // ── Cold call: transcript Name: pattern + free text "asked/called on Name" ──
     if (id === 'cold_call') {
-      const namedCallRegex = /\b([A-Z][a-z]{2,12})\s*[:\-—]/g;
-      const matches = [...text.matchAll(namedCallRegex)];
-      const names = matches
-        .map(m => m[1])
-        .filter(n => !EXCLUDED_NAMES.has(n));
-      const uniqueNames = [...new Set(names)];
-      if (uniqueNames.length >= 3) {
-        score = 2;
-        evidence = 'named students: ' + uniqueNames.slice(0,5).join(', ');
-      } else if (uniqueNames.length >= 1) {
-        score = 1;
-        evidence = 'some named: ' + uniqueNames.join(', ');
+      // Pattern 1: transcript format  "Rahul:"
+      const transcriptMatches = [...text.matchAll(/\b([A-Z][a-z]{2,12})\s*[:\-—]/g)];
+      // Pattern 2: free text "asked Rahul", "called on Priya" (case-insensitive on verb)
+      const askedMatches = [...text.matchAll(/\b(?:asked|called on)\s+([A-Z][a-z]{2,12})\b/gi)];
+      // Pattern 3: free text "Rahul answered", "Sunita explained", "Priya got it"
+      const answeredMatches = [...text.matchAll(/\b([A-Z][a-z]{2,12})\s+(?:answered|said|explained|got it|tried|responded)\b/g)];
+      const nameMatches = [...transcriptMatches, ...askedMatches, ...answeredMatches];
+      const names = [...new Set(
+        nameMatches.map(m => m[1]).filter(n => n && !EXCLUDED_NAMES.has(n))
+      )];
+      if (names.length >= 3) {
+        score = 2; evidence = 'named students: ' + names.slice(0,5).join(', ');
+      } else if (names.length >= 1) {
+        score = 1; evidence = 'some named: ' + names.join(', ');
       }
       const absentHit = match(dim.absent);
-      if (absentHit) absenceEvidence = absentHit;
+      if (absentHit) { absenceEvidence = absentHit; if (score < 2) score = 0; }
     }
 
     // ── All other dimensions: check absence FIRST to prevent false positives,
@@ -1994,41 +2042,86 @@ const REFLECTION_CHIPS = {
   ],
 };
 
-const REFLECTION_QUESTIONS = {
-  small_steps:   "After you explained something new today, did students get a chance to try it before you moved on — or did you cover everything first?",
-  cfu_quality:   "When you asked questions, how did you know which individual students understood and which didn't?",
-  cold_call:     "Think about the students who answered your questions today — who answered? Who stayed quiet the whole time?",
-  wait_time:     "After asking a question, what typically happened in the next few seconds before someone answered?",
-  student_talk:  "How much did students talk today compared to you? When did they get to explain something in their own words?",
-  uptake:        "When a student gave an answer — right or wrong — what did you do with it? Did you build on it or move on?",
-  back_row:      "Think about the students at the back or the sides — were you sure they were following throughout the lesson?",
+// 3 questions per dimension — rotated by session count within the dimension
+const REFLECTION_QUESTION_BANK = {
+  prior_review: [
+    "How did you open the lesson? Did you connect it to what students already know?",
+    "Before introducing today's new idea, how did you find out what students already remembered?",
+    "What was the very first thing you did in class — and did it connect to previous learning?",
+  ],
+  small_steps: [
+    "After explaining something new, did students get to try it before you moved on — or did you cover everything first?",
+    "At what point did students practise during the lesson? Was it after each idea, or only at the end?",
+    "If you split today's lesson into steps — explanation, then practice — where did the practice actually happen?",
+  ],
+  cfu_quality: [
+    "When you asked questions, how did you know which individual students understood and which didn't?",
+    "What's the difference between how a confident student responded and how a quieter student responded today?",
+    "If you had to name three students right now and say whether each understood — could you? How do you know?",
+  ],
+  cold_call: [
+    "Think about who answered your questions today — who answered? Who stayed quiet the whole time?",
+    "Were the same students answering every time, or did you hear from different students throughout?",
+    "How did you decide which student to ask? Did every student have an equal chance of being called?",
+  ],
+  wait_time: [
+    "After asking a question, what typically happened in the next few seconds before someone answered?",
+    "How long did you wait after asking a question before accepting an answer?",
+    "When you asked a question, who was thinking — just the student who answered, or the whole class?",
+  ],
+  student_talk: [
+    "How much did students talk compared to you? When did they get to explain something in their own words?",
+    "At what point in the lesson did students talk to each other, not just answer your questions?",
+    "If you had to estimate — how many minutes did you talk versus how many minutes did students talk?",
+  ],
+  uptake: [
+    "When a student gave an answer — right or wrong — what did you do with it? Did you build on it or move on?",
+    "Think of one student answer today. What did you say immediately after — did you go deeper or move on?",
+    "When a student said something interesting or surprising, what happened next in the lesson?",
+  ],
+  back_row: [
+    "Think about the students at the back or the sides — were you sure they were following throughout?",
+    "Which students did you not hear from today — and do you know why?",
+    "If you had to identify two students who may not have understood, who would they be and why?",
+  ],
 };
+
+// Flat map for backwards compatibility
+const REFLECTION_QUESTIONS = Object.fromEntries(
+  Object.entries(REFLECTION_QUESTION_BANK).map(([k, v]) => [k, v[0]])
+);
+
 const FALLBACK_QUESTIONS = [
   "Which moment in today's lesson felt most uncertain, and why?",
   "If you taught this lesson again tomorrow, what one thing would you change first?",
 ];
 
-// Returns { question, dimId } so caller can also get the dimension
+// Returns { question, dimId }
 function getReflectionQuestionAndDim(signals) {
+  const sessions = lsGetJSON('ss_sessions', []);
+
   // Priority 1: target weakest rubric dimension
   if (signals) {
     const entries = Object.entries(signals).sort((a,b)=>a[1].score-b[1].score);
     const weakest = entries[0];
     if (weakest[1].score < 2) {
-      return {
-        question: REFLECTION_QUESTIONS[weakest[0]] || FALLBACK_QUESTIONS[0],
-        dimId: weakest[0]
-      };
+      const dimId = weakest[0];
+      const bank  = REFLECTION_QUESTION_BANK[dimId];
+      const q = bank ? bank[sessions.length % bank.length] : FALLBACK_QUESTIONS[0];
+      return { question: q, dimId };
     }
   }
-  // Priority 2: rotate by session history
-  const sessions = lsGetJSON('ss_sessions', []);
-  const dimKeys = Object.keys(REFLECTION_QUESTIONS);
+
+  // Priority 2: rotate across dimensions by session history
+  const dimKeys = Object.keys(REFLECTION_QUESTION_BANK);
   if (sessions.length > 0) {
-    const idx = sessions.length % dimKeys.length;
-    return { question: REFLECTION_QUESTIONS[dimKeys[idx]], dimId: dimKeys[idx] };
+    const dimIdx = sessions.length % dimKeys.length;
+    const dimId  = dimKeys[dimIdx];
+    const bank   = REFLECTION_QUESTION_BANK[dimId];
+    const qIdx   = Math.floor(sessions.length / dimKeys.length) % bank.length;
+    return { question: bank[qIdx], dimId };
   }
-  // Fallback
+
   return { question: FALLBACK_QUESTIONS[0], dimId: null };
 }
 
