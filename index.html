@@ -40,8 +40,10 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
 .field{display:flex;flex-direction:column;gap:6px;}
 .field label{font-size:12px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink2);}
-.field select,.field input{appearance:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 36px 10px 14px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);outline:none;transition:border-color 0.15s;width:100%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239C9088' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.field select{appearance:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 36px 10px 14px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);outline:none;transition:border-color 0.15s;width:100%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239C9088' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.field input{appearance:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);outline:none;transition:border-color 0.15s;width:100%;}
 .field select:focus,.field input:focus{border-color:var(--teal);}
+.field select.required-empty,.field input.required-empty{border-color:var(--red) !important;border-width:1.5px;}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .rec-area{display:flex;flex-direction:column;align-items:center;gap:14px;padding:28px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
 .rec-btn{width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s,box-shadow 0.15s;position:relative;}
@@ -270,7 +272,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   <div class="card" style="display:flex;flex-direction:column;gap:14px;">
     <div class="field-row">
       <div class="field">
-        <label>Subject</label>
+        <label>Subject <span style="color:var(--red);">*</span></label>
         <select id="subject" onchange="onContextChange();onLessonTextInput()">
           <option value="">— select —</option>
           <option>Maths</option><option>Science</option><option>Hindi</option>
@@ -278,32 +280,23 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
         </select>
       </div>
       <div class="field">
-        <label>Class</label>
+        <label>Class <span style="color:var(--red);">*</span></label>
         <select id="grade" onchange="onContextChange();onLessonTextInput()">
           <option value="">— select —</option>
         </select>
       </div>
     </div>
     <div class="field">
-      <label>Topic</label>
+      <label>Topic <span style="color:var(--red);">*</span></label>
       <input type="text" id="topic" placeholder="e.g. Fractions, Photosynthesis, Past tense…" oninput="onLessonTextInput()"/>
     </div>
   </div>
 
-  <div class="rec-area">
-    <button class="rec-btn idle" id="lesson-rec-btn" onclick="toggleLessonRecording()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
-        <rect x="9" y="2" width="6" height="12" rx="3"/>
-        <path d="M5 10a7 7 0 0014 0"/>
-        <line x1="12" y1="21" x2="12" y2="17"/><line x1="8" y1="21" x2="16" y2="21"/>
-      </svg>
-    </button>
-    <div class="rec-label">
-      <strong id="lesson-rec-label">Tap to start recording</strong>
-      <span id="lesson-rec-sub">Record your class, or tell us what happened in class</span>
-    </div>
-    <div class="rec-timer" id="lesson-timer" style="display:none">0:00</div>
-  </div>
+  <!-- hidden compat refs — lesson recorder removed from UI but JS still references these -->
+  <button id="lesson-rec-btn" style="display:none" onclick="toggleLessonRecording()"></button>
+  <div id="lesson-timer" style="display:none">0:00</div>
+  <span id="lesson-rec-label" style="display:none"></span>
+  <span id="lesson-rec-sub" style="display:none"></span>
 
   <div id="lesson-status" style="display:none">
     <div style="display:flex;align-items:center;gap:10px;">
@@ -312,32 +305,12 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     </div>
   </div>
 
-  <!-- demo mode toggle — small, secondary -->
-  <div style="display:flex;align-items:center;gap:8px;margin-top:-8px;">
-    <span style="font-size:12px;color:var(--ink3);">Need a sample?</span>
+  <!-- demo mode toggle -->
+  <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--ink3);">
+    <span>Need a sample?</span>
     <button onclick="toggleDemoMode()" id="demo-toggle-btn" style="font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;padding:0;">Use a demo lesson</button>
   </div>
 
-  <!-- divider -->
-  <div style="display:flex;align-items:center;gap:10px;">
-    <div style="flex:1;height:1px;background:var(--border);"></div>
-    <span style="font-size:12px;color:var(--ink3);">or</span>
-    <div style="flex:1;height:1px;background:var(--border);"></div>
-  </div>
-
-  <!-- text description — equal-weight option -->
-  <div style="display:flex;flex-direction:column;gap:10px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;">
-      <p style="font-size:14px;font-weight:500;color:var(--ink);">Describe what happened in class</p>
-      <button onclick="toggleLessonText()" id="lesson-text-toggle-btn" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;">show / hide</button>
-    </div>
-    <div id="lesson-text-panel" style="display:flex;flex-direction:column;gap:8px;">
-      <textarea id="lesson-text-input" rows="4"
-        placeholder="What did you teach today? How did it go? e.g. Taught fractions, back row was lost, finished rushed."
-        style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
-        oninput="onLessonTextInput()"></textarea>
-    </div>
-  </div>
   <div id="demo-panel" style="display:none;background:var(--teal-l);border:1px solid rgba(181,84,30,0.15);border-radius:10px;padding:14px;gap:10px;flex-direction:column;">
     <p style="font-size:12px;font-weight:500;color:var(--teal);text-transform:uppercase;letter-spacing:0.05em;">Demo mode — sample lesson</p>
     <div class="field">
@@ -350,6 +323,18 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       </select>
     </div>
     <p style="font-size:12px;color:var(--teal);opacity:0.8;">Subject/class will be pre-filled. Tap Continue when ready.</p>
+  </div>
+
+  <!-- text description — primary input, same card style as fields above -->
+  <div class="card" style="display:flex;flex-direction:column;gap:10px;">
+    <p style="font-size:14px;font-weight:500;color:var(--ink);">Describe your experience</p>
+    <div id="lesson-text-panel">
+      <textarea id="lesson-text-input" rows="5"
+        placeholder="What happened in class today? What did students do? What felt uncertain?"
+        style="appearance:none;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;"
+        oninput="onLessonTextInput()"></textarea>
+      <p style="font-size:12px;color:var(--ink3);margin-top:6px;">You can also tap the 🎤 mic button on your phone keyboard to speak your description.</p>
+    </div>
   </div>
 
   <button class="btn-primary" id="proceed-btn" disabled onclick="proceedToReflection()">
@@ -389,36 +374,18 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     </div>
   </div>
 
-  <!-- Optional: voice or text answer to the question -->
-  <div id="reflect-answer-wrap" style="display:none;flex-direction:column;gap:12px;">
-    <p style="font-size:13px;color:var(--ink2);">Optional — answer the question above, or tap below to get your note.</p>
-
-    <div class="rec-area" style="padding:18px 20px;">
-      <button class="rec-btn idle" id="reflect-rec-btn" onclick="toggleReflectRecording()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-          <rect x="9" y="2" width="6" height="12" rx="3"/>
-          <path d="M5 10a7 7 0 0014 0"/>
-          <line x1="12" y1="21" x2="12" y2="17"/><line x1="8" y1="21" x2="16" y2="21"/>
-        </svg>
-      </button>
-      <div class="rec-label">
-        <strong id="reflect-rec-label">Speak your answer</strong>
-        <span>30–60 seconds</span>
-      </div>
-      <div class="rec-timer" id="reflect-timer" style="display:none">0:00</div>
-    </div>
-
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div style="flex:1;height:1px;background:var(--border);"></div>
-      <span style="font-size:12px;color:var(--ink3);">or write</span>
-      <div style="flex:1;height:1px;background:var(--border);"></div>
-    </div>
-
+  <!-- Optional: text answer to the question -->
+  <div id="reflect-answer-wrap" style="display:none;flex-direction:column;gap:10px;">
     <textarea id="reflect-text-input" rows="3"
-      placeholder="Type your answer here…"
+      placeholder="Type your answer…"
       style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
       oninput="onReflectTextInput()"></textarea>
   </div>
+
+  <!-- hidden compat refs for JS that still references reflect-rec-btn -->
+  <button id="reflect-rec-btn" style="display:none" onclick="toggleReflectRecording()"></button>
+  <div id="reflect-timer" style="display:none">0:00</div>
+  <span id="reflect-rec-label" style="display:none"></span>
 
   <button class="btn-primary" id="feedback-btn" disabled onclick="proceedToFeedback()">
     Get my coaching note →
@@ -628,6 +595,10 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <!-- chat -->
     <div class="card" style="display:flex;flex-direction:column;gap:12px;">
       <p class="subtext">Ask anything about your teaching journey — patterns, progress, what to focus on next.</p>
+
+      <!-- dimension quick-tap chips -->
+      <div id="tiptalk-dim-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;"></div>
+
       <div class="tiptalk-thread" id="tiptalk-thread"></div>
       <div id="tiptalk-starters" style="display:flex;flex-direction:column;gap:6px;"></div>
       <div class="chat-input-row">
@@ -763,28 +734,28 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <div class="onboard-step">
       <div class="onboard-num">1</div>
       <div>
-        <div class="onboard-step-title">Record your lesson</div>
-        <div class="onboard-step-desc">Tap record before class. Shiksha Saathi listens to the full lesson — you teach normally.</div>
+        <div class="onboard-step-title">Describe your lesson</div>
+        <div class="onboard-step-desc">Type or use your keyboard's voice input to describe what happened in class. What did you teach? How did students respond?</div>
       </div>
     </div>
     <div class="onboard-step">
       <div class="onboard-num">2</div>
       <div>
-        <div class="onboard-step-title">Reflect for 60 seconds</div>
-        <div class="onboard-step-desc">Answer one quick question about how the lesson went. Or pick a phrase that fits.</div>
+        <div class="onboard-step-title">Reflect for a moment</div>
+        <div class="onboard-step-desc">Select what was happening in your class today. A targeted question appears — answer it, or skip straight to your note.</div>
       </div>
     </div>
     <div class="onboard-step">
       <div class="onboard-num">3</div>
       <div>
         <div class="onboard-step-title">Get your coaching note</div>
-        <div class="onboard-step-desc">A short, specific note: what worked, what to notice, one thing to try tomorrow.</div>
+        <div class="onboard-step-desc">A short, specific note from Meera: what worked, what to notice, one thing to try tomorrow.</div>
       </div>
     </div>
   </div>
 
   <button class="btn-primary" style="max-width:380px;width:100%;" onclick="dismissOnboarding()">
-    Start — record today's lesson →
+    Start — describe today's lesson →
   </button>
   <p style="font-size:12px;color:var(--ink3);margin-top:14px;text-align:center;">
     Inspired by Rosenshine's Principles of Instruction &amp; Teach Like a Champion
@@ -820,7 +791,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 // ═══════════════════════════════════
 //  EARLY CONSTANTS (used before definition if not moved here)
 // ═══════════════════════════════════
-const ALL_GRADES = ['Class 3','Class 4','Class 5','Class 6','Class 7','Class 8','Class 9','Class 10'];
+const ALL_GRADES = ['Class 1','Class 2','Class 3','Class 4','Class 5','Class 6','Class 7','Class 8','Class 9','Class 10','Class 11','Class 12'];
 const TIPTALK_UNLOCK_COUNT = 5;
 let learnRendered = false;
 let selectedClassStates = [];
@@ -1132,10 +1103,17 @@ async function proceedToReflection() {
   const grd   = document.getElementById('grade').value;
   const topic = document.getElementById('topic').value.trim();
   if (!subj || !grd || !topic) {
-    ['subject','grade','topic'].forEach(id => {
-      const el = document.getElementById(id);
-      if (!el.value.trim()) { el.style.borderColor='var(--red)'; setTimeout(()=>el.style.borderColor='',2000); }
-    });
+    const subjectEl = document.getElementById('subject');
+    const gradeEl   = document.getElementById('grade');
+    const topicEl   = document.getElementById('topic');
+    subjectEl.classList.toggle('required-empty', !subj);
+    gradeEl.classList.toggle('required-empty', !grd);
+    topicEl.classList.toggle('required-empty', !topic);
+    const clear = (el) => el.addEventListener('change', () => el.classList.remove('required-empty'), { once: true });
+    const clearInput = (el) => el.addEventListener('input', () => { if (el.value.trim()) el.classList.remove('required-empty'); }, { once: true });
+    if (!subj)  clear(subjectEl);
+    if (!grd)   clear(gradeEl);
+    if (!topic) clearInput(topicEl);
     return;
   }
   state.sessionSubject = subj;
@@ -1144,13 +1122,51 @@ async function proceedToReflection() {
   state.weakestDim     = null;
   state.reflectionQuestion = '';
 
-  // Navigate and render class state chips
+  // Navigate and render chips
   goTo('screen-reflect');
   renderClassStateChips();
+
+  // Generate reflection question from S1 description — chips are NOT involved
+  // If S1 is empty or very short, show a warm generic question
+  const lessonText = state.lessonTranscript || '';
+  const isEmpty = lessonText.trim().length < 15;
+
+  if (isEmpty) {
+    // S1 was empty — use a warm, open, non-chip-dependent fallback
+    const q = "How did today's class feel overall — what moment stands out to you?";
+    state.reflectionQuestion = q;
+    document.getElementById('reflection-question').textContent = '"' + q + '"';
+    document.getElementById('reflect-question-wrap').style.display = 'none';
+    document.getElementById('reflect-answer-wrap').style.display = 'none';
+    return;
+  }
+
+  // Try AI generation from description
+  const key = lsGet('ss_gemini_key');
+  if (key && navigator.onLine) {
+    document.getElementById('question-box').style.display = 'none';
+    document.getElementById('question-loading').style.display = 'flex';
+    document.getElementById('reflect-question-wrap').style.display = 'flex';
+
+    const aiQ = await generateAIQuestion(key);
+    if (aiQ) {
+      state.reflectionQuestion = aiQ;
+      document.getElementById('reflection-question').textContent = '"' + aiQ + '"';
+    } else {
+      setFallbackQuestionFromDescription();
+    }
+    document.getElementById('question-loading').style.display = 'none';
+    document.getElementById('question-box').style.display = 'block';
+  } else {
+    // Offline — generate from description without chips
+    setFallbackQuestionFromDescription();
+    document.getElementById('reflect-question-wrap').style.display = 'flex';
+    document.getElementById('question-box').style.display = 'block';
+  }
 }
 
-// C2: Generate reflection question from lesson description directly
-// Does NOT use rubric signals — Gemini reads what the teacher wrote
+// Generate reflection question from S1 lesson description only
+// Chips are NOT used here — they feed the coaching note, not this question
 async function generateAIQuestion(apiKey) {
   const lessonText = state.lessonTranscript.substring(0, 300);
   if (!lessonText || lessonText.length < 10) return null;
@@ -1163,20 +1179,18 @@ async function generateAIQuestion(apiKey) {
     ? "Write in Hinglish, matching the teacher's register."
     : 'Write in English.';
 
-  const prompt = `You are Meera, a teaching coach. A teacher described their lesson and selected what was happening in class.
+  const prompt = `You are Meera, a teaching coach. A teacher described their lesson:
 
-Lesson description: "${lessonText || '(not provided)'}"
-Class state selected: ${selectedClassStates.map(s => s.context).join('; ') || '(not selected)'}
+"${lessonText}"
 
-Write ONE reflection question (max 20 words) that:
-- Is grounded in something SPECIFIC from what they wrote or selected above
-- Opens up reflection — what did they notice, what happened, how did it feel
+Write ONE open reflection question (max 20 words) that:
+- Is grounded in something specific from what they wrote above
+- Invites them to describe what they noticed — not evaluate what they did
 - Does NOT suggest they failed, does NOT imply a correct answer
-- Does NOT start with "Why didn't you" or "Could you have"
-- Sounds like a thoughtful colleague asking over tea, not an inspector
+- Sounds like a curious colleague asking, not an inspector
 
 Good example: "When students were quiet, what were you noticing about them?"
-Bad example: "How could you have checked if students understood the material?"
+Bad example: "How could you have checked if students understood?"
 
 ${langNote}
 Reply with ONLY the question. No quotes, no explanation.`;
@@ -1388,6 +1402,7 @@ WHAT YOU MUST ALWAYS DO:
 - Give one concrete action for tomorrow — specific enough that the teacher knows exactly what to do
 - End every field with a statement, never a question
 - Speak to the teacher as "you" — never "we" or "one should"
+- Notice when students seem curious, engaged, or genuinely thinking — that's as important as technique
 
 WHAT YOU MUST NEVER DO:
 - Never say "you should have", "you didn't", "you failed to", "you missed" — say what happened, not what should have happened
@@ -1398,6 +1413,7 @@ WHAT YOU MUST NEVER DO:
 - Never start any field with "It's wonderful", "Great", "Fantastic", "As a teacher", "In today's lesson"
 - Never give more than one piece of advice — one thing, clearly stated
 - Never end with a question
+- If the teacher expresses hopelessness about students ("they just don't get it", "these students can't learn"), gently name it without shaming — high expectations matter, and a good coach notices when they slip
 
 RESPOND ONLY with valid JSON. No markdown, no preamble, no explanation.`;
 
@@ -1455,37 +1471,43 @@ Based ONLY on the description and class state above, write a coaching note in th
 
 function fallbackNote() {
   // Offline / no-key fallback — uses class state chips as signal
-  // Never invents what happened — only states what was selected or observed
-
-  // Determine pattern from class state chips if available
   const hasConfusion  = selectedClassStates.some(s => ['confused','no_check','choral'].includes(s.id));
   const hasDisengage  = selectedClassStates.some(s => ['same_few','no_answer','back_lost'].includes(s.id));
   const hasPositive   = selectedClassStates.some(s => ['good_energy','better','quiet'].includes(s.id));
   const hasRushed     = selectedClassStates.some(s => s.id === 'rushed');
+  const hasMixed      = (hasPositive && (hasConfusion || hasDisengage || hasRushed));
+  const noChips       = selectedClassStates.length === 0;
 
   let pattern, tryThis, tip;
 
-  if (hasConfusion) {
-    pattern = `Students seemed unclear at some point in the lesson. When confusion builds without being caught, students stop trying — they wait for the teacher to give the answer rather than thinking it through.`;
-    tryThis = `In your next lesson, after explaining something, pause and ask one student to explain it back in their own words — not "did everyone understand?" but "Raju, what did you just hear me say?" One student's answer tells you more than the whole class nodding.`;
-    tip     = `Ask one student to explain it back before moving on.`;
+  if (hasMixed) {
+    // Contradictory chips — acknowledge both honestly
+    const positiveDesc = selectedClassStates.filter(s => ['good_energy','better','quiet'].includes(s.id)).map(s => s.label).join(' and ');
+    const challengeDesc = selectedClassStates.filter(s => !['good_energy','better','quiet'].includes(s.id)).map(s => s.label).join(' and ');
+    pattern = `You noticed both "${positiveDesc}" and "${challengeDesc}" in the same lesson. That mix is more honest than most teachers admit — different parts of a class can go very differently, and different students experience the same lesson in very different ways.`;
+    tryThis = `Before your next lesson, take 30 seconds to note one thing you want to sustain and one thing you want to try differently. Not a plan — just two words. "Keep: [X]. Try: [Y]." That clarity is enough.`;
+    tip     = `Name one thing to keep and one thing to change — before the next lesson.`;
+  } else if (hasConfusion) {
+    pattern = `Students seemed unclear at some point in the lesson. When confusion builds without being caught, students stop trying — they wait for the answer rather than thinking it through.`;
+    tryThis = `In your next lesson, after explaining something, pause and ask one student to explain it back: "Raju, what did you just hear me say?" One student's answer tells you more than the whole class nodding.`;
+    tip     = `After each explanation, ask one student to explain it back before moving on.`;
   } else if (hasDisengage) {
-    pattern = `Some students were not participating — either the same few answered everything, or others stayed silent throughout. When participation is uneven, the quieter students get much less practice thinking.`;
-    tryThis = `Next class, before asking a question, say: "Everyone think first. Don't raise your hand yet." Count silently to 5. Then say a name. Do this just twice per lesson to start — it changes who gets to think.`;
-    tip     = `Pause 5 seconds after questions before naming who answers.`;
+    pattern = `Some students were not participating — the same few answered, or others stayed silent. When participation is uneven, quieter students get much less practice thinking.`;
+    tryThis = `Next class, before asking a question, say: "Everyone think first — don't raise your hand yet." Count silently to 5. Then say a name. Do this just twice per lesson to start.`;
+    tip     = `Pause 5 seconds after questions, then name who answers — don't wait for hands.`;
   } else if (hasRushed) {
-    pattern = `The lesson felt rushed — which usually means content moved faster than students could follow. When pace is driven by finishing rather than understanding, students who are confused stay confused and fall further behind.`;
-    tryThis = `Before your next lesson, identify the ONE most important idea students must leave with. Teach that idea slowly, with one practice moment. Leave the rest for next class if needed — depth beats coverage.`;
+    pattern = `The lesson felt rushed — which usually means content moved faster than students could follow. When pace is driven by finishing rather than understanding, students who fall behind stay behind.`;
+    tryThis = `Before your next lesson, identify the ONE most important idea students must leave with. Teach that deeply, with one practice moment. Leave the rest — depth matters more than coverage.`;
     tip     = `Identify the one most important idea and teach only that, deeply.`;
   } else if (hasPositive) {
-    pattern = `The class went well — which is worth understanding, not just appreciating. What specifically created that good energy? Was it the topic, how you opened, the pace, the seating? Naming it means you can repeat it.`;
-    tryThis = `Before your next lesson, write down one thing you think made today's class work. Try to do that thing deliberately tomorrow — not just hope it happens again.`;
+    pattern = `The class went well — which is worth understanding, not just appreciating. What specifically created that energy? Naming it means you can repeat it deliberately rather than hoping it happens again.`;
+    tryThis = `Before your next lesson, write one sentence: "What made today work was ___." Then try to do that thing deliberately tomorrow.`;
     tip     = `Name what made today work so you can repeat it deliberately.`;
   } else {
-    // No chips selected — genuinely generic
-    pattern = `Without more detail about what happened in class, it's hard to name a specific pattern. The most useful thing after any lesson is to notice one moment where students seemed uncertain — and ask yourself what created it.`;
-    tryThis = `After your next lesson, before you leave the classroom, write one sentence about a moment that felt uncertain. That habit of naming one thing — just one — builds the observational instinct that improves teaching over time.`;
-    tip     = `After class, write one sentence about one uncertain moment.`;
+    // No chips, or unknown combination
+    pattern = `Without more detail about what happened, it's hard to name a specific pattern. The most useful habit after any lesson is to notice one moment where students seemed uncertain — and ask yourself what created it.`;
+    tryThis = `After your next lesson, before you leave the classroom, write one sentence about one moment that felt uncertain. Just one. That habit builds the observational instinct that improves teaching over time.`;
+    tip     = `After class, write one sentence about one moment that felt uncertain.`;
   }
 
   const strength = hasPositive
@@ -1606,7 +1628,8 @@ function newSession() {
   // reset text input panels — lesson text shown open by default
   document.getElementById('lesson-text-panel').style.display='flex';
   document.getElementById('lesson-text-input').value='';
-  document.getElementById('lesson-text-toggle-btn').textContent='show / hide';
+  const ltb = document.getElementById('lesson-text-toggle-btn');
+  if (ltb) ltb.textContent='show / hide';
   // reflect-text-input still exists in new Screen 2
   const rti = document.getElementById('reflect-text-input');
   if (rti) rti.value='';
@@ -2081,9 +2104,10 @@ function onContextChange() {
 function toggleLessonText() {
   const panel = document.getElementById('lesson-text-panel');
   const btn   = document.getElementById('lesson-text-toggle-btn');
+  if (!panel) return;
   const show  = panel.style.display === 'none' || !panel.style.display;
   panel.style.display = show ? 'flex' : 'none';
-  btn.textContent = show ? 'show / hide' : 'show / hide';
+  if (btn) btn.textContent = 'show / hide';
 }
 
 function onLessonTextInput() {
@@ -2543,13 +2567,10 @@ function toggleClassStateChip(btn, chip) {
   }
 
   if (selectedClassStates.length > 0) {
-    // Unlock continue
     document.getElementById('feedback-btn').disabled = false;
-    // Show reflection question area
+    // Show question and answer areas — question was already set by proceedToReflection
     document.getElementById('reflect-question-wrap').style.display = 'flex';
     document.getElementById('reflect-answer-wrap').style.display = 'flex';
-    // Update question — AI generates it, or use fallback
-    updateReflectionQuestion();
   } else {
     document.getElementById('feedback-btn').disabled = true;
     document.getElementById('reflect-question-wrap').style.display = 'none';
@@ -2611,20 +2632,33 @@ Reply with ONLY the question. No quotes.`;
   }, 600);
 }
 
-function setFallbackQuestion() {
-  // Pick a question from bank based on selected states
-  const hasConfusion  = selectedClassStates.some(s => ['confused','no_check','choral'].includes(s.id));
-  const hasEngagement = selectedClassStates.some(s => ['same_few','no_answer','back_lost'].includes(s.id));
-  const hasPositive   = selectedClassStates.some(s => ['good_energy','better'].includes(s.id));
-
+// Fallback question when AI unavailable — based on lesson description keywords
+// NOT based on chips (chips feed coaching note, not the reflection question)
+function setFallbackQuestionFromDescription() {
+  const text = (state.lessonTranscript || '').toLowerCase();
   let q;
-  if (hasConfusion)    q = "When did students seem most uncertain — and what were you doing at that point?";
-  else if (hasEngagement) q = "Which students did you hear from today — and which ones were silent throughout?";
-  else if (hasPositive)   q = "What specifically went well — and what do you think caused it?";
-  else                    q = "Which moment in this lesson felt most important, and why?";
+
+  if (/quiet|shant|focused|calm|attentive/.test(text)) {
+    q = "When the class was quiet — what do you think was going on for students in that silence?";
+  } else if (/confus|lost|stuck|didn.*understand|samajh/.test(text)) {
+    q = "At what point did you first sense students were uncertain — what were you doing then?";
+  } else if (/rush|hurry|couldn.*finish|time|portion/.test(text)) {
+    q = "What did you have to leave out — and how do you feel about that choice?";
+  } else if (/good|well|great|better|enjoy|achha/.test(text)) {
+    q = "What do you think made today's class work — was it something you did, or something else?";
+  } else if (text.trim().length > 10) {
+    q = "What felt most uncertain to you in today's lesson — and why?";
+  } else {
+    q = "How did today's class feel overall — what moment stands out to you?";
+  }
 
   state.reflectionQuestion = q;
   document.getElementById('reflection-question').textContent = '"' + q + '"';
+}
+
+// Legacy — chips-based fallback kept only for setFallbackQuestion calls from old paths
+function setFallbackQuestion() {
+  setFallbackQuestionFromDescription();
 }
 
 // Legacy stubs — kept so other code doesn't break
@@ -3011,6 +3045,14 @@ function renderTiptalk() {
       `<button class="followup-chip" onclick="sendTiptalkQuestion('${q.replace(/'/g,"\\'")}')">${q}</button>`
     ).join('');
   }
+
+  // Dimension quick-tap chips — always shown for contextual deep-dives
+  const dimChips = document.getElementById('tiptalk-dim-chips');
+  if (dimChips) {
+    dimChips.innerHTML = Object.entries(DIM_NAMES).map(([id, label]) =>
+      `<button class="chip" style="font-size:11px;padding:4px 10px;" onclick="sendTiptalkDimension('${id}','${label.replace(/'/g,"\\'")}')">${label}</button>`
+    ).join('');
+  }
 }
 
 function setRating(dimId, val) {
@@ -3061,6 +3103,11 @@ function saveRatings() {
 
 function onTiptalkKeydown(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendTiptalk(); }
+}
+
+function sendTiptalkDimension(dimId, label) {
+  const q = `How have I been doing on: ${label}? What patterns do you see from my sessions?`;
+  sendTiptalkQuestion(q);
 }
 
 function sendTiptalkQuestion(q) {
