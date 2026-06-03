@@ -3,28 +3,28 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="theme-color" content="#F5F0E8"/>
+<meta name="theme-color" content="#F8F3EC"/>
 <title>Shiksha Saathi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --bg:      #F5F0E8;
-  --surface: #FDFAF4;
-  --ink:     #1C1C1A;
-  --ink2:    #5A5850;
-  --ink3:    #9A9890;
-  --teal:    #1D6B5A;
-  --teal-l:  #E6F0ED;
+  --bg:      #F8F3EC;
+  --surface: #FEFAF5;
+  --ink:     #1C1A18;
+  --ink2:    #5C5248;
+  --ink3:    #9C9088;
+  --teal:    #B5541E;
+  --teal-l:  #F5E8DF;
   --amber:   #C8791A;
   --amber-l: #FDF3E3;
   --red:     #B84040;
   --red-l:   #FDEAEA;
   --blue-l:  #EEF3FF;
   --blue:    #3B5FBE;
-  --border:  rgba(28,28,26,0.12);
+  --border:  rgba(28,26,24,0.12);
   --radius:  14px;
-  --shadow:  0 2px 16px rgba(28,28,26,0.08);
+  --shadow:  0 2px 16px rgba(28,26,24,0.08);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
@@ -40,14 +40,14 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
 .field{display:flex;flex-direction:column;gap:6px;}
 .field label{font-size:12px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink2);}
-.field select,.field input{appearance:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);outline:none;transition:border-color 0.15s;width:100%;}
+.field select,.field input{appearance:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 36px 10px 14px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);outline:none;transition:border-color 0.15s;width:100%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239C9088' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
 .field select:focus,.field input:focus{border-color:var(--teal);}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .rec-area{display:flex;flex-direction:column;align-items:center;gap:14px;padding:28px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
 .rec-btn{width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s,box-shadow 0.15s;position:relative;}
 .rec-btn:active{transform:scale(0.95);}
-.rec-btn.idle{background:var(--teal);box-shadow:0 4px 20px rgba(29,107,90,0.35);}
-.rec-btn.idle:hover{box-shadow:0 6px 28px rgba(29,107,90,0.45);transform:translateY(-1px);}
+.rec-btn.idle{background:var(--teal);box-shadow:0 4px 20px rgba(181,84,30,0.30);}
+.rec-btn.idle:hover{box-shadow:0 6px 28px rgba(181,84,30,0.40);transform:translateY(-1px);}
 .rec-btn.recording{background:var(--red);box-shadow:0 4px 20px rgba(184,64,64,0.4);animation:pulse 1.4s ease-in-out infinite;}
 .rec-btn.done{background:#e8e4da;box-shadow:none;cursor:default;}
 @keyframes pulse{0%,100%{box-shadow:0 4px 20px rgba(184,64,64,0.4);}50%{box-shadow:0 4px 36px rgba(184,64,64,0.65);}}
@@ -106,9 +106,11 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 .streak-bar{display:flex;gap:4px;align-items:flex-end;height:32px;}
 .streak-day{width:16px;border-radius:3px 3px 0 0;background:var(--teal-l);transition:background 0.2s;}
 .streak-day.active{background:var(--teal);}
-.timeline-item{border-left:2px solid var(--teal-l);padding:0 0 20px 16px;position:relative;cursor:pointer;}
-.timeline-item:last-child{padding-bottom:0;border-left-color:transparent;}
-.timeline-item::before{content:'';position:absolute;left:-5px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--teal);border:2px solid var(--bg);}
+.timeline-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;box-shadow:var(--shadow);transition:box-shadow 0.15s;}
+.timeline-item:hover{box-shadow:0 4px 20px rgba(28,26,24,0.12);}
+.timeline-item-header{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.timeline-chevron{color:var(--ink3);transition:transform 0.2s;flex-shrink:0;}
+.timeline-chevron.open{transform:rotate(180deg);}
 .timeline-meta{font-size:12px;color:var(--ink3);}
 .timeline-title{font-size:14px;font-weight:500;color:var(--ink);margin-top:2px;}
 .timeline-preview{font-size:13px;color:var(--ink2);margin-top:3px;line-height:1.45;}
@@ -174,8 +176,30 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 
 .offline-banner{background:#F0F0EE;border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:13px;color:var(--ink2);display:flex;align-items:flex-start;gap:8px;}
 .offline-banner svg{flex-shrink:0;margin-top:1px;color:var(--ink3);}
-.retry-banner{background:var(--teal-l);border:1px solid rgba(29,107,90,0.2);border-radius:10px;padding:12px 14px;display:none;flex-direction:column;gap:8px;}
+.retry-banner{background:var(--teal-l);border:1px solid rgba(181,84,30,0.15);border-radius:10px;padding:12px 14px;display:none;flex-direction:column;gap:8px;}
 .retry-banner p{font-size:13px;color:var(--teal);}
+
+/* learn cards */
+.learn-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.learn-card-header{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;user-select:none;}
+.learn-card-icon{font-size:22px;flex-shrink:0;line-height:1;}
+.learn-card-title{flex:1;}
+.learn-card-title strong{font-size:15px;font-weight:500;color:var(--ink);display:block;}
+.learn-card-title span{font-size:12px;color:var(--ink3);}
+.learn-card-chevron{color:var(--ink3);transition:transform 0.2s;flex-shrink:0;}
+.learn-card-chevron.open{transform:rotate(180deg);}
+.learn-card-body{display:none;padding:0 18px 18px;border-top:1px solid var(--border);}
+.learn-card-body.open{display:block;}
+.learn-section{margin-top:14px;}
+.learn-section-title{font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;}
+.learn-body-text{font-size:14px;color:var(--ink2);line-height:1.6;}
+.learn-techniques{display:flex;flex-direction:column;gap:8px;margin-top:2px;}
+.learn-technique{background:var(--bg);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--ink);line-height:1.5;}
+.learn-technique strong{color:var(--teal);display:block;margin-bottom:2px;font-size:12px;}
+.learn-quote{background:var(--teal-l);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--teal);font-style:italic;margin-top:10px;line-height:1.5;}
+.learn-goal-btn{margin-top:12px;font-size:12px;color:var(--teal);background:none;border:1px solid var(--teal-l);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.learn-goal-btn:hover{background:var(--teal-l);}
+.learn-goal-btn.active{background:var(--teal);color:#fff;border-color:var(--teal);}
 
 /* bottom nav */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--border);display:flex;padding:10px 0 20px;}
@@ -190,8 +214,8 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 .sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 20px;flex-shrink:0;}
 .sheet-title{font-family:'Lora',serif;font-size:20px;font-weight:500;padding:0 20px 16px;color:var(--ink);}
 .sheet-body{padding:0 20px;}
-/* gear button */
-.gear-btn{position:absolute;top:48px;right:20px;width:36px;height:36px;background:none;border:1px solid var(--border);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink3);transition:color 0.15s,border-color 0.15s;}
+.gear-btn{position:fixed;top:16px;right:calc(50% - 220px);width:36px;height:36px;background:var(--surface);border:1px solid var(--border);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink3);transition:color 0.15s,border-color 0.15s;z-index:50;box-shadow:var(--shadow);}
+@media(max-width:480px){.gear-btn{right:16px;}}
 .gear-btn:hover{color:var(--teal);border-color:var(--teal);}
 /* tip talk */
 .tiptalk-lock{display:flex;flex-direction:column;align-items:center;gap:12px;padding:40px 20px;text-align:center;}
@@ -220,15 +244,17 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 <body>
 <div class="app">
 
+<!-- Fixed gear button — visible on all screens -->
+<button class="gear-btn" onclick="openSettings()" title="Settings" aria-label="Open settings">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+</button>
+
 <!-- ══════ SCREEN 1 — Record ══════ -->
 <div class="screen active" id="screen-record">
-  <div style="position:relative;">
+  <div>
     <p class="wordmark">Shiksha Saathi</p>
     <p class="tagline">Your daily teaching coach</p>
-    <h1 id="screen1-heading">Let's talk about today's lesson</h1>
-    <button class="gear-btn" onclick="openSettings()" title="Settings">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    </button>
+    <p id="screen1-heading" style="font-family:'Lora',serif;font-size:22px;font-weight:600;line-height:1.3;color:var(--ink);padding-right:44px;">Let's talk about today's lesson</p>
   </div>
 
   <div class="api-banner" id="api-banner" style="display:none" onclick="openSettings();showKeySection()">
@@ -246,7 +272,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       <div class="field">
         <label>Subject</label>
         <select id="subject" onchange="onContextChange();onLessonTextInput()">
-          <option value="">— pick —</option>
+          <option value="">— select —</option>
           <option>Maths</option><option>Science</option><option>Hindi</option>
           <option>English</option><option>Social Science</option><option>Other</option>
         </select>
@@ -254,9 +280,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       <div class="field">
         <label>Class</label>
         <select id="grade" onchange="onContextChange();onLessonTextInput()">
-          <option value="">— pick —</option>
-          <option>Class 3</option><option>Class 4</option><option>Class 5</option>
-          <option>Class 6</option><option>Class 7</option><option>Class 8</option>
+          <option value="">— select —</option>
         </select>
       </div>
     </div>
@@ -276,7 +300,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     </button>
     <div class="rec-label">
       <strong id="lesson-rec-label">Tap to start recording</strong>
-      <span id="lesson-rec-sub">Record your class, or tell us what happened</span>
+      <span id="lesson-rec-sub">Record your class, or tell us what happened in class</span>
     </div>
     <div class="rec-timer" id="lesson-timer" style="display:none">0:00</div>
   </div>
@@ -314,7 +338,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
         oninput="onLessonTextInput()"></textarea>
     </div>
   </div>
-  <div id="demo-panel" style="display:none;background:var(--teal-l);border:1px solid rgba(29,107,90,0.2);border-radius:10px;padding:14px;gap:10px;flex-direction:column;">
+  <div id="demo-panel" style="display:none;background:var(--teal-l);border:1px solid rgba(181,84,30,0.15);border-radius:10px;padding:14px;gap:10px;flex-direction:column;">
     <p style="font-size:12px;font-weight:500;color:var(--teal);text-transform:uppercase;letter-spacing:0.05em;">Demo mode — sample lesson</p>
     <div class="field">
       <label>Select a sample</label>
@@ -436,6 +460,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <div class="note-section">
       <span class="note-tag pattern">A pattern to notice</span>
       <p class="note-body" id="note-pattern"></p>
+      <button id="learn-more-btn" onclick="openLearnCard(state.weakestDim)" style="display:none;margin-top:6px;font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;text-decoration:underline;">Learn how to improve this →</button>
     </div>
     <div class="note-sep"></div>
     <div class="note-section">
@@ -563,7 +588,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   <div>
     <p class="wordmark">Shiksha Saathi</p>
     <h1>Tip Talk</h1>
-    <p class="subtext" style="margin-top:6px;">Your coaching patterns, all in one place.</p>
+    <p class="subtext" style="margin-top:6px;">Talk to your teaching coach about your patterns.</p>
   </div>
 
   <!-- locked state -->
@@ -578,25 +603,34 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   </div>
 
   <!-- unlocked state -->
-  <div id="tiptalk-unlocked" style="display:none;flex-direction:column;gap:20px;">
+  <div id="tiptalk-unlocked" style="display:none;flex-direction:column;gap:16px;">
 
-    <!-- self-rating -->
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-        <h2 style="font-size:16px;">Rate yourself</h2>
-        <span style="font-size:12px;color:var(--ink3);" id="rating-month-label"></span>
+    <!-- My Score card — summary from self-rating in settings -->
+    <div class="card" id="my-score-card" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <h2 style="font-size:15px;font-weight:500;">My Score</h2>
+        <span style="font-size:11px;color:var(--ink3);" id="my-score-month"></span>
       </div>
-      <div id="rating-rows"></div>
-      <div style="margin-top:14px;">
-        <p style="font-size:13px;color:var(--ink2);margin-bottom:8px;font-weight:500;">Focus areas this month (pick up to 3):</p>
-        <div class="goals-row" id="goals-row"></div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+        <div style="font-family:'Lora',serif;font-size:32px;font-weight:600;color:var(--teal);" id="my-score-avg">—</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;color:var(--ink2);" id="my-score-label">out of 5</div>
+          <div style="height:6px;background:var(--border);border-radius:3px;margin-top:6px;overflow:hidden;">
+            <div id="my-score-bar" style="height:100%;background:var(--teal);border-radius:3px;transition:width 0.5s ease;width:0%;"></div>
+          </div>
+          <div style="font-size:12px;color:var(--ink3);margin-top:4px;" id="my-score-rated">Rate yourself in Settings</div>
+        </div>
       </div>
-      <button class="btn-primary" style="margin-top:14px;" onclick="saveRatings()">Save ratings</button>
+      <!-- monthly priorities — shown as a defined list, not chips -->
+      <div id="my-score-goals" style="margin-top:10px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);">
+        <button onclick="openSettings()" style="font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;">Update ratings →</button>
+        <button onclick="navTo('screen-learn','nav-learn');renderLearn()" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;font-weight:500;">📖 Learn how to improve →</button>
+      </div>
     </div>
 
     <!-- chat -->
     <div class="card" style="display:flex;flex-direction:column;gap:12px;">
-      <h2 style="font-size:16px;">Ask about your patterns</h2>
       <p class="subtext">Ask anything about your teaching journey — patterns, progress, what to focus on next.</p>
       <div class="tiptalk-thread" id="tiptalk-thread"></div>
       <div id="tiptalk-starters" style="display:flex;flex-direction:column;gap:6px;"></div>
@@ -617,28 +651,72 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 <div class="sheet-overlay" id="settings-overlay" onclick="closeSettings()"></div>
 <div class="sheet" id="settings-sheet">
   <div class="sheet-handle"></div>
-  <div class="sheet-title">Profile &amp; Settings</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px 16px;">
+    <div class="sheet-title" style="padding:0;margin:0;">Profile &amp; Settings</div>
+    <button onclick="closeSettings()" style="width:32px;height:32px;border:none;background:var(--bg);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink3);font-size:20px;line-height:1;">×</button>
+  </div>
   <div class="sheet-body">
-    <div class="profile-header">
+    <!-- profile — collapses to compact summary once saved -->
+    <div id="profile-compact" style="display:none;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--border);cursor:pointer;" onclick="toggleProfileEdit()">
       <div class="profile-avatar" id="avatar-initials">?</div>
-      <div>
+      <div style="flex:1;">
         <div class="profile-name" id="profile-name-display">Your name</div>
         <div class="profile-school" id="profile-school-display">School not set</div>
       </div>
+      <span style="font-size:12px;color:var(--teal);font-family:'DM Sans',sans-serif;">Edit</span>
     </div>
-    <div class="setting-section" style="margin-top:16px;">
-      <div class="setting-row">
-        <span class="setting-label">Name</span>
-        <div class="field" style="margin-top:6px;"><input type="text" id="profile-name" placeholder="Your name…"/></div>
+    <div id="profile-edit">
+      <div class="profile-header">
+        <div class="profile-avatar" id="avatar-initials-edit">?</div>
+        <div>
+          <div class="profile-name" id="profile-name-display-edit">Your name</div>
+          <div class="profile-school" id="profile-school-display-edit">School not set</div>
+        </div>
       </div>
-      <div class="setting-row">
-        <span class="setting-label">School</span>
-        <div class="field" style="margin-top:6px;"><input type="text" id="profile-school" placeholder="School name…"/></div>
-      </div>
-      <div class="setting-row" style="border-bottom:none;">
-        <button class="btn-primary" onclick="saveProfile()">Save profile</button>
+      <div class="setting-section" style="margin-top:16px;">
+        <div class="setting-row">
+          <span class="setting-label">Name</span>
+          <div class="field" style="margin-top:6px;"><input type="text" id="profile-name" placeholder="Your name…" autocomplete="name"/></div>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">School</span>
+          <div class="field" style="margin-top:6px;"><input type="text" id="profile-school" placeholder="School name…" autocomplete="organization"/></div>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">Classes I teach</span>
+          <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;" id="grade-chips-profile">
+            <!-- rendered by JS --></div>
+          <p style="font-size:11px;color:var(--ink3);margin-top:6px;">Selected classes will appear in the lesson dropdown.</p>
+        </div>
+        <div class="setting-row" style="border-bottom:none;">
+          <button class="btn-primary" onclick="saveProfile()">Save profile</button>
+        </div>
       </div>
     </div>
+    <!-- self-rating section -->
+    <div class="advanced-toggle" id="rating-toggle" onclick="toggleRatingSection()" style="margin-top:4px;">
+      <span>My teaching ratings</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="advanced-body" id="rating-body">
+      <div class="setting-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div class="setting-section-title" style="margin-bottom:0;">How am I doing? (this month)</div>
+          <span style="font-size:11px;color:var(--ink3);" id="rating-month-label"></span>
+        </div>
+        <div id="rating-rows"></div>
+        <div style="margin-top:14px;">
+          <p style="font-size:13px;color:var(--ink2);margin-bottom:8px;font-weight:500;">Focus areas this month (pick up to 3):</p>
+          <div class="goals-row" id="goals-row"></div>
+          <p style="font-size:12px;color:var(--ink3);margin-top:8px;">
+            Not sure what these mean?
+            <button onclick="closeSettings();navTo('screen-learn','nav-learn');renderLearn()" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;text-decoration:underline;">Explore the Learn tab →</button>
+          </p>
+        </div>
+        <button class="btn-primary" style="margin-top:12px;" onclick="saveRatings()">Save ratings</button>
+      </div>
+    </div>
+
     <div class="advanced-toggle" id="advanced-toggle" onclick="toggleAdvanced()">
       <span>Advanced settings</span>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -667,6 +745,18 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     </div>
   </div>
 </div>
+
+<!-- ══════ SCREEN 6 — Learn ══════ -->
+<div class="screen" id="screen-learn">
+  <div>
+    <p class="wordmark">Shiksha Saathi</p>
+    <h1>Learn</h1>
+    <p class="subtext" style="margin-top:6px;">What good teaching looks like — and how to get there.</p>
+  </div>
+  <div id="learn-cards" style="display:flex;flex-direction:column;gap:12px;"></div>
+  <div class="spacer-nav"></div>
+</div>
+
 
 <!-- ══════ ONBOARDING OVERLAY — first visit only ══════ -->
 <div class="onboarding" id="onboarding" style="display:none">
@@ -701,7 +791,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     Start — record today's lesson →
   </button>
   <p style="font-size:12px;color:var(--ink3);margin-top:14px;text-align:center;">
-    Based on Rosenshine's Principles of Instruction
+    Inspired by Rosenshine's Principles of Instruction &amp; Teach Like a Champion
   </p>
 </div>
 
@@ -720,6 +810,10 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   <div class="nav-item" id="nav-tiptalk" onclick="navTo('screen-tiptalk','nav-tiptalk');renderTiptalk()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     Tip Talk
+  </div>
+  <div class="nav-item" id="nav-learn" onclick="navTo('screen-learn','nav-learn');renderLearn()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    Learn
   </div>
 </nav>
 
@@ -754,7 +848,7 @@ window.addEventListener('DOMContentLoaded', () => {
   checkOnboarding();
   updateGreeting();
   checkOffline();
-  // Listen for connectivity changes
+  updateGradeDropdown();
   window.addEventListener('online',  () => { checkOffline(); checkApiBanner(); });
   window.addEventListener('offline', () => { checkOffline(); });
 });
@@ -799,14 +893,19 @@ async function retryWithAI() {
   document.getElementById('note-no-key').style.display = 'none';
 }
 
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 function updateGreeting() {
-  const name = lsGet('ss_name');
+  const name    = lsGet('ss_name');
   const heading = document.getElementById('screen1-heading');
   if (!heading) return;
   if (name) {
-    heading.textContent = `Hi ${name.split(' ')[0]} — let's talk about today's lesson`;
+    const first = escapeHtml(name.split(' ')[0]);
+    heading.innerHTML = `Hi ${first},<br>Let's talk about today's lesson`;
   } else {
-    heading.textContent = `Hi — let's talk about today's lesson`;
+    heading.innerHTML = `Hi —<br>Let's talk about today's lesson`;
   }
 }
 
@@ -1060,52 +1159,38 @@ async function proceedToReflection() {
   }
 }
 
-// C2: Generate a targeted reflection question using AI
+// C2: Rephrase a question bank entry to reference the teacher's specific lesson
 async function generateAIQuestion(apiKey, dimId) {
-  const dimLabels = {
-    prior_review: 'connecting to prior knowledge',
-    small_steps:  'breaking explanation into small steps with practice',
-    cfu_quality:  'checking individual understanding',
-    cold_call:    'calling on specific students by name',
-    wait_time:    'giving students time to think before answering',
-    student_talk: 'getting students to talk and explain',
-    uptake:       'building on what students say',
-    back_row:     'reaching all students including quieter ones',
-  };
-  const dimLabel = dimLabels[dimId] || 'teaching effectiveness';
-  const excerpt  = state.lessonTranscript.substring(0, 300);
+  const excerpt  = state.lessonTranscript.substring(0, 250);
+  // Get the base question from the bank for this dimension
+  const bank = REFLECTION_QUESTION_BANK[dimId];
+  const sessions = lsGetJSON('ss_sessions', []);
+  const baseQuestion = bank ? bank[sessions.length % bank.length] : FALLBACK_QUESTIONS[0];
 
-  const prompt = `You are a teaching coach. A teacher described their lesson as:
+  const prompt = `A teacher described their lesson as:
 "${excerpt}"
 
-The weakest area detected in this lesson was: ${dimLabel}.
+Rephrase this reflection question to reference something specific the teacher mentioned above:
+"${baseQuestion}"
 
-Write ONE open reflection question (max 20 words) that:
-- Opens with "What" or "How" or "When" — never a leading "Why didn't you..." or "Could you have..."
-- Invites the teacher to describe what actually happened — not what they should have done
-- References something specific from their description above
-- Does NOT imply they failed or suggest a solution
-- Sounds like a curious colleague asking, not an evaluator judging
-
-Bad example: "When they didn't respond, how could you have given more thinking time?" (too leading, implies failure)
-Good example: "What happened in the moments after you asked a question — how did students respond?" (open, observational)
-
-Reply with ONLY the question. No preamble, no quotes, no explanation.`;
+Rules:
+- Keep the same intent and openness as the original
+- Reference one specific detail from the teacher's description (a word, event, or moment they mentioned)
+- Do NOT make it a leading question — never "could you have", "should you have", "why didn't you"
+- The question should invite the teacher to describe what happened, not what they should have done differently
+- Max 25 words
+- Reply with ONLY the rephrased question. No quotes, no explanation.`;
 
   try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
-      { method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-          contents:[{role:'user', parts:[{text:prompt}]}],
-          generationConfig:{ temperature:0.7, maxOutputTokens:60 }
-        })
-      }
+    const res = await geminiCall(apiKey,
+      { contents:[{role:'user', parts:[{text:prompt}]}] },
+      { temperature:0.5, maxOutputTokens:60 }
     );
-    if (!res.ok) return null;
     const data = await res.json();
     const q = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-    return (q && q.length > 10 && q.length < 120) ? q : null;
+    const badPatterns = /\b(could you have|should you have|why didn't|why don't|how could you have|shouldn't you|what if you had)\b/i;
+    if (q && q.length > 10 && q.length < 150 && !badPatterns.test(q)) return q;
+    return null;
   } catch(e) {
     return null;
   }
@@ -1216,6 +1301,9 @@ async function showFeedbackScreen() {
   document.getElementById('note-card').style.display='flex';
   document.getElementById('save-btn').disabled=false;
   document.getElementById('copy-note-btn').style.display='block';
+  // Show "Learn more" if we know the weakest dimension
+  const learnBtn = document.getElementById('learn-more-btn');
+  if (learnBtn) learnBtn.style.display = state.weakestDim ? 'inline-block' : 'none';
 
   // Store coaching note in state for follow-up context
   state.coachingNote = note;
@@ -1244,6 +1332,43 @@ function buildSignalBlock(signals) {
   lines.push('Weakest dimension: ' + weakest.label);
   lines.push('Raw excerpt: ' + state.lessonTranscript.substring(0, 400) + '...');
   return lines.join('\n');
+}
+
+// ═══════════════════════════════════
+//  GEMINI API HELPER
+//  Tries gemini-3.1-flash-lite first.
+//  On 429 (rate limit) or 404 (model unavailable), falls back to
+//  gemini-2.5-flash-lite which has 1,000 RPD free tier.
+// ═══════════════════════════════════
+const GEMINI_PRIMARY  = 'gemini-3.1-flash-lite';
+const GEMINI_FALLBACK = 'gemini-2.5-flash-lite';
+
+async function geminiCall(apiKey, body, genConfig = {}) {
+  const makeRequest = async (model) => {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const payload = { ...body, generationConfig: genConfig };
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    return res;
+  };
+
+  let res = await makeRequest(GEMINI_PRIMARY);
+
+  // Fall back to 2.5-flash-lite on rate limit or model not found
+  if (res.status === 429 || res.status === 404) {
+    console.warn(`${GEMINI_PRIMARY} ${res.status} — falling back to ${GEMINI_FALLBACK}`);
+    res = await makeRequest(GEMINI_FALLBACK);
+  }
+
+  if (!res.ok) {
+    if (res.status === 429) throw new Error('RATE_LIMIT');
+    if (res.status === 401 || res.status === 403) throw new Error('AUTH');
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return res;
 }
 
 async function callGemini(apiKey) {
@@ -1306,23 +1431,13 @@ Write the coaching note in this exact JSON:
 }`;
 
   try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
+    const res = await geminiCall(apiKey,
       {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          system_instruction: { parts: [{ text: systemInstruction }] },
-          contents: [{ role: 'user', parts: [{ text: userMessage }] }],
-          generationConfig: { temperature: 0.6, maxOutputTokens: 700 }
-        })
-      }
+        system_instruction: { parts: [{ text: systemInstruction }] },
+        contents: [{ role: 'user', parts: [{ text: userMessage }] }],
+      },
+      { temperature: 0.6, maxOutputTokens: 700 }
     );
-    if (!res.ok) {
-      if (res.status === 429) throw new Error('RATE_LIMIT');
-      if (res.status === 401 || res.status === 403) throw new Error('AUTH');
-      throw new Error(`HTTP ${res.status}`);
-    }
     const data   = await res.json();
     const raw    = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const clean  = raw.replace(/```json|```/g, '').trim();
@@ -1458,6 +1573,9 @@ function saveSession() {
 //  NEW SESSION — full reset
 // ═══════════════════════════════════
 function newSession() {
+  // Clear any running intervals before state reset to prevent memory leaks
+  if (state.lessonInterval)  clearInterval(state.lessonInterval);
+  if (state.reflectInterval) clearInterval(state.reflectInterval);
   Object.assign(state,{
     lessonRecording:false,reflectRecording:false,
     lessonDone:false,reflectDone:false,  // set false BEFORE navTo to prevent loop
@@ -1472,7 +1590,7 @@ function newSession() {
   const lb=document.getElementById('lesson-rec-btn');
   lb.className='rec-btn idle'; lb.innerHTML=micIcon();
   document.getElementById('lesson-rec-label').textContent='Tap to start recording';
-  document.getElementById('lesson-rec-sub').textContent='Record your class, or tell us what happened';
+  document.getElementById('lesson-rec-sub').textContent='Record your class, or tell us what happened in class';
   document.getElementById('lesson-timer').style.display='none';
   document.getElementById('lesson-status').style.display='none';
   document.getElementById('proceed-btn').disabled=true;
@@ -1489,6 +1607,8 @@ function newSession() {
   // save btn
   document.getElementById('note-card').style.display='none';
   document.getElementById('note-generating').style.display='none';
+  const learnBtn = document.getElementById('learn-more-btn');
+  if (learnBtn) learnBtn.style.display='none';
   const sb=document.getElementById('save-btn');
   sb.textContent='Save this note ✓'; sb.disabled=false;
   document.getElementById('followup-wrap').style.display='none';
@@ -1604,10 +1724,16 @@ function renderJourney() {
   const visibleSessions = sessions.slice(0, 6);
   const renderSession = (s, i) => `
     <div class="timeline-item" onclick="toggleExpand(${i})">
-      <div class="timeline-meta">${s.dateDisplay}${s.subject?' · '+s.subject:''}${s.grade?', '+s.grade:''}</div>
-      ${s.topic?`<div class="timeline-title">${s.topic}</div>`:'<div class="timeline-title">Lesson</div>'}
-      <div class="timeline-preview">${s.tip||s.tryThis.substring(0,80)+'…'}</div>
+      <div class="timeline-item-header">
+        <div style="flex:1;">
+          <div class="timeline-meta">${s.dateDisplay}${s.subject?' · '+s.subject:''}${s.grade?', '+s.grade:''}</div>
+          ${s.topic?`<div class="timeline-title">${s.topic}</div>`:'<div class="timeline-title">Lesson</div>'}
+          <div class="timeline-preview">${s.tip||s.tryThis.substring(0,80)+'…'}</div>
+        </div>
+        <svg class="timeline-chevron" id="tchev-${i}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
       <div class="timeline-expanded" id="exp-${i}">
+        <div style="height:10px;"></div>
         <div class="exp-section">
           <span class="exp-tag s">What worked</span>
           <div class="exp-body">${s.strength}</div>
@@ -1637,16 +1763,69 @@ function renderJourney() {
 }
 
 function toggleExpand(i) {
-  const el=document.getElementById(`exp-${i}`);
+  const el   = document.getElementById(`exp-${i}`);
+  const chev = document.getElementById(`tchev-${i}`);
+  if (!el) return;
   el.classList.toggle('open');
+  if (chev) chev.classList.toggle('open', el.classList.contains('open'));
 }
 
 // ═══════════════════════════════════
 //  SETTINGS / PROFILE
 // ═══════════════════════════════════
 // ═══════════════════════════════════
+//  GRADE PROFILE
+// ═══════════════════════════════════
+const ALL_GRADES = ['Class 3','Class 4','Class 5','Class 6','Class 7','Class 8','Class 9','Class 10'];
+
+function renderGradeChips() {
+  const saved = lsGetJSON('ss_grades', []);
+  const container = document.getElementById('grade-chips-profile');
+  if (!container) return;
+  container.innerHTML = ALL_GRADES.map(g => {
+    const sel = saved.includes(g);
+    return `<button onclick="toggleGradeChip('${g}',this)" style="font-size:12px;padding:4px 11px;border-radius:20px;border:1.5px solid ${sel?'var(--teal)':'var(--border)'};background:${sel?'var(--teal-l)':'var(--bg)'};color:${sel?'var(--teal)':'var(--ink2)'};cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" data-grade="${g}">${g}</button>`;
+  }).join('');
+}
+
+function toggleGradeChip(grade, btn) {
+  const saved = lsGetJSON('ss_grades', []);
+  const idx   = saved.indexOf(grade);
+  if (idx >= 0) {
+    saved.splice(idx, 1);
+    btn.style.borderColor = 'var(--border)';
+    btn.style.background  = 'var(--bg)';
+    btn.style.color       = 'var(--ink2)';
+  } else {
+    saved.push(grade);
+    btn.style.borderColor = 'var(--teal)';
+    btn.style.background  = 'var(--teal-l)';
+    btn.style.color       = 'var(--teal)';
+  }
+  lsSet('ss_grades', JSON.stringify(saved));
+  updateGradeDropdown();
+}
+
+function updateGradeDropdown() {
+  const saved  = lsGetJSON('ss_grades', []);
+  const sel    = document.getElementById('grade');
+  if (!sel) return;
+  const current = sel.value;
+  const grades  = saved.length > 0 ? saved : ALL_GRADES;
+  sel.innerHTML = `<option value="">— select —</option>` +
+    grades.map(g => `<option value="${g}"${g===current?' selected':''}>${g}</option>`).join('');
+}
+
+// ═══════════════════════════════════
 //  SETTINGS SHEET
 // ═══════════════════════════════════
+function toggleRatingSection() {
+  const toggle = document.getElementById('rating-toggle');
+  const body   = document.getElementById('rating-body');
+  toggle.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
 function openSettings() {
   loadSettingsSheet();
   document.getElementById('settings-overlay').classList.add('open');
@@ -1663,6 +1842,12 @@ function loadSettingsSheet() {
   const school = lsGet('ss_school');
   document.getElementById('profile-name').value   = name;
   document.getElementById('profile-school').value = school;
+
+  // Collapse profile to compact if already saved
+  const hasProfile = !!(name && school);
+  document.getElementById('profile-compact').style.display = hasProfile ? 'flex' : 'none';
+  document.getElementById('profile-edit').style.display    = hasProfile ? 'none' : 'block';
+
   loadProfileDisplay();
   const key = lsGet('ss_gemini_key');
   document.getElementById('api-key-input').value  = key;
@@ -1670,6 +1855,18 @@ function loadSettingsSheet() {
   document.getElementById('key-status').className   = 'key-status '+(key?'ok':'');
   document.getElementById('advanced-toggle').classList.remove('open');
   document.getElementById('advanced-body').classList.remove('open');
+  document.getElementById('rating-toggle').classList.remove('open');
+  document.getElementById('rating-body').classList.remove('open');
+  loadRatingsUI();
+  renderGradeChips();
+}
+
+function toggleProfileEdit() {
+  const compact = document.getElementById('profile-compact');
+  const edit    = document.getElementById('profile-edit');
+  const showing = edit.style.display !== 'none';
+  compact.style.display = showing ? 'flex' : 'none';
+  edit.style.display    = showing ? 'none' : 'block';
 }
 
 // kept for compatibility
@@ -1688,10 +1885,17 @@ function showKeySection() {
 function loadProfileDisplay() {
   const name   = lsGet('ss_name') || 'Your name';
   const school = lsGet('ss_school') || 'School not set';
-  document.getElementById('profile-name-display').textContent   = name;
-  document.getElementById('profile-school-display').textContent = school;
+  // Update all display elements (compact + edit views)
+  ['profile-name-display','profile-name-display-edit'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.textContent = name;
+  });
+  ['profile-school-display','profile-school-display-edit'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.textContent = school;
+  });
   const initials = name.split(' ').filter(Boolean).map(w=>w[0].toUpperCase()).slice(0,2).join('') || '?';
-  document.getElementById('avatar-initials').textContent = initials;
+  ['avatar-initials','avatar-initials-edit'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.textContent = initials;
+  });
 }
 
 function saveProfile() {
@@ -1701,9 +1905,13 @@ function saveProfile() {
   if (school) lsSet('ss_school', school);
   loadProfileDisplay();
   updateGreeting();
+  // Collapse to compact view after saving
+  if (name && school) {
+    document.getElementById('profile-compact').style.display = 'flex';
+    document.getElementById('profile-edit').style.display    = 'none';
+  }
   const btn = document.querySelector('#settings-sheet .btn-primary');
   const orig = btn.textContent;
-  // Show feedback even if fields were empty
   btn.textContent = (name || school) ? 'Saved ✓' : 'Nothing to save — fill in your name first';
   setTimeout(()=>btn.textContent=orig, 2000);
 }
@@ -2375,8 +2583,8 @@ const REFLECTION_QUESTION_BANK = {
     "How did you decide which student to ask? Did every student have an equal chance of being called?",
   ],
   wait_time: [
-    "After asking a question, what typically happened in the next few seconds before someone answered?",
-    "How long did you wait after asking a question before accepting an answer?",
+    "After you asked a question, what did you do while waiting for someone to answer?",
+    "When a student answered your question, how much time had passed since you asked it?",
     "When you asked a question, who was thinking — just the student who answered, or the whole class?",
   ],
   student_talk: [
@@ -2602,19 +2810,10 @@ ${isLastTurn ? 'This is the final exchange. End with one grounding sentence that
         { role: 'user', parts: [{ text: question }] }
       ];
 
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${key}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            system_instruction: { parts: [{ text: systemPrompt }] },
-            contents: messages,
-            generationConfig: { temperature: 0.65, maxOutputTokens: 220 }
-          })
-        }
+      const res = await geminiCall(key,
+        { system_instruction: { parts: [{ text: systemPrompt }] }, contents: messages },
+        { temperature: 0.65, maxOutputTokens: 220 }
       );
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Could not get a response.';
 
@@ -2729,14 +2928,14 @@ async function copyToClipboard(text, btnId, successLabel, originalLabel) {
 // ═══════════════════════════════════
 const TIPTALK_UNLOCK_COUNT = 5;
 const DIM_NAMES = {
-  prior_review: 'Prior knowledge review',
-  small_steps:  'Small steps & practice',
-  cfu_quality:  'Checking understanding',
-  cold_call:    'Cold-calling by name',
-  wait_time:    'Wait time',
-  student_talk: 'Student talk',
-  uptake:       'Uptake of responses',
-  back_row:     'Reaching all students',
+  prior_review: 'Connecting to what students know',
+  small_steps:  'One step at a time',
+  cfu_quality:  'Knowing who actually understood',
+  cold_call:    'Calling on everyone',
+  wait_time:    'Giving time to think',
+  student_talk: 'Getting students to talk',
+  uptake:       'Building on what students say',
+  back_row:     'Reaching every student',
 };
 const TIPTALK_STARTERS = [
   "What teaching pattern shows up most in my sessions?",
@@ -2746,6 +2945,62 @@ const TIPTALK_STARTERS = [
 ];
 
 let tiptalkHistory = [];
+
+function loadRatingsUI() {
+  const now      = new Date();
+  const monthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  const monthLabel = now.toLocaleString('en-IN',{month:'long', year:'numeric'});
+
+  const el = document.getElementById('rating-month-label');
+  if (el) el.textContent = monthLabel;
+
+  const saved   = lsGetJSON('ss_ratings', {});
+  const ratings = saved[monthKey] || {};
+  const goals   = lsGetJSON('ss_goals', []);
+
+  const PLAIN_LABELS = {
+    prior_review: 'I connect new lessons to what students already know',
+    small_steps:  'Students practise after each new idea, not just at the end',
+    cfu_quality:  'I know which individual students understood — not just the class',
+    cold_call:    'I call on specific students by name, not just whoever raises their hand',
+    wait_time:    'I give students time to think before accepting an answer',
+    student_talk: 'Students explain ideas in their own words, not just give short answers',
+    uptake:       'I build on what students say, not just move on after they answer',
+    back_row:     'I specifically check on quieter students and those at the back',
+  };
+
+  // 3-point scale: 1 = Not yet, 3 = Sometimes, 5 = Regularly
+  const POINTS = [
+    { val:1, emoji:'😐', label:'Not yet' },
+    { val:3, emoji:'🙂', label:'Sometimes' },
+    { val:5, emoji:'😊', label:'Regularly' },
+  ];
+
+  const rr = document.getElementById('rating-rows');
+  if (rr) {
+    rr.innerHTML = Object.entries(PLAIN_LABELS).map(([id, label]) => {
+      const val = ratings[id] || 0;
+      const btns = POINTS.map(p => {
+        const active = val === p.val;
+        return `<button onclick="setRating('${id}',${p.val})" style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 10px;border-radius:8px;border:1.5px solid ${active?'var(--teal)':'var(--border)'};background:${active?'var(--teal-l)':'var(--surface)'};cursor:pointer;transition:all 0.15s;" id="rpt-${id}-${p.val}">
+          <span style="font-size:20px;">${p.emoji}</span>
+          <span style="font-size:10px;color:${active?'var(--teal)':'var(--ink3)'};">${p.label}</span>
+        </button>`;
+      }).join('');
+      return `<div style="padding:10px 0;border-bottom:1px solid var(--border);">
+        <div style="font-size:13px;color:var(--ink);margin-bottom:8px;line-height:1.4;">${label}</div>
+        <div style="display:flex;gap:8px;">${btns}</div>
+      </div>`;
+    }).join('');
+  }
+
+  const gr = document.getElementById('goals-row');
+  if (gr) {
+    gr.innerHTML = Object.entries(PLAIN_LABELS).map(([id, label]) =>
+      `<button class="goal-chip${goals.includes(id)?' selected':''}" onclick="toggleGoal('${id}',this)">${DIM_NAMES[id]||id}</button>`
+    ).join('');
+  }
+}
 
 function renderTiptalk() {
   const sessions = lsGetJSON('ss_sessions', []);
@@ -2763,36 +3018,41 @@ function renderTiptalk() {
     return;
   }
 
-  // Render self-rating
-  const now = new Date();
+  // My Score card
+  const now      = new Date();
   const monthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-  document.getElementById('rating-month-label').textContent =
-    now.toLocaleString('en-IN',{month:'long', year:'numeric'});
+  const saved    = lsGetJSON('ss_ratings', {});
+  const ratings  = saved[monthKey] || {};
+  const goals    = lsGetJSON('ss_goals', []);
+  const ratedDims = Object.values(ratings).filter(v => v > 0);
 
-  const saved = lsGetJSON('ss_ratings', {});
-  const ratings = saved[monthKey] || {};
-  const goals   = lsGetJSON('ss_goals', []);
+  const scoreCard = document.getElementById('my-score-card');
+  if (ratedDims.length > 0) {
+    scoreCard.style.display = 'block';
+    const avg = (ratedDims.reduce((a,b)=>a+b,0) / ratedDims.length).toFixed(1);
+    document.getElementById('my-score-avg').textContent = avg;
+    document.getElementById('my-score-month').textContent =
+      now.toLocaleString('en-IN',{month:'short', year:'numeric'});
+    document.getElementById('my-score-rated').textContent =
+      `Based on ${ratedDims.length} of 8 dimensions`;
+    // Set bar width (scale 1-5 to 0-100%)
+    const barPct = Math.round(((parseFloat(avg) - 1) / 4) * 100);
+    document.getElementById('my-score-bar').style.width = barPct + '%';
+    const goalsEl = document.getElementById('my-score-goals');
+    if (goals.length) {
+      goalsEl.innerHTML = `
+        <p style="font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;">This month's focus</p>
+        <ol style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;">
+          ${goals.map(g => `<li style="font-size:14px;color:var(--ink);font-weight:500;">${DIM_NAMES[g]||g}</li>`).join('')}
+        </ol>`;
+    } else {
+      goalsEl.innerHTML = `<p style="font-size:13px;color:var(--ink3);">No focus areas set — update your ratings in Settings to set priorities.</p>`;
+    }
+  } else {
+    scoreCard.style.display = 'none';
+  }
 
-  // Rating rows
-  const rr = document.getElementById('rating-rows');
-  rr.innerHTML = Object.entries(DIM_NAMES).map(([id, label]) => {
-    const val = ratings[id] || 0;
-    const stars = [1,2,3,4,5].map(n =>
-      `<span class="star${n<=val?' active':''}" onclick="setRating('${id}',${n})">${n<=val?'★':'☆'}</span>`
-    ).join('');
-    return `<div class="rating-row">
-      <span class="rating-label">${label}</span>
-      <div class="stars" id="stars-${id}">${stars}</div>
-    </div>`;
-  }).join('');
-
-  // Goals chips
-  const gr = document.getElementById('goals-row');
-  gr.innerHTML = Object.entries(DIM_NAMES).map(([id, label]) =>
-    `<button class="goal-chip${goals.includes(id)?' selected':''}" onclick="toggleGoal('${id}',this)">${label}</button>`
-  ).join('');
-
-  // Chat starters (only if no messages yet)
+  // Chat starters — only on first load
   if (tiptalkHistory.length === 0) {
     const st = document.getElementById('tiptalk-starters');
     st.innerHTML = TIPTALK_STARTERS.map(q =>
@@ -2808,14 +3068,16 @@ function setRating(dimId, val) {
   if (!saved[monthKey]) saved[monthKey] = {};
   saved[monthKey][dimId] = val;
   lsSet('ss_ratings', JSON.stringify(saved));
-
-  // Update star display
-  const container = document.getElementById('stars-' + dimId);
-  if (container) {
-    container.innerHTML = [1,2,3,4,5].map(n =>
-      `<span class="star${n<=val?' active':''}" onclick="setRating('${dimId}',${n})">${n<=val?'★':'☆'}</span>`
-    ).join('');
-  }
+  // Refresh all 3 buttons for this dimension
+  [1,3,5].forEach(p => {
+    const btn = document.getElementById(`rpt-${dimId}-${p}`);
+    if (!btn) return;
+    const active = val === p;
+    btn.style.borderColor = active ? 'var(--teal)' : 'var(--border)';
+    btn.style.background  = active ? 'var(--teal-l)' : 'var(--surface)';
+    const label = btn.querySelector('span:last-child');
+    if (label) label.style.color = active ? 'var(--teal)' : 'var(--ink3)';
+  });
 }
 
 function toggleGoal(dimId, btn) {
@@ -2838,7 +3100,8 @@ function toggleGoal(dimId, btn) {
 }
 
 function saveRatings() {
-  const btn = document.querySelector('#screen-tiptalk .btn-primary');
+  const btn = document.querySelector('#rating-body .btn-primary');
+  if (!btn) return;
   const orig = btn.textContent;
   btn.textContent = 'Saved ✓';
   setTimeout(() => btn.textContent = orig, 1500);
@@ -2906,15 +3169,9 @@ Voice: warm, direct, like a thoughtful mentor. Maximum 4 sentences.`;
 
       tiptalkHistory.push({ role:'user', parts:[{text: question}] });
 
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${key}`,
-        { method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({
-            system_instruction: { parts:[{text: systemPrompt + '\n\n' + context}] },
-            contents: tiptalkHistory,
-            generationConfig: { temperature:0.7, maxOutputTokens:250 }
-          })
-        }
+      const res = await geminiCall(key,
+        { system_instruction: { parts:[{text: systemPrompt + '\n\n' + context}] }, contents: tiptalkHistory },
+        { temperature:0.7, maxOutputTokens:250 }
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
@@ -2930,6 +3187,227 @@ Voice: warm, direct, like a thoughtful mentor. Maximum 4 sentences.`;
   document.getElementById('tiptalk-send').disabled = false;
   document.getElementById('tiptalk-input').disabled = false;
   document.getElementById('tiptalk-input').focus();
+}
+
+// ═══════════════════════════════════
+//  LEARN TAB
+// ═══════════════════════════════════
+const LEARN_CARDS = [
+  {
+    id: 'prior_review',
+    icon: '📚',
+    title: 'Connecting to what students know',
+    subtitle: 'Rosenshine Principle 1 · Daily review',
+    why: 'Before teaching something new, spend 3–5 minutes connecting it to something students already know. When new ideas attach to existing knowledge, students understand faster and forget less.',
+    techniques: [
+      { label: '🗣️ Yesterday\'s question', desc: '"What do you remember from last class?" — Call on 2–3 students by name before opening the book.' },
+      { label: '✍️ 2-minute write', desc: '"Write one thing you already know about today\'s topic." — You circulate and read; it tells you what to build on.' },
+      { label: '🔗 Make the link explicit', desc: 'Say it out loud: "Today we\'re learning X. You already know Y — X builds on that."' },
+      { label: '❓ Recall question', desc: 'Ask one question about previous content before starting new material. Just one is enough.' },
+    ],
+    quote: '"Before we start fractions, who can tell me what multiplication means? Raju, what do you think?"',
+  },
+  {
+    id: 'small_steps',
+    icon: '🪜',
+    title: 'One step at a time',
+    subtitle: 'Rosenshine Principle 2 · Small steps + practice',
+    why: 'Explain one idea, then let students try it — before explaining the next idea. Covering everything and practising at the end means students lose the thread halfway through.',
+    techniques: [
+      { label: '⏸️ Explain-pause-try', desc: 'After each concept, pause and give one small problem before moving on. One question, not five.' },
+      { label: '👥 Mini partner check', desc: '"Turn to your partner. Explain what I just said in your own words. 30 seconds." — Then continue.' },
+      { label: '🖊️ One sum now', desc: 'Give students one problem immediately after each explanation — not a full exercise, just one.' },
+      { label: '📝 Stop and jot', desc: 'After explaining, ask students to write one sentence summarising the idea before you move on.' },
+    ],
+    quote: '"Okay, I\'ve explained numerator. Before we go further — try question 1 only. Just that one."',
+  },
+  {
+    id: 'cfu_quality',
+    icon: '🔍',
+    title: 'Knowing who actually understood',
+    subtitle: 'Rosenshine Principle 3 · Checking for understanding',
+    why: '"Everyone understood?" tells you nothing. Real checking means finding out what individual students know — not just the confident ones who always answer.',
+    techniques: [
+      { label: '👆 Thumbs signal', desc: '"Thumbs up = clear, sideways = a bit confused, down = lost." Look around the room — really look, don\'t just wait for thumbs up.' },
+      { label: '🎯 Name + explain', desc: 'Pick one student: "Priya, explain this back to me in your own words." Not a yes/no question.' },
+      { label: '📋 Show me', desc: '"Write the answer on your slate/notebook. Hold it up." — You can see 40 answers in 10 seconds.' },
+      { label: '🔄 Teach your neighbour', desc: '"Explain this concept to the person next to you." Then walk around and listen to two or three pairs.' },
+    ],
+    quote: '"Before we move on — Sunita, tell me what we just learned in your own words."',
+  },
+  {
+    id: 'cold_call',
+    icon: '📣',
+    title: 'Calling on everyone, not just volunteers',
+    subtitle: 'Teach Like a Champion · Cold call',
+    why: 'When you only call on students who raise their hands, the same 4–5 students answer everything. The rest of the class stops thinking — because they know they won\'t be called.',
+    techniques: [
+      { label: '⏱️ Question → pause → name', desc: 'Ask the question. Wait 5 seconds. Then say a name. If you say the name first, everyone else stops thinking immediately.' },
+      { label: '🔄 Go around the rows', desc: 'Systematically call on students row by row. Everyone knows their turn is coming — so everyone stays ready.' },
+      { label: '💪 Start warm', desc: 'Begin with students who are likely to know the answer. This builds comfort with being called on before the questions get harder.' },
+      { label: '🤝 Partner first', desc: '"Discuss with your partner, then I\'ll call someone to share." — Reduces anxiety before a cold call.' },
+    ],
+    quote: '"What is the capital of Maharashtra? [5 seconds of silence] ... Rahul?"',
+  },
+  {
+    id: 'wait_time',
+    icon: '⏳',
+    title: 'Giving time to think',
+    subtitle: 'Rosenshine + TLAC · Wait time',
+    why: 'Most teachers wait less than one second after asking a question. Students who need more processing time — quieter students, weaker students — never get to answer if the fastest hand always wins.',
+    techniques: [
+      { label: '🔢 Count silently to 5', desc: 'After asking a question, count to 5 in your head before accepting any answer. It feels long to you — it feels normal to students.' },
+      { label: '🗣️ Narrate hands', desc: '"I see one hand... two hands, now three." — This fills the silence naturally and builds participation.' },
+      { label: '✋ No hands yet', desc: '"Don\'t raise your hand yet. Think first. I\'ll ask you in a moment." — Then wait, then call.' },
+      { label: '📖 Look back', desc: '"You have 30 seconds. Look at your notes if you need to." — This makes the wait time purposeful.' },
+    ],
+    quote: '"Think about it first. Don\'t call out." [5 second pause] "Okay, Fatima — what do you think?"',
+  },
+  {
+    id: 'student_talk',
+    icon: '💬',
+    title: 'Getting students to talk and explain',
+    subtitle: 'TLAC Ratio · Student talk',
+    why: 'When only the teacher talks, students listen passively. When students explain things in their own words — to you or to each other — they understand more deeply and forget less.',
+    techniques: [
+      { label: '👫 Turn and talk', desc: '"Tell your partner what you just learned. 45 seconds." Then call one pair to share with the class.' },
+      { label: '🎙️ Student explains', desc: '"Mohammad, explain this to the class in your words — not mine." Not a yes/no, a real explanation.' },
+      { label: '🔁 Repeat and add', desc: '"Neha said X. Who can add to that?" — This builds on student answers instead of replacing them with yours.' },
+      { label: '🎭 Teach back', desc: '"Imagine I\'ve never heard of photosynthesis. Explain it to me from the beginning." — Forces real understanding.' },
+    ],
+    quote: '"Before I explain the next step — Arjun, tell me what you understood so far."',
+  },
+  {
+    id: 'uptake',
+    icon: '🌱',
+    title: 'Building on what students say',
+    subtitle: 'Dialogic teaching · Uptake of responses',
+    why: 'When a student answers and you say "correct" and move on, students learn their thinking doesn\'t matter — only the answer does. Every response — right or wrong — is useful information.',
+    techniques: [
+      { label: '➕ Add to it', desc: '"Good start — can anyone add to what Raju said?" — This signals that answers can be built on, not just judged.' },
+      { label: '❓ Ask why', desc: 'Don\'t just accept correct answers. "You\'re right — but can you tell me why?" Extends thinking.' },
+      { label: '🔍 Use the wrong answer', desc: '"Someone wrote X. Why might a student think that?" — Don\'t shame, illuminate. Wrong answers teach the whole class.' },
+      { label: '🔗 Connect two answers', desc: '"Sunita said A. Mohammad said B. How are those two ideas related?" — Builds dialogue, not just Q&A.' },
+    ],
+    quote: '"Priya said the plant needs sunlight. Let\'s build on that — what does it do with the sunlight? Fatima?"',
+  },
+  {
+    id: 'back_row',
+    icon: '🏫',
+    title: 'Reaching every student',
+    subtitle: 'Equity in practice · Back row',
+    why: 'In most classrooms, 80% of teacher attention goes to the front 3 rows. Students at the back or sides learn quickly that they\'re invisible — so they stop trying.',
+    techniques: [
+      { label: '🚶 Walk to the back first', desc: 'During independent work, go to the back row first — not the front. Look at what they\'ve written.' },
+      { label: '📛 Name from the edges', desc: 'Deliberately cold-call students at the back and sides — not to catch them out, but to include them.' },
+      { label: '👁️ Circulate with purpose', desc: 'Don\'t stand at the front while students work. Move around the room. Crouch down to look at notebooks.' },
+      { label: '🤝 Pair strategically', desc: 'Pair a quieter back-row student with a more confident student for partner activities. Not to help them — to hear them.' },
+    ],
+    quote: '[Walking to back] "Show me what you have so far, Fatima." [looks at notebook] "Good — explain your thinking."',
+  },
+];
+
+const LEARN_SOURCES = {
+  prior_review: { label:'Rosenshine (2012) — Principles of Instruction', url:'https://www.aft.org/sites/default/files/periodicals/Rosenshine.pdf' },
+  small_steps:  { label:'Rosenshine (2012) — Principles of Instruction', url:'https://www.aft.org/sites/default/files/periodicals/Rosenshine.pdf' },
+  cfu_quality:  { label:'TLAC Free Resources — Check for Understanding', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
+  cold_call:    { label:'TLAC Free Resources — Cold Call', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
+  wait_time:    { label:'TLAC Free Resources — Wait Time', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
+  student_talk: { label:'TLAC Free Resources — Turn and Talk', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
+  uptake:       { label:'TLAC Free Resources — No Opt Out', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
+  back_row:     { label:'Rosenshine (2012) — Principles of Instruction', url:'https://www.aft.org/sites/default/files/periodicals/Rosenshine.pdf' },
+};
+
+let learnRendered = false;
+
+function renderLearn() {
+  if (learnRendered) return; // static content — only render once
+  learnRendered = true;
+  const goals = lsGetJSON('ss_goals', []);
+  const container = document.getElementById('learn-cards');
+  container.innerHTML = LEARN_CARDS.map((card, idx) => {
+    const isGoal = goals.includes(card.id);
+    const techniques = card.techniques.map(t =>
+      `<div class="learn-technique"><strong>${t.label}</strong>${t.desc}</div>`
+    ).join('');
+    return `
+    <div class="learn-card" id="lcard-${card.id}">
+      <div class="learn-card-header" onclick="toggleLearnCard('${card.id}')">
+        <span class="learn-card-icon">${card.icon}</span>
+        <div class="learn-card-title">
+          <strong>${card.title}</strong>
+          <span>${card.why.split('.')[0]}.</span>
+        </div>
+        <svg class="learn-card-chevron" id="lchev-${card.id}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="learn-card-body" id="lbody-${card.id}">
+        <div class="learn-section">
+          <div class="learn-section-title">What it means</div>
+          <p class="learn-body-text">${card.why}</p>
+        </div>
+        <div class="learn-section">
+          <div class="learn-section-title">Try these in class</div>
+          <div class="learn-techniques">${techniques}</div>
+        </div>
+        <div class="learn-quote">${card.quote}</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:8px;">
+          <button class="learn-goal-btn${isGoal?' active':''}" id="lgoal-${card.id}"
+            onclick="event.stopPropagation();toggleLearnGoal('${card.id}')">
+            ${isGoal ? '✓ In your focus areas' : '+ Set as focus area'}
+          </button>
+          ${LEARN_SOURCES[card.id] ? `<a href="${LEARN_SOURCES[card.id].url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:11px;color:var(--ink3);text-decoration:none;">📖 ${LEARN_SOURCES[card.id].label} ↗</a>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleLearnCard(id) {
+  const body  = document.getElementById('lbody-' + id);
+  const chev  = document.getElementById('lchev-' + id);
+  const open  = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  chev.classList.toggle('open', !open);
+}
+
+function toggleLearnGoal(dimId) {
+  const goals = lsGetJSON('ss_goals', []);
+  const btn   = document.getElementById('lgoal-' + dimId);
+  const idx   = goals.indexOf(dimId);
+  if (idx >= 0) {
+    goals.splice(idx, 1);
+    if (btn) { btn.textContent = '+ Set as focus area'; btn.classList.remove('active'); }
+  } else {
+    if (goals.length >= 3) {
+      if (btn) {
+        btn.style.borderColor = 'var(--red)';
+        btn.textContent = 'Max 3 focus areas';
+        setTimeout(() => { btn.style.borderColor = ''; btn.textContent = '+ Set as focus area'; }, 2000);
+      }
+      return;
+    }
+    goals.push(dimId);
+    if (btn) { btn.textContent = '✓ In your focus areas'; btn.classList.add('active'); }
+  }
+  lsSet('ss_goals', JSON.stringify(goals));
+  // Allow re-render next time Learn tab is opened so goal state reflects correctly
+  learnRendered = false;
+}
+
+// Open a specific learn card — called from coaching note "Learn more" links
+function openLearnCard(dimId) {
+  navTo('screen-learn', 'nav-learn');
+  renderLearn();
+  setTimeout(() => {
+    const body = document.getElementById('lbody-' + dimId);
+    const chev = document.getElementById('lchev-' + dimId);
+    if (body && !body.classList.contains('open')) {
+      body.classList.add('open');
+      chev.classList.add('open');
+    }
+    const card = document.getElementById('lcard-' + dimId);
+    if (card) card.scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 150);
 }
 
 // ═══════════════════════════════════
