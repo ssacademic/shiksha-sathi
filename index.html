@@ -1925,7 +1925,7 @@ function saveApiKey() {
   const key = document.getElementById('api-key-input').value.trim();
   const status = document.getElementById('key-status');
   if (!key) { status.textContent='Paste a key first.'; status.className='key-status err'; return; }
-  if (!key.startsWith('AIza')) { status.textContent='Doesn\'t look like a Gemini key (should start with AIza…).'; status.className='key-status err'; return; }
+  if (key.length < 10 || key.length > 100 || /\s/.test(key)) { status.textContent = key.length < 10 ? 'Key seems too short — paste the full key.' : key.length > 100 ? 'Key seems too long — check for extra characters.' : 'Key should not contain spaces — paste it directly.'; status.className='key-status err'; return; }
   lsSet('ss_gemini_key', key);
   status.textContent='✓ Key saved on this device'; status.className='key-status ok';
   checkApiBanner();
