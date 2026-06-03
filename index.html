@@ -290,27 +290,33 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       <label>Topic <span style="color:var(--red);">*</span></label>
       <input type="text" id="topic" placeholder="e.g. Fractions, Photosynthesis, Past tense…" oninput="onLessonTextInput()"/>
     </div>
+    <div id="lesson-text-panel">
+      <label style="font-size:13px;font-weight:500;color:var(--ink2);display:block;margin-bottom:6px;">Describe what happened</label>
+      <textarea id="lesson-text-input" rows="5"
+        placeholder="What happened in class today? What did students do? What felt uncertain?"
+        style="appearance:none;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;"
+        oninput="onLessonTextInput()"></textarea>
+      <p style="font-size:12px;color:var(--ink3);margin-top:6px;">You can also tap the 🎤 mic button on your phone keyboard to speak your description.</p>
+    </div>
   </div>
 
-  <!-- hidden compat refs — lesson recorder removed from UI but JS still references these -->
+  </div>
+
+  <!-- hidden compat refs -->
   <button id="lesson-rec-btn" style="display:none" onclick="toggleLessonRecording()"></button>
   <div id="lesson-timer" style="display:none">0:00</div>
   <span id="lesson-rec-label" style="display:none"></span>
   <span id="lesson-rec-sub" style="display:none"></span>
-
   <div id="lesson-status" style="display:none">
-    <div style="display:flex;align-items:center;gap:10px;">
-      <span class="pill dot" id="status-pill">Transcribing…</span>
-      <span class="subtext" id="status-text">This takes a moment</span>
-    </div>
+    <span class="pill dot" id="status-pill"></span>
+    <span id="status-text"></span>
   </div>
 
-  <!-- demo mode toggle -->
+  <!-- demo mode -->
   <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--ink3);">
     <span>Need a sample?</span>
     <button onclick="toggleDemoMode()" id="demo-toggle-btn" style="font-size:12px;color:var(--ink3);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;padding:0;">Use a demo lesson</button>
   </div>
-
   <div id="demo-panel" style="display:none;background:var(--teal-l);border:1px solid rgba(181,84,30,0.15);border-radius:10px;padding:14px;gap:10px;flex-direction:column;">
     <p style="font-size:12px;font-weight:500;color:var(--teal);text-transform:uppercase;letter-spacing:0.05em;">Demo mode — sample lesson</p>
     <div class="field">
@@ -323,18 +329,6 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       </select>
     </div>
     <p style="font-size:12px;color:var(--teal);opacity:0.8;">Subject/class will be pre-filled. Tap Continue when ready.</p>
-  </div>
-
-  <!-- text description — primary input, same card style as fields above -->
-  <div class="card" style="display:flex;flex-direction:column;gap:10px;">
-    <p style="font-size:14px;font-weight:500;color:var(--ink);">Describe your experience</p>
-    <div id="lesson-text-panel">
-      <textarea id="lesson-text-input" rows="5"
-        placeholder="What happened in class today? What did students do? What felt uncertain?"
-        style="appearance:none;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;"
-        oninput="onLessonTextInput()"></textarea>
-      <p style="font-size:12px;color:var(--ink3);margin-top:6px;">You can also tap the 🎤 mic button on your phone keyboard to speak your description.</p>
-    </div>
   </div>
 
   <button class="btn-primary" id="proceed-btn" disabled onclick="proceedToReflection()">
@@ -374,10 +368,10 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     </div>
   </div>
 
-  <!-- Optional: text answer to the question -->
-  <div id="reflect-answer-wrap" style="display:none;flex-direction:column;gap:10px;">
+  <!-- Optional text answer — always visible once on Screen 2 -->
+  <div id="reflect-answer-wrap" style="display:flex;flex-direction:column;gap:10px;">
     <textarea id="reflect-text-input" rows="3"
-      placeholder="Type your answer…"
+      placeholder="Add anything you'd like Meera to know…"
       style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
       oninput="onReflectTextInput()"></textarea>
   </div>
@@ -455,11 +449,11 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   </div>
 
   <!-- unsaved warning — at bottom, near save button -->
-  <div id="unsaved-warning" style="display:none;background:var(--amber-l);border:1px solid rgba(200,121,26,0.25);border-radius:10px;padding:12px 14px;">
-    <p style="font-size:13px;color:var(--amber);margin-bottom:10px;">Note not saved — save it before leaving?</p>
+  <div id="unsaved-warning" style="display:none;background:#FEF3CD;border:1.5px solid #C8791A;border-radius:10px;padding:14px 16px;">
+    <p style="font-size:13px;color:#7A4A0A;font-weight:500;margin-bottom:10px;">⚠️ Note not saved — save before leaving?</p>
     <div style="display:flex;gap:8px;">
-      <button onclick="saveSession()" style="flex:1;padding:9px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Save &amp; leave</button>
-      <button onclick="confirmLeaveNote()" style="flex:1;padding:9px;background:none;color:var(--amber);border:1px solid rgba(200,121,26,0.4);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Leave without saving</button>
+      <button onclick="saveSession()" style="flex:1;padding:9px;background:#C8791A;color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;font-weight:500;">Save &amp; leave</button>
+      <button onclick="confirmLeaveNote()" style="flex:1;padding:9px;background:none;color:#7A4A0A;border:1.5px solid #C8791A;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Leave without saving</button>
     </div>
   </div>
 
@@ -1605,8 +1599,7 @@ function newSession() {
   if (csChips) csChips.innerHTML = '';
   const qWrap = document.getElementById('reflect-question-wrap');
   if (qWrap) qWrap.style.display = 'none';
-  const aWrap = document.getElementById('reflect-answer-wrap');
-  if (aWrap) aWrap.style.display = 'none';
+  // reflect-answer-wrap is always visible — just clear the text
   const rtInput = document.getElementById('reflect-text-input');
   if (rtInput) rtInput.value = '';
   // remove stale chips-wrap refs (removed from Screen 2 HTML — guard against null)
@@ -2543,9 +2536,7 @@ const CLASS_STATE_CHIPS = [
   { id: 'no_check',    label: "Couldn't tell who actually understood",    context: 'It was hard to tell which individual students understood.' },
   { id: 'rushed',      label: 'Felt rushed / ran out of time',            context: 'The lesson felt rushed and there was not enough time.' },
   { id: 'back_lost',   label: 'Back rows seemed disengaged',              context: 'Students at the back seemed disengaged or lost.' },
-  { id: 'no_answer',   label: 'Students did not answer my questions',     context: 'Students were not answering questions.' },
   { id: 'good_energy', label: 'Discussion was good / students were active', context: 'The discussion was good and students were actively participating.' },
-  { id: 'choral',      label: 'Class answered together, not individually', context: 'Students answered in chorus — hard to tell what individuals knew.' },
   { id: 'better',      label: 'Better than expected',                     context: 'The lesson went better than expected.' },
 ];
 
@@ -2580,13 +2571,10 @@ function toggleClassStateChip(btn, chip) {
 
   if (selectedClassStates.length > 0) {
     document.getElementById('feedback-btn').disabled = false;
-    // Show question and answer areas — question was already set by proceedToReflection
     document.getElementById('reflect-question-wrap').style.display = 'flex';
-    document.getElementById('reflect-answer-wrap').style.display = 'flex';
   } else {
     document.getElementById('feedback-btn').disabled = true;
     document.getElementById('reflect-question-wrap').style.display = 'none';
-    document.getElementById('reflect-answer-wrap').style.display = 'none';
   }
 }
 function updateReflectionQuestion() {
