@@ -1175,13 +1175,7 @@ async function generateAIQuestion(apiKey) {
   const lessonText = state.lessonTranscript.substring(0, 300);
   if (!lessonText || lessonText.length < 10) return null;
 
-  const hasDevanagari = /[\u0900-\u097F]/.test(lessonText);
-  const hasHinglish = /\b(tha|the|thi|hai|hain|nahi|kiya|karte|bacche|sab|aaj|kal|bhi|toh|kuch|bahut|achha|theek)\b/i.test(lessonText);
-  const langNote = hasDevanagari
-    ? 'Write the question in simple Hindi (Devanagari script).'
-    : hasHinglish
-    ? "Write in Hinglish, matching the teacher's register."
-    : 'Write in English.';
+  const langNote = 'Detect the language the teacher wrote in and respond in that same language throughout.';
 
   const prompt = `You are Meera, a teaching coach. A teacher described their lesson:
 
@@ -1386,13 +1380,7 @@ async function callGemini(apiKey) {
 
   // Detect language from lesson description for response language matching
   const lessonText = state.lessonTranscript || '';
-  const hasDevanagari = /[\u0900-\u097F]/.test(lessonText);
-  const hasHinglish = /\b(tha|the|thi|hai|hain|nahi|kiya|karte|bacche|class mein|sab|aaj|kal|bhi|toh|kuch|bahut|achha|theek)\b/i.test(lessonText);
-  const langInstruction = hasDevanagari
-    ? 'The teacher wrote in Hindi (Devanagari script). Respond in simple Hindi throughout — informal, conversational, not bureaucratic.'
-    : hasHinglish
-    ? 'The teacher wrote in Hinglish (Hindi-English mix). Respond in the same Hinglish register — warm, informal, the way a colleague would speak.'
-    : 'Respond in clear English.';
+  const langInstruction = 'Detect the language the teacher wrote in and respond in that same language throughout.';
 
   const systemInstruction = `You are Meera, a teaching coach with 20 years of classroom experience in Indian government schools. You have seen everything — large classes, limited resources, pressure to finish the syllabus, mixed-ability students. You speak to teachers as equals, not as an inspector or an academic.
 
@@ -1421,6 +1409,8 @@ WHAT YOU MUST NEVER DO:
 
 RESPOND ONLY with valid JSON. No markdown, no preamble, no explanation.`;
 
+  const langReminder = 'IMPORTANT: Detect the language the teacher wrote in and respond in that same language throughout. Write all JSON field values in that language.';
+
   const userMessage = `Lesson: ${subj}, ${grade}. Topic: ${topic}.
 
 What the teacher described:
@@ -1429,18 +1419,18 @@ What the teacher described:
 Teacher's reflection:
 "${state.reflectTranscript || '(no reflection provided)'}"
 
-The teacher also reported their class state: ${state.reflectTranscript || '(not provided)'}
+${langReminder}
 
 Based ONLY on the description and class state above, write a coaching note in this exact JSON:
 {
-  "strength": "Name one specific thing visible in what the teacher described. Examples: quiet focused class, honest self-reflection, finishing the content, asking questions. If the description mentions ANY positive moment — name it specifically. If absolutely nothing positive is detectable, write EXACTLY this: 'You showed up, taught your class, and took time to reflect on it — that habit of pausing to notice what happened is where every good teacher begins.' Do not vary this fallback sentence. 2 sentences max.",
-  "pattern": "Name ONE thing worth noticing — grounded only in the description and class state chips. If students seemed confused or disengaged, name what they likely experienced (not what the teacher did wrong). If the class was positive, name the next thing that would make it even stronger. NEVER assume a practice was skipped just because it was not mentioned. NEVER diagnose prior knowledge review as the issue unless the teacher explicitly mentioned it. 2 sentences.",
-  "try": "One action for tomorrow. Name the exact moment, what to say, what to do. Must be doable in the first 5 minutes of any class. 2 sentences.",
-  "tip": "The single most important takeaway. Imperative verb. Max 15 words. Must directly relate to the pattern named above.",
+  "strength": "Name one specific thing visible in what the teacher described. If absolutely nothing positive is detectable, write EXACTLY this: 'You showed up, taught your class, and took time to reflect on it — that habit of pausing to notice what happened is where every good teacher begins.' Do not vary this fallback sentence. 2 sentences max.",
+  "pattern": "Name ONE thing worth noticing — grounded only in the description. NEVER assume a practice was skipped just because it was not mentioned. NEVER diagnose prior knowledge review unless explicitly mentioned. 2 sentences.",
+  "try": "One action for tomorrow. Name the exact moment, what to say, what to do. 2 sentences.",
+  "tip": "Single most important takeaway. Imperative verb. Max 15 words.",
   "followups": [
-    "A practical HOW question about executing the tip specifically. Max 10 words.",
+    "A practical HOW question about executing the tip. Max 10 words.",
     "A question about what to do when it goes wrong. Max 10 words.",
-    "A question about adapting the tip to this teacher's class size or subject. Max 10 words."
+    "A question about adapting to class size or subject. Max 10 words."
   ]
 }`;
 
@@ -2560,9 +2550,7 @@ function updateReflectionQuestion() {
 
       const stateContext = selectedClassStates.map(s => s.context).join(' ');
       const lessonText = state.lessonTranscript.substring(0, 200);
-      const hasDevanagari = /[\u0900-\u097F]/.test(lessonText);
-      const hasHinglish = /\b(tha|the|thi|hai|hain|nahi|kiya|karte|bacche|sab|aaj|kal|bhi|toh)\b/i.test(lessonText);
-      const langNote = hasDevanagari ? 'Write in simple Hindi.' : hasHinglish ? 'Write in Hinglish.' : 'Write in English.';
+      const langNote = 'Detect the language the teacher wrote in and respond in that same language throughout.';
 
       const prompt = `A teacher just described their class:
 Lesson: "${lessonText}"
@@ -2733,22 +2721,16 @@ async function fetchFollowUpResponse(question) {
 
       // Match language of the teacher's lesson description
       const lessonText = state.lessonTranscript || '';
-      const hasDevanagari = /[\u0900-\u097F]/.test(lessonText);
-      const hasHinglish = /\b(tha|the|thi|hai|hain|nahi|kiya|karte|bacche|sab|aaj|kal|bhi|toh|kuch|bahut|achha|theek)\b/i.test(lessonText);
-      const langNote = hasDevanagari ? 'Respond in simple Hindi (Devanagari).'
-        : hasHinglish ? "Respond in Hinglish, matching the teacher's register."
-        : 'Respond in English.';
+      const langNote = 'Detect the language the teacher wrote in and respond in that same language throughout.';
 
       // Also detect language from the question itself, not just lesson transcript
       const qHasDevanagari = /[ऀ-ॿ]/.test(question);
       const qHasHinglish = /(tha|the|thi|hai|hain|nahi|kiya|karte|sab|kuch|bahut|achha|theek|kaise|kya)/i.test(question);
-      const effectiveLangNote = (qHasDevanagari || hasDevanagari) ? 'Respond in simple Hindi (Devanagari).'
-        : (qHasHinglish || hasHinglish) ? "Respond in Hinglish, matching the teacher's register."
-        : 'Respond in English.';
+
 
       const systemPrompt = `You are Meera, a teaching coach. You are in a brief, focused conversation helping a teacher try ONE specific idea in their classroom tomorrow. This is not an open-ended chat — it has ${MAX_TURNS} exchanges total and this is exchange ${turnNum}.
 
-${effectiveLangNote}
+${langNote}
 
 The teacher's coaching note:
 ${noteContext}
@@ -3140,11 +3122,7 @@ Self-ratings this month (1-5): ${Object.entries(ratings).map(([k,v])=>`${DIM_NAM
 Focus goals: ${goals.map(g=>DIM_NAMES[g]).join(', ') || 'none set'}`;
 
       // Language detection for Tip Talk
-      const ttHasDevanagari = /[ऀ-ॿ]/.test(question);
-      const ttHasHinglish = /(tha|the|thi|hai|hain|nahi|kiya|karte|sab|kuch|achha|theek|kaise|kya)/i.test(question);
-      const ttLangNote = ttHasDevanagari ? 'Respond in simple Hindi (Devanagari).'
-        : ttHasHinglish ? "Respond in Hinglish."
-        : 'Respond in English.';
+      const ttLangNote = 'Detect the language the teacher wrote in and respond in that same language throughout.';
 
       // Richer context — include pattern data not just tips
       const patternContext = sessions.length >= 3
