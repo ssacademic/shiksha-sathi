@@ -1149,7 +1149,7 @@ async function proceedToReflection() {
     document.getElementById('question-box').style.display = 'none';
     document.getElementById('question-loading').style.display = 'flex';
 
-    const aiQ = await generateAIQuestion(key, dimId);
+    const aiQ = await generateAIQuestion(key);
     if (aiQ) {
       state.reflectionQuestion = aiQ;
       document.getElementById('reflection-question').textContent = `"${aiQ}"`;
@@ -1159,42 +1159,48 @@ async function proceedToReflection() {
   }
 }
 
-// C2: Rephrase a question bank entry to reference the teacher's specific lesson
-async function generateAIQuestion(apiKey, dimId) {
-  const excerpt  = state.lessonTranscript.substring(0, 250);
-  // Get the base question from the bank for this dimension
-  const bank = REFLECTION_QUESTION_BANK[dimId];
-  const sessions = lsGetJSON('ss_sessions', []);
-  const baseQuestion = bank ? bank[sessions.length % bank.length] : FALLBACK_QUESTIONS[0];
+// C2: Generate reflection question from lesson description directly
+// Does NOT use rubric signals — Gemini reads what the teacher wrote
+async function generateAIQuestion(apiKey) {
+  const lessonText = state.lessonTranscript.substring(0, 300);
+  if (!lessonText || lessonText.length < 10) return null;
 
-  const prompt = `A teacher described their lesson as:
-"${excerpt}"
+  const hasDevanagari = /[\u0900-\u097F]/.test(lessonText);
+  const hasHinglish = /\b(tha|the|thi|hai|hain|nahi|kiya|karte|bacche|sab|aaj|kal|bhi|toh|kuch|bahut|achha|theek)\b/i.test(lessonText);
+  const langNote = hasDevanagari
+    ? 'Write the question in simple Hindi (Devanagari script).'
+    : hasHinglish
+    ? "Write in Hinglish, matching the teacher's register."
+    : 'Write in English.';
 
-Rephrase this reflection question to reference something specific the teacher mentioned above:
-"${baseQuestion}"
+  const prompt = `A teacher described their lesson:
+"${lessonText}"
 
-Rules:
-- Keep the same intent and openness as the original
-- Reference one specific detail from the teacher's description (a word, event, or moment they mentioned)
-- Do NOT make it a leading question — never "could you have", "should you have", "why didn't you"
-- The question should invite the teacher to describe what happened, not what they should have done differently
-- Max 25 words
-- Reply with ONLY the rephrased question. No quotes, no explanation.`;
+Write ONE open reflection question that:
+- References something specific from what they actually wrote
+- Invites them to describe what happened — not what they should have done
+- Does NOT imply failure or a correct answer
+- Sounds like a curious colleague asking, not an evaluator
+- Max 20 words
+- ${langNote}
+
+Reply with ONLY the question. No quotes, no explanation.`;
 
   try {
     const res = await geminiCall(apiKey,
       { contents:[{role:'user', parts:[{text:prompt}]}] },
-      { temperature:0.5, maxOutputTokens:60 }
+      { temperature:0.6, maxOutputTokens:60 }
     );
     const data = await res.json();
     const q = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
     const badPatterns = /\b(could you have|should you have|why didn't|why don't|how could you have|shouldn't you|what if you had)\b/i;
-    if (q && q.length > 10 && q.length < 150 && !badPatterns.test(q)) return q;
+    if (q && q.length > 8 && q.length < 150 && !badPatterns.test(q)) return q;
     return null;
   } catch(e) {
     return null;
   }
 }
+
 
 function proceedToFeedback() {
   // Combine all reflection inputs — rank by richness
@@ -1376,57 +1382,59 @@ async function callGemini(apiKey) {
   const grade = state.sessionGrade   || 'a class';
   const topic = state.sessionTopic   || 'a topic';
 
-  const signals    = state.rubricSignals;
-  const signalBlock = signals
-    ? buildSignalBlock(signals)
-    : `Lesson transcript (no rubric analysis available): ${state.lessonTranscript}`;
+  // Detect language from lesson description for response language matching
+  const lessonText = state.lessonTranscript || '';
+  const hasDevanagari = /[\u0900-\u097F]/.test(lessonText);
+  const hasHinglish = /\b(tha|the|thi|hai|hain|nahi|kiya|karte|bacche|class mein|sab|aaj|kal|bhi|toh|kuch|bahut|achha|theek)\b/i.test(lessonText);
+  const langInstruction = hasDevanagari
+    ? 'The teacher wrote in Hindi (Devanagari script). Respond in simple Hindi throughout — informal, conversational, not bureaucratic.'
+    : hasHinglish
+    ? 'The teacher wrote in Hinglish (Hindi-English mix). Respond in the same Hinglish register — warm, informal, the way a colleague would speak.'
+    : 'Respond in clear English.';
 
-  // Check if lesson was genuinely strong across all dimensions
-  const allStrong = signals && Object.values(signals).every(s => s.score === 2);
+  const systemInstruction = `You are Meera, a teaching coach with 20 years of classroom experience in Indian government schools. You have seen everything — large classes, limited resources, pressure to finish the syllabus, mixed-ability students. You speak to teachers as equals, not as an inspector or an academic.
 
-  const systemInstruction = `You are Shiksha Saathi — a teaching coach for Indian government school teachers.
+${langInstruction}
 
-Your voice: direct, warm, specific. Like a respected senior teacher giving honest feedback over chai after school. Not an evaluator. Not a cheerleader.
+YOUR VOICE: Direct, warm, specific. Like a trusted senior colleague giving honest feedback over chai after school. You notice things, you name them precisely, and you always assume the teacher is trying their best.
 
-CRITICAL RULES:
-1. "strength" and "pattern" must be about DIFFERENT teaching behaviours. Never describe the same action as both a strength and a problem.
-2. "strength" must come from a rubric dimension that scored 1 or 2 — NEVER from the weakest dimension.
-3. If ALL rubric dimensions scored 0 (no positive signals at all), do NOT invent a strength. Instead write: "You recorded this lesson and took time to reflect on it. That habit — stepping back to notice what happened — is the starting point for every teacher who improves."
-4. "pattern" is grounded in the WEAKEST dimension only. Name what it means for student learning. Never say the teacher "failed" — say what students experienced.
-5. Never start any field with "It's wonderful", "Great", "Fantastic", "As a teacher", "In today's lesson".
-6. Never end any field with a question. Statements only.
-7. Speak to the teacher as "you". Never "we".
-8. No jargon. No formal academic language.
-9. Respond ONLY with valid JSON. No markdown, no preamble.`;
+WHAT YOU MUST ALWAYS DO:
+- Read the teacher's description carefully and only comment on what you can actually see there
+- Name something specific the teacher did — not a generic principle
+- Give one concrete action for tomorrow — specific enough that the teacher knows exactly what to do
+- End every field with a statement, never a question
+- Speak to the teacher as "you" — never "we" or "one should"
 
-  // Find strongest dimension for the strength field
-  const strongestDim = signals
-    ? Object.entries(signals)
-        .filter(([,v]) => v.score > 0)
-        .sort((a,b) => b[1].score - a[1].score)[0]
-    : null;
+WHAT YOU MUST NEVER DO:
+- Never say "you should have", "you didn't", "you failed to", "you missed" — say what happened, not what should have happened
+- Never scold or imply the teacher was lazy, careless, or incompetent
+- Never invent something that wasn't in the description — if you cannot detect whether a teaching practice happened, say so honestly or focus on what you CAN see
+- Never assume a practice was absent just because the teacher didn't mention it — short descriptions leave out a lot
+- Never use jargon: no "prior knowledge activation", "metacognition", "scaffolding", "formative assessment"
+- Never start any field with "It's wonderful", "Great", "Fantastic", "As a teacher", "In today's lesson"
+- Never give more than one piece of advice — one thing, clearly stated
+- Never end with a question
 
-  const userMessage = `Lesson context: ${subj}, ${grade}. Topic: ${topic}.
+RESPOND ONLY with valid JSON. No markdown, no preamble, no explanation.`;
 
-${signalBlock}
+  const userMessage = `Lesson: ${subj}, ${grade}. Topic: ${topic}.
 
-Strongest dimension (use this for "strength"): ${strongestDim ? strongestDim[1].label + ' (score: ' + strongestDim[1].score + '/2, evidence: "' + (strongestDim[1].evidence||'detected') + '")' : 'NONE — no positive signals found, use the effort/reflection fallback'}
+What the teacher described:
+"${lessonText.substring(0, 400)}"
 
-Teacher's reflection (their answer to the question "${state.reflectionQuestion}"):
-${state.reflectTranscript}
+Teacher's reflection:
+"${state.reflectTranscript || '(no reflection provided)'}"
 
-${allStrong ? 'Note: all dimensions were strong. For "pattern", name one area for further growth as an invitation.' : ''}
-
-Write the coaching note in this exact JSON:
+Based ONLY on what the teacher described above, write a coaching note in this exact JSON:
 {
-  "strength": "What the teacher did well — from the STRONGEST dimension only, with specific evidence. If no positive signals exist, write the reflection/effort acknowledgment. 2 sentences.",
-  "pattern": "From the WEAKEST dimension — what students experienced as a result. Not what the teacher did wrong. 2 sentences.",
-  "try": "One specific action for the next lesson. Name the moment, the words to say. Concrete enough to do tomorrow. 2 sentences.",
+  "strength": "Something specific and genuine the teacher did — based on what they actually wrote. If you cannot identify a specific teaching strength from the description, acknowledge their effort to reflect honestly. 2 sentences. Start with what they did, not a compliment.",
+  "pattern": "One thing worth noticing for student learning — grounded in the description. If the description is short or unclear, name what you cannot tell from it and why it would matter to know. Never assume a practice was skipped just because it wasn't mentioned. 2 sentences.",
+  "try": "One action for tomorrow's lesson. Name the exact moment, the words to say, what to do. Concrete enough to do in the first 5 minutes of class. 2 sentences.",
   "tip": "Single most actionable takeaway. Imperative verb. Max 15 words.",
   "followups": [
-    "Question about HOW to execute the tip in a large or mixed class. Max 10 words.",
-    "Question about what to do if it goes wrong. Max 10 words.",
-    "Question about adapting to their subject or grade. Max 10 words."
+    "A question the teacher might ask about how to execute the tip. Max 10 words.",
+    "A question about what to do if it goes wrong. Max 10 words.",
+    "A question about adapting to their class size or subject. Max 10 words."
   ]
 }`;
 
@@ -2783,27 +2791,32 @@ async function fetchFollowUpResponse(question) {
         ? `What worked: ${note.strength}\nPattern: ${note.pattern}\nTry tomorrow: ${note.try}\nTip: ${note.tip}`
         : '(Coaching note not available)';
 
-      const turnNum   = state.chatTurns;
+      const turnNum    = state.chatTurns;
       const isLastTurn = turnNum >= MAX_TURNS;
 
-      const systemPrompt = `You are Shiksha Saathi, a teaching coach for Indian school teachers.
+      // Match language of the teacher's lesson description
+      const lessonText = state.lessonTranscript || '';
+      const hasDevanagari = /[\u0900-\u097F]/.test(lessonText);
+      const hasHinglish = /\b(tha|the|thi|hai|hain|nahi|kiya|karte|bacche|sab|aaj|kal|bhi|toh|kuch|bahut|achha|theek)\b/i.test(lessonText);
+      const langNote = hasDevanagari ? 'Respond in simple Hindi (Devanagari).'
+        : hasHinglish ? "Respond in Hinglish, matching the teacher's register."
+        : 'Respond in English.';
 
-The teacher just received this coaching note:
+      const systemPrompt = `You are Meera, a teaching coach with 20 years of experience in Indian government schools. You speak to teachers as equals — warm, direct, never judgmental.
+
+${langNote}
+
+The teacher received this coaching note:
 ${noteContext}
 
-Subject: ${state.sessionSubject||'unknown'}, ${state.sessionGrade||'unknown'}.
+Subject: ${state.sessionSubject||'?'}, ${state.sessionGrade||'?'}. This is exchange ${turnNum} of ${MAX_TURNS}.
 
-This is a brief follow-up conversation. This is exchange ${turnNum} of ${MAX_TURNS}.
+Your job: help them execute the tip in their actual classroom. Answer only implementation questions.
 
-Your job: help the teacher understand HOW to execute the tip in their specific classroom.
-Answer only implementation questions — how to do it, what to say, how to adapt for large classes, what to do when it fails.
-
-If the teacher asks something not related to this coaching note, respond:
-"That's worth thinking about — but let's stay with today's note. [briefly redirect to the tip]."
-
-Voice: direct, warm, specific. Same voice as the coaching note. No jargon. No lists.
-Maximum 3 sentences — if you need more, you are saying too much.
-${isLastTurn ? 'This is the final exchange. End with one grounding sentence that sends the teacher back to their classroom with confidence — not a question, a statement.' : ''}`;
+NEVER: scold, say "you should have", use jargon, give more than one piece of advice, end with a question.
+If off-topic: "Good question — let's stay with today's tip for now. [redirect]."
+Maximum 3 sentences.
+${isLastTurn ? 'Final exchange — end with one grounding statement that sends the teacher back to class with confidence.' : ''}`;
 
       const messages = [
         ...state.chatHistory,
@@ -2928,14 +2941,14 @@ async function copyToClipboard(text, btnId, successLabel, originalLabel) {
 // ═══════════════════════════════════
 const TIPTALK_UNLOCK_COUNT = 5;
 const DIM_NAMES = {
-  prior_review: 'Connecting to what students know',
-  small_steps:  'One step at a time',
-  cfu_quality:  'Knowing who actually understood',
-  cold_call:    'Calling on everyone',
-  wait_time:    'Giving time to think',
-  student_talk: 'Getting students to talk',
-  uptake:       'Building on what students say',
-  back_row:     'Reaching every student',
+  prior_review: 'Start by connecting to prior knowledge',
+  small_steps:  'Teach one step at a time',
+  cfu_quality:  'Check who actually understood',
+  cold_call:    'Call on every student',
+  wait_time:    'Give time to think',
+  student_talk: 'Get students to explain',
+  uptake:       'Build on what students say',
+  back_row:     'Reach students at the back',
 };
 const TIPTALK_STARTERS = [
   "What teaching pattern shows up most in my sessions?",
@@ -3162,10 +3175,12 @@ ${sessions.slice(0,10).map(s => `- ${s.dateDisplay} (${s.subject||'?'}, ${s.grad
 Self-ratings this month (1-5): ${Object.entries(ratings).map(([k,v])=>`${DIM_NAMES[k]}: ${v}/5`).join(', ') || 'not rated yet'}
 Focus goals: ${goals.map(g=>DIM_NAMES[g]).join(', ') || 'none set'}`;
 
-      const systemPrompt = `You are Shiksha Saathi, a teaching coach. You have access to a teacher's session history and self-ratings.
-Help them understand their teaching patterns, celebrate progress, and identify focus areas.
-Be specific — reference actual tips and patterns from their history.
-Voice: warm, direct, like a thoughtful mentor. Maximum 4 sentences.`;
+      const systemPrompt = `You are Meera, a teaching coach with 20 years of experience in Indian government schools. You speak to teachers as equals — warm, direct, specific, never judgmental.
+
+Help this teacher understand their teaching patterns, celebrate genuine progress, and identify what to focus on next. Be specific — reference actual tips from their history, not generic advice.
+
+NEVER: scold, say "you should have", use academic jargon, end with a question, give a generic motivational speech.
+Maximum 4 sentences per response.`;
 
       tiptalkHistory.push({ role:'user', parts:[{text: question}] });
 
@@ -3196,7 +3211,7 @@ const LEARN_CARDS = [
   {
     id: 'prior_review',
     icon: '📚',
-    title: 'Connecting to what students know',
+    title: 'Start by connecting to what students already know',
     subtitle: 'Rosenshine Principle 1 · Daily review',
     why: 'Before teaching something new, spend 3–5 minutes connecting it to something students already know. When new ideas attach to existing knowledge, students understand faster and forget less.',
     techniques: [
@@ -3209,8 +3224,8 @@ const LEARN_CARDS = [
   },
   {
     id: 'small_steps',
-    icon: '🪜',
-    title: 'One step at a time',
+    icon: '📶',
+    title: 'Teach one step at a time — practise before moving on',
     subtitle: 'Rosenshine Principle 2 · Small steps + practice',
     why: 'Explain one idea, then let students try it — before explaining the next idea. Covering everything and practising at the end means students lose the thread halfway through.',
     techniques: [
@@ -3224,7 +3239,7 @@ const LEARN_CARDS = [
   {
     id: 'cfu_quality',
     icon: '🔍',
-    title: 'Knowing who actually understood',
+    title: 'Check who actually understood — not just the class',
     subtitle: 'Rosenshine Principle 3 · Checking for understanding',
     why: '"Everyone understood?" tells you nothing. Real checking means finding out what individual students know — not just the confident ones who always answer.',
     techniques: [
@@ -3238,8 +3253,8 @@ const LEARN_CARDS = [
   {
     id: 'cold_call',
     icon: '📣',
-    title: 'Calling on everyone, not just volunteers',
-    subtitle: 'Teach Like a Champion · Cold call',
+    title: 'Call on every student — not just those with raised hands',
+    subtitle: 'Teach Like a Champion (TLAC) · Cold call',
     why: 'When you only call on students who raise their hands, the same 4–5 students answer everything. The rest of the class stops thinking — because they know they won\'t be called.',
     techniques: [
       { label: '⏱️ Question → pause → name', desc: 'Ask the question. Wait 5 seconds. Then say a name. If you say the name first, everyone else stops thinking immediately.' },
@@ -3252,7 +3267,7 @@ const LEARN_CARDS = [
   {
     id: 'wait_time',
     icon: '⏳',
-    title: 'Giving time to think',
+    title: 'Give students time to think before accepting answers',
     subtitle: 'Rosenshine + TLAC · Wait time',
     why: 'Most teachers wait less than one second after asking a question. Students who need more processing time — quieter students, weaker students — never get to answer if the fastest hand always wins.',
     techniques: [
@@ -3266,7 +3281,7 @@ const LEARN_CARDS = [
   {
     id: 'student_talk',
     icon: '💬',
-    title: 'Getting students to talk and explain',
+    title: 'Get students to explain ideas in their own words',
     subtitle: 'TLAC Ratio · Student talk',
     why: 'When only the teacher talks, students listen passively. When students explain things in their own words — to you or to each other — they understand more deeply and forget less.',
     techniques: [
@@ -3280,7 +3295,7 @@ const LEARN_CARDS = [
   {
     id: 'uptake',
     icon: '🌱',
-    title: 'Building on what students say',
+    title: 'Build on what students say — don\'t just move on',
     subtitle: 'Dialogic teaching · Uptake of responses',
     why: 'When a student answers and you say "correct" and move on, students learn their thinking doesn\'t matter — only the answer does. Every response — right or wrong — is useful information.',
     techniques: [
@@ -3294,7 +3309,7 @@ const LEARN_CARDS = [
   {
     id: 'back_row',
     icon: '🏫',
-    title: 'Reaching every student',
+    title: 'Deliberately reach students at the back and sides',
     subtitle: 'Equity in practice · Back row',
     why: 'In most classrooms, 80% of teacher attention goes to the front 3 rows. Students at the back or sides learn quickly that they\'re invisible — so they stop trying.',
     techniques: [
@@ -3306,17 +3321,6 @@ const LEARN_CARDS = [
     quote: '[Walking to back] "Show me what you have so far, Fatima." [looks at notebook] "Good — explain your thinking."',
   },
 ];
-
-const LEARN_SOURCES = {
-  prior_review: { label:'Rosenshine (2012) — Principles of Instruction', url:'https://www.aft.org/sites/default/files/periodicals/Rosenshine.pdf' },
-  small_steps:  { label:'Rosenshine (2012) — Principles of Instruction', url:'https://www.aft.org/sites/default/files/periodicals/Rosenshine.pdf' },
-  cfu_quality:  { label:'TLAC Free Resources — Check for Understanding', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
-  cold_call:    { label:'TLAC Free Resources — Cold Call', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
-  wait_time:    { label:'TLAC Free Resources — Wait Time', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
-  student_talk: { label:'TLAC Free Resources — Turn and Talk', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
-  uptake:       { label:'TLAC Free Resources — No Opt Out', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
-  back_row:     { label:'Rosenshine (2012) — Principles of Instruction', url:'https://www.aft.org/sites/default/files/periodicals/Rosenshine.pdf' },
-};
 
 let learnRendered = false;
 
