@@ -290,13 +290,13 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
       <label>Topic <span style="color:var(--red);">*</span></label>
       <input type="text" id="topic" placeholder="e.g. Fractions, Photosynthesis, Past tense…" oninput="onLessonTextInput()"/>
     </div>
-    <div id="lesson-text-panel">
-      <label style="font-size:13px;font-weight:500;color:var(--ink2);display:block;margin-bottom:6px;">Describe what happened</label>
+    <div id="lesson-text-panel" style="display:flex;flex-direction:column;gap:6px;">
+      <label style="font-size:13px;font-weight:500;color:var(--ink2);display:block;">Describe what happened</label>
       <textarea id="lesson-text-input" rows="5"
         placeholder="What happened in class today? What did students do? What felt uncertain?"
         style="appearance:none;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;"
         oninput="onLessonTextInput()"></textarea>
-      <p style="font-size:12px;color:var(--ink3);margin-top:6px;">You can also tap the 🎤 mic button on your phone keyboard to speak your description.</p>
+      <p style="font-size:12px;color:var(--ink3);">You can also tap the 🎤 mic button on your phone keyboard to speak your description.</p>
     </div>
   </div>
 
@@ -693,7 +693,7 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
         <div class="setting-row">
           <span class="setting-desc">Stored only on this device — never uploaded anywhere.</span>
           <div class="key-input-wrap">
-            <input type="password" id="api-key-input" placeholder="Paste your key here…" autocomplete="off" spellcheck="false"/>
+            <input type="password" id="api-key-input" placeholder="Paste your key here…" autocomplete="new-password" spellcheck="false"/>
             <button class="key-toggle" id="key-toggle-btn" onclick="toggleKeyVisibility()">Show</button>
           </div>
           <div class="key-status" id="key-status"></div>
@@ -1629,8 +1629,7 @@ function newSession() {
   document.getElementById('demo-select').value='';
   document.getElementById('demo-toggle-btn').textContent='sample lesson';
   // reset text input panels — lesson text shown open by default
-  document.getElementById('lesson-text-panel').style.display='flex';
-  document.getElementById('lesson-text-input').value='';
+  document.getElementById('lesson-text-panel').style.display='flex';  document.getElementById('lesson-text-input').value='';
   const ltb = document.getElementById('lesson-text-toggle-btn');
   if (ltb) ltb.textContent='show / hide';
   // reflect-text-input still exists in new Screen 2
@@ -2119,41 +2118,16 @@ function onLessonTextInput() {
   const grd   = document.getElementById('grade').value;
   const topic = document.getElementById('topic').value.trim();
 
-  if (text.length >= 20 && subj && grd && topic) {
-    state.lessonTranscript = text;
-    state.rubricSignals    = runRubricEngine(text);
-    state.lessonDone       = true;
-
-    document.getElementById('lesson-status').style.display = 'block';
-    const pill = document.getElementById('status-pill');
-    const st   = document.getElementById('status-text');
-    pill.className   = 'pill done-pill dot';
-    pill.textContent = 'Description ready';
-    st.textContent   = 'Ready to continue';
-
-    const recBtn = document.getElementById('lesson-rec-btn');
-    recBtn.className = 'rec-btn done';
-    recBtn.innerHTML = checkIcon();
-    document.getElementById('lesson-rec-label').textContent = 'Using typed description';
-    document.getElementById('lesson-rec-sub').textContent   = 'Text input active';
-    document.getElementById('proceed-btn').disabled = false;
-  } else {
-    // Text was cleared or incomplete — reset if text was the active input
-    // (don't reset if voice recording was used)
-    const wasTextInput = document.getElementById('lesson-rec-label').textContent === 'Using typed description';
-    if (wasTextInput && !state.lessonRecording) {
-      state.lessonDone       = false;
-      state.lessonTranscript = '';
-      state.rubricSignals    = null;
-      document.getElementById('proceed-btn').disabled = true;
-      document.getElementById('lesson-status').style.display = 'none';
-      const recBtn = document.getElementById('lesson-rec-btn');
-      recBtn.className = 'rec-btn idle';
-      recBtn.innerHTML = micIcon();
-      document.getElementById('lesson-rec-label').textContent = 'Tap to start recording';
-      document.getElementById('lesson-rec-sub').textContent   = 'Record your class, or tell us what happened';
-    }
+  // Update lesson transcript whenever text changes
+  state.lessonTranscript = text;
+  if (text.length > 0) {
+    state.rubricSignals = runRubricEngine(text);
   }
+
+  // Button enables when all three required fields filled + at least 10 chars described
+  const allFilled = subj && grd && topic && text.length >= 10;
+  document.getElementById('proceed-btn').disabled = !allFilled;
+  state.lessonDone = allFilled;
 }
 
 // submitLessonText kept as no-op for safety (button removed but may be called elsewhere)
