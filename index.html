@@ -369,59 +369,55 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <p class="wordmark">Shiksha Saathi</p>
     <p class="tagline">Your daily teaching coach</p>
     <h1>One moment before feedback</h1>
-    <p class="subtext" style="margin-top:8px;">Your answer shapes the coaching note.</p>
+    <p class="subtext" style="margin-top:8px;">Select what felt true about this class.</p>
   </div>
 
-  <div class="question-box" id="question-box">
-    <p id="reflection-question">"You taught a full lesson today — which moment felt most uncertain, and why?"</p>
+  <!-- Class state chips — multi-select, shown immediately -->
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    <p style="font-size:13px;font-weight:500;color:var(--ink2);">What was happening in your class today?</p>
+    <div id="class-state-chips" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
   </div>
 
-  <!-- shown while AI generates the question -->
-  <div id="question-loading" style="display:none;align-items:center;gap:10px;padding:4px 0;">
-    <div class="spinner" style="width:18px;height:18px;border-width:2px;"></div>
-    <span style="font-size:13px;color:var(--ink2);">Personalising your question…</span>
-  </div>
-
-  <div class="rec-area">
-    <button class="rec-btn idle" id="reflect-rec-btn" onclick="toggleReflectRecording()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
-        <rect x="9" y="2" width="6" height="12" rx="3"/>
-        <path d="M5 10a7 7 0 0014 0"/>
-        <line x1="12" y1="21" x2="12" y2="17"/><line x1="8" y1="21" x2="16" y2="21"/>
-      </svg>
-    </button>
-    <div class="rec-label">
-      <strong id="reflect-rec-label">Tap to answer</strong>
-      <span>Speak freely, 30–60 seconds</span>
+  <!-- Reflection question — appears after chips selected -->
+  <div id="reflect-question-wrap" style="display:none;flex-direction:column;gap:10px;">
+    <div class="question-box" id="question-box">
+      <p id="reflection-question" style="font-style:italic;"></p>
     </div>
-    <div class="rec-timer" id="reflect-timer" style="display:none">0:00</div>
-  </div>
-
-  <!-- divider -->
-  <div style="display:flex;align-items:center;gap:10px;margin-top:-4px;">
-    <div style="flex:1;height:1px;background:var(--border);"></div>
-    <span style="font-size:12px;color:var(--ink3);">or write</span>
-    <div style="flex:1;height:1px;background:var(--border);"></div>
-  </div>
-
-  <!-- text answer -->
-  <div style="display:flex;flex-direction:column;gap:8px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;">
-      <p style="font-size:14px;font-weight:500;color:var(--ink);">Write your response</p>
-      <button onclick="toggleReflectText()" id="reflect-text-toggle" style="font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;">show / hide</button>
-    </div>
-    <div id="reflect-text-panel" style="display:flex;flex-direction:column;gap:6px;">
-      <textarea id="reflect-text-input" rows="3"
-        placeholder="Type your answer here…"
-        style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
-        oninput="onReflectTextInput()"></textarea>
+    <div id="question-loading" style="display:none;align-items:center;gap:10px;">
+      <div class="spinner" style="width:16px;height:16px;border-width:2px;"></div>
+      <span style="font-size:13px;color:var(--ink2);">Thinking of a question…</span>
     </div>
   </div>
 
-  <!-- chips — below text box, as quick-pick shortcuts -->
-  <div id="chips-wrap" style="display:none">
-    <p class="chips-label">Or pick what fits:</p>
-    <div class="chips-row" id="chips-row"></div>
+  <!-- Optional: voice or text answer to the question -->
+  <div id="reflect-answer-wrap" style="display:none;flex-direction:column;gap:12px;">
+    <p style="font-size:13px;color:var(--ink2);">Optional — answer the question above, or tap below to get your note.</p>
+
+    <div class="rec-area" style="padding:18px 20px;">
+      <button class="rec-btn idle" id="reflect-rec-btn" onclick="toggleReflectRecording()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+          <rect x="9" y="2" width="6" height="12" rx="3"/>
+          <path d="M5 10a7 7 0 0014 0"/>
+          <line x1="12" y1="21" x2="12" y2="17"/><line x1="8" y1="21" x2="16" y2="21"/>
+        </svg>
+      </button>
+      <div class="rec-label">
+        <strong id="reflect-rec-label">Speak your answer</strong>
+        <span>30–60 seconds</span>
+      </div>
+      <div class="rec-timer" id="reflect-timer" style="display:none">0:00</div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="flex:1;height:1px;background:var(--border);"></div>
+      <span style="font-size:12px;color:var(--ink3);">or write</span>
+      <div style="flex:1;height:1px;background:var(--border);"></div>
+    </div>
+
+    <textarea id="reflect-text-input" rows="3"
+      placeholder="Type your answer here…"
+      style="appearance:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:vertical;width:100%;line-height:1.6;box-shadow:var(--shadow);"
+      oninput="onReflectTextInput()"></textarea>
   </div>
 
   <button class="btn-primary" id="feedback-btn" disabled onclick="proceedToFeedback()">
@@ -821,6 +817,15 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
 // ═══════════════════════════════════
 //  STATE
 // ═══════════════════════════════════
+// ═══════════════════════════════════
+//  EARLY CONSTANTS (used before definition if not moved here)
+// ═══════════════════════════════════
+const ALL_GRADES = ['Class 3','Class 4','Class 5','Class 6','Class 7','Class 8','Class 9','Class 10'];
+const TIPTALK_UNLOCK_COUNT = 5;
+let learnRendered = false;
+let selectedClassStates = [];
+let questionUpdateTimer = null;
+
 const state = {
   lessonRecording:false, reflectRecording:false,
   lessonDone:false, reflectDone:false,
@@ -877,20 +882,27 @@ async function retryWithAI() {
   document.getElementById('note-card').style.display = 'none';
   document.getElementById('save-btn').disabled = true;
 
-  const note = await callGemini(key);
-  document.getElementById('note-strength').textContent = note.strength;
-  document.getElementById('note-pattern').textContent  = note.pattern;
-  document.getElementById('note-try').textContent      = note.try;
-  document.getElementById('note-tip').textContent      = note.tip || '';
-  state.coachingNote = note;
-  renderFollowUpSuggestions(note.followups);
-
-  document.getElementById('note-generating').style.display = 'none';
-  document.getElementById('note-card').style.display = 'flex';
-  document.getElementById('save-btn').disabled = false;
-  document.getElementById('copy-note-btn').style.display = 'block';
-  document.getElementById('note-error').style.display = 'none';
-  document.getElementById('note-no-key').style.display = 'none';
+  try {
+    const note = await callGemini(key);
+    document.getElementById('note-strength').textContent = note.strength;
+    document.getElementById('note-pattern').textContent  = note.pattern;
+    document.getElementById('note-try').textContent      = note.try;
+    document.getElementById('note-tip').textContent      = note.tip || '';
+    state.coachingNote = note;
+    renderFollowUpSuggestions(note.followups);
+    document.getElementById('note-generating').style.display = 'none';
+    document.getElementById('note-card').style.display = 'flex';
+    document.getElementById('save-btn').disabled = false;
+    document.getElementById('copy-note-btn').style.display = 'block';
+    document.getElementById('note-error').style.display = 'none';
+    document.getElementById('note-no-key').style.display = 'none';
+  } catch(err) {
+    console.error('retryWithAI error:', err);
+    document.getElementById('note-generating').style.display = 'none';
+    document.getElementById('retry-banner').style.display = 'flex';
+    document.getElementById('retry-banner').querySelector('p').textContent =
+      'Could not reach coaching service — check your connection and try again.';
+  }
 }
 
 function escapeHtml(str) {
@@ -1129,34 +1141,12 @@ async function proceedToReflection() {
   state.sessionSubject = subj;
   state.sessionGrade   = grd;
   state.sessionTopic   = topic;
+  state.weakestDim     = null;
+  state.reflectionQuestion = '';
 
-  // Get fallback question immediately from question bank
-  const { question: fallbackQ, dimId } = getReflectionQuestionAndDim(state.rubricSignals);
-  const topicPhrase = topic ? `in your ${topic} lesson` : 'today';
-  const fallbackWithTopic = fallbackQ.replace(/today'?s? lesson|today/i, topicPhrase) || fallbackQ;
-
-  state.weakestDim = dimId;
-
-  // Navigate to Screen 2 immediately with fallback question
-  document.getElementById('reflection-question').textContent = `"${fallbackWithTopic}"`;
-  state.reflectionQuestion = fallbackWithTopic;
-  renderReflectionChips(dimId);
+  // Navigate and render class state chips
   goTo('screen-reflect');
-
-  // C2: Try to get an AI-generated question if online + key available
-  const key = lsGet('ss_gemini_key');
-  if (key && navigator.onLine && state.lessonTranscript) {
-    document.getElementById('question-box').style.display = 'none';
-    document.getElementById('question-loading').style.display = 'flex';
-
-    const aiQ = await generateAIQuestion(key);
-    if (aiQ) {
-      state.reflectionQuestion = aiQ;
-      document.getElementById('reflection-question').textContent = `"${aiQ}"`;
-    }
-    document.getElementById('question-loading').style.display = 'none';
-    document.getElementById('question-box').style.display = 'block';
-  }
+  renderClassStateChips();
 }
 
 // C2: Generate reflection question from lesson description directly
@@ -1173,17 +1163,22 @@ async function generateAIQuestion(apiKey) {
     ? "Write in Hinglish, matching the teacher's register."
     : 'Write in English.';
 
-  const prompt = `A teacher described their lesson:
-"${lessonText}"
+  const prompt = `You are Meera, a teaching coach. A teacher described their lesson and selected what was happening in class.
 
-Write ONE open reflection question that:
-- References something specific from what they actually wrote
-- Invites them to describe what happened — not what they should have done
-- Does NOT imply failure or a correct answer
-- Sounds like a curious colleague asking, not an evaluator
-- Max 20 words
-- ${langNote}
+Lesson description: "${lessonText || '(not provided)'}"
+Class state selected: ${selectedClassStates.map(s => s.context).join('; ') || '(not selected)'}
 
+Write ONE reflection question (max 20 words) that:
+- Is grounded in something SPECIFIC from what they wrote or selected above
+- Opens up reflection — what did they notice, what happened, how did it feel
+- Does NOT suggest they failed, does NOT imply a correct answer
+- Does NOT start with "Why didn't you" or "Could you have"
+- Sounds like a thoughtful colleague asking over tea, not an inspector
+
+Good example: "When students were quiet, what were you noticing about them?"
+Bad example: "How could you have checked if students understood the material?"
+
+${langNote}
 Reply with ONLY the question. No quotes, no explanation.`;
 
   try {
@@ -1203,25 +1198,28 @@ Reply with ONLY the question. No quotes, no explanation.`;
 
 
 function proceedToFeedback() {
-  // Combine all reflection inputs — rank by richness
-  // Voice transcript (set by runDummyTranscription) > typed text > chip
-  const typed = document.getElementById('reflect-text-input').value.trim();
-  const chip  = state.selectedChip || '';
-
-  // Build combined reflection — richer inputs first
+  // Build reflectTranscript from all inputs — class states + typed text + voice
   const parts = [];
-  if (state.reflectTranscript && state.reflectTranscript !== typed && state.reflectTranscript !== chip) {
-    // Voice recording was transcribed — use as primary
+
+  // Class state chips — most reliable signal
+  if (selectedClassStates.length > 0) {
+    parts.push('Class state: ' + selectedClassStates.map(s => s.context).join(' '));
+  }
+
+  // Typed text
+  const typed = document.getElementById('reflect-text-input').value.trim();
+  if (typed) parts.push(typed);
+
+  // Voice (set by recording)
+  if (state.reflectRecording === false && state.reflectDone && state.reflectTranscript
+      && !parts.some(p => p === state.reflectTranscript)) {
     parts.push(state.reflectTranscript);
   }
-  if (typed) parts.push(typed);
-  if (chip && !parts.some(p => p === chip)) parts.push(chip);
 
-  if (parts.length > 0) {
-    state.reflectTranscript = parts.join(' | ');
-  } else if (!state.reflectTranscript) {
-    state.reflectTranscript = '(no reflection provided)';
-  }
+  state.reflectTranscript = parts.length > 0
+    ? parts.join(' | ')
+    : '(no reflection provided)';
+
   showFeedbackScreen();
 }
 
@@ -1324,21 +1322,7 @@ async function showFeedbackScreen() {
 // ═══════════════════════════════════
 //  GEMINI CALL
 // ═══════════════════════════════════
-function buildSignalBlock(signals) {
-  const lines = ['Rubric analysis of lesson transcript:'];
-  for (const s of Object.values(signals)) {
-    const level = s.score === 2 ? 'clearly present' : s.score === 1 ? 'weakly present' : 'absent';
-    let ev = '';
-    if (s.evidence) ev = ' (evidence: "' + s.evidence + '")';
-    else if (s.absenceEvidence) ev = ' (absence marker: "' + s.absenceEvidence + '")';
-    lines.push('- ' + s.label + ': ' + level + ev);
-  }
-  const weakest = getWeakestDimension(signals);
-  lines.push('');
-  lines.push('Weakest dimension: ' + weakest.label);
-  lines.push('Raw excerpt: ' + state.lessonTranscript.substring(0, 400) + '...');
-  return lines.join('\n');
-}
+// buildSignalBlock removed — rubric no longer drives coaching note
 
 // ═══════════════════════════════════
 //  GEMINI API HELPER
@@ -1425,16 +1409,18 @@ What the teacher described:
 Teacher's reflection:
 "${state.reflectTranscript || '(no reflection provided)'}"
 
-Based ONLY on what the teacher described above, write a coaching note in this exact JSON:
+The teacher also reported their class state: ${state.reflectTranscript || '(not provided)'}
+
+Based ONLY on the description and class state above, write a coaching note in this exact JSON:
 {
-  "strength": "Something specific and genuine the teacher did — based on what they actually wrote. If you cannot identify a specific teaching strength from the description, acknowledge their effort to reflect honestly. 2 sentences. Start with what they did, not a compliment.",
-  "pattern": "One thing worth noticing for student learning — grounded in the description. If the description is short or unclear, name what you cannot tell from it and why it would matter to know. Never assume a practice was skipped just because it wasn't mentioned. 2 sentences.",
-  "try": "One action for tomorrow's lesson. Name the exact moment, the words to say, what to do. Concrete enough to do in the first 5 minutes of class. 2 sentences.",
-  "tip": "Single most actionable takeaway. Imperative verb. Max 15 words.",
+  "strength": "Name one specific thing visible in what the teacher described. Examples: quiet focused class, honest self-reflection, finishing the content, asking questions. If the description mentions ANY positive moment — name it specifically. If absolutely nothing positive is detectable, write EXACTLY this: 'You showed up, taught your class, and took time to reflect on it — that habit of pausing to notice what happened is where every good teacher begins.' Do not vary this fallback sentence. 2 sentences max.",
+  "pattern": "Name ONE thing worth noticing — grounded only in the description and class state chips. If students seemed confused or disengaged, name what they likely experienced (not what the teacher did wrong). If the class was positive, name the next thing that would make it even stronger. NEVER assume a practice was skipped just because it was not mentioned. NEVER diagnose prior knowledge review as the issue unless the teacher explicitly mentioned it. 2 sentences.",
+  "try": "One action for tomorrow. Name the exact moment, what to say, what to do. Must be doable in the first 5 minutes of any class. 2 sentences.",
+  "tip": "The single most important takeaway. Imperative verb. Max 15 words. Must directly relate to the pattern named above.",
   "followups": [
-    "A question the teacher might ask about how to execute the tip. Max 10 words.",
-    "A question about what to do if it goes wrong. Max 10 words.",
-    "A question about adapting to their class size or subject. Max 10 words."
+    "A practical HOW question about executing the tip specifically. Max 10 words.",
+    "A question about what to do when it goes wrong. Max 10 words.",
+    "A question about adapting the tip to this teacher's class size or subject. Max 10 words."
   ]
 }`;
 
@@ -1468,88 +1454,59 @@ Based ONLY on what the teacher described above, write a coaching note in this ex
 }
 
 function fallbackNote() {
-  // Use rubric signals if available — no API needed, purely local
-  const signals = state.rubricSignals;
+  // Offline / no-key fallback — uses class state chips as signal
+  // Never invents what happened — only states what was selected or observed
 
-  // Per-dimension fallback content keyed by dimension id
-  const DIM_CONTENT = {
-    prior_review: {
-      pattern: `The lesson started without connecting to what students already know. When new content arrives without a bridge to prior learning, students have to work harder to find where it fits — and some don't make that connection at all.`,
-      try:     `Open tomorrow's lesson with one recall question before touching new content. Ask one student by name: "What do you remember about what we did last class?" Even 90 seconds of this changes how students receive new information.`,
-      tip:     `Open with one recall question before teaching anything new.`
-    },
-    small_steps: {
-      pattern: `The new content was presented in a single block without practice breaks. When students can't consolidate one idea before the next arrives, confusion compounds — and by the end, the teacher can't see where things went wrong.`,
-      try:     `After explaining one idea tomorrow, stop and give students 2 minutes to try one example themselves before moving on. Watch what they do — that tells you more than asking "understood?".`,
-      tip:     `Explain one idea, then pause and let students try before continuing.`
-    },
-    cfu_quality: {
-      pattern: `Checking for understanding relied on whole-class responses — "everyone understood?" or choral answers. These tell you what the confident students know, not what the class as a whole has grasped.`,
-      try:     `After your next explanation, pause — then say one student's name and ask them to explain it back in their own words. Just one student. Notice what you learn from that single exchange.`,
-      tip:     `Ask one student by name to explain it back after your next explanation.`
-    },
-    cold_call: {
-      pattern: `Questions went to students who volunteered — likely the same few who always answer. The rest of the class learned they don't need to think, because someone else will answer.`,
-      try:     `Tomorrow, after asking a question, pause for 5 seconds — then say a name before anyone raises their hand. Don't start with the most challenging student; start with someone you think knows, to build the habit.`,
-      tip:     `Name a student before they raise their hand — every question.`
-    },
-    wait_time: {
-      pattern: `Questions were answered very quickly, which usually means only the fastest thinkers responded. Students who need more processing time — often the ones who most need to practise — never got the chance.`,
-      try:     `Tomorrow, after asking a question, count silently to 5 before accepting any answer. Say "think first, don't call out" if needed. The silence feels longer than it is — students adjust within a lesson.`,
-      tip:     `Count to 5 silently after every question before taking answers.`
-    },
-    student_talk: {
-      pattern: `Students mostly listened and gave short answers. When students only receive information rather than explaining it themselves, their understanding stays thin — they can recognise the right answer but can't generate it.`,
-      try:     `Give students 30 seconds to explain the key idea to the person next to them before you move on. You don't need to hear all pairs — circulate and listen to two or three. That's enough signal.`,
-      tip:     `Give students 30 seconds to explain the idea to a partner before moving on.`
-    },
-    uptake: {
-      pattern: `Student answers were acknowledged as right or wrong and the lesson moved on. When teachers don't build on what students say, students learn that their thinking doesn't really matter — only the correct answer does.`,
-      try:     `When a student answers tomorrow — correctly or not — ask one follow-up: "Why do you think that?" or "Say more." You don't need to do this every time. Once per lesson changes the classroom dynamic.`,
-      tip:     `Ask "why do you think that?" at least once after a student answers.`
-    },
-    back_row: {
-      pattern: `Students at the back or sides weren't specifically checked on during the lesson. In most classrooms, disengagement clusters at the edges — and it's invisible until it becomes a behaviour issue or a failing grade.`,
-      try:     `Tomorrow, when students are working independently, walk to the back of the room first — not to check behaviour, but to look at what students have written. Crouch down to one student and ask "show me what you have so far."`,
-      tip:     `Walk to the back row first during independent work — every lesson.`
-    },
-  };
+  // Determine pattern from class state chips if available
+  const hasConfusion  = selectedClassStates.some(s => ['confused','no_check','choral'].includes(s.id));
+  const hasDisengage  = selectedClassStates.some(s => ['same_few','no_answer','back_lost'].includes(s.id));
+  const hasPositive   = selectedClassStates.some(s => ['good_energy','better','quiet'].includes(s.id));
+  const hasRushed     = selectedClassStates.some(s => s.id === 'rushed');
 
-  // Find weakest dimension — rotate among ties
-  let dimId = 'cfu_quality'; // default
-  if (signals) {
-    const sorted  = Object.entries(signals).sort((a,b) => a[1].score - b[1].score);
-    const lowest  = sorted[0][1].score;
-    const tied    = sorted.filter(([,v]) => v.score === lowest);
-    const sessions = lsGetJSON('ss_sessions', []);
-    dimId = tied[sessions.length % tied.length][0];
+  let pattern, tryThis, tip;
+
+  if (hasConfusion) {
+    pattern = `Students seemed unclear at some point in the lesson. When confusion builds without being caught, students stop trying — they wait for the teacher to give the answer rather than thinking it through.`;
+    tryThis = `In your next lesson, after explaining something, pause and ask one student to explain it back in their own words — not "did everyone understand?" but "Raju, what did you just hear me say?" One student's answer tells you more than the whole class nodding.`;
+    tip     = `Ask one student to explain it back before moving on.`;
+  } else if (hasDisengage) {
+    pattern = `Some students were not participating — either the same few answered everything, or others stayed silent throughout. When participation is uneven, the quieter students get much less practice thinking.`;
+    tryThis = `Next class, before asking a question, say: "Everyone think first. Don't raise your hand yet." Count silently to 5. Then say a name. Do this just twice per lesson to start — it changes who gets to think.`;
+    tip     = `Pause 5 seconds after questions before naming who answers.`;
+  } else if (hasRushed) {
+    pattern = `The lesson felt rushed — which usually means content moved faster than students could follow. When pace is driven by finishing rather than understanding, students who are confused stay confused and fall further behind.`;
+    tryThis = `Before your next lesson, identify the ONE most important idea students must leave with. Teach that idea slowly, with one practice moment. Leave the rest for next class if needed — depth beats coverage.`;
+    tip     = `Identify the one most important idea and teach only that, deeply.`;
+  } else if (hasPositive) {
+    pattern = `The class went well — which is worth understanding, not just appreciating. What specifically created that good energy? Was it the topic, how you opened, the pace, the seating? Naming it means you can repeat it.`;
+    tryThis = `Before your next lesson, write down one thing you think made today's class work. Try to do that thing deliberately tomorrow — not just hope it happens again.`;
+    tip     = `Name what made today work so you can repeat it deliberately.`;
+  } else {
+    // No chips selected — genuinely generic
+    pattern = `Without more detail about what happened in class, it's hard to name a specific pattern. The most useful thing after any lesson is to notice one moment where students seemed uncertain — and ask yourself what created it.`;
+    tryThis = `After your next lesson, before you leave the classroom, write one sentence about a moment that felt uncertain. That habit of naming one thing — just one — builds the observational instinct that improves teaching over time.`;
+    tip     = `After class, write one sentence about one uncertain moment.`;
   }
 
-  const content = DIM_CONTENT[dimId] || DIM_CONTENT['cfu_quality'];
-
-  const STRENGTH_BY_DIM = {
-    prior_review: `You completed the lesson and reflected on it after. That act of pausing to think about what happened — rather than just moving on — is where real improvement starts.`,
-    small_steps:  `You taught through the full content of the lesson. Covering the material is the foundation — the next layer is how you pace it for students to absorb.`,
-    cfu_quality:  `You kept the lesson moving and finished the planned content. That sense of momentum matters, and building check-ins into it will make it even more effective.`,
-    cold_call:    `You engaged the class and kept them with you through the lesson. The questions you asked show you were thinking about their understanding throughout.`,
-    wait_time:    `You asked questions during the lesson — that itself is more than many teachers do. The quality of what you get back from those questions is the next thing to work on.`,
-    student_talk: `You explained the content clearly enough to get through it. The explanation phase was present — the student practice phase is what comes next.`,
-    uptake:       `You responded to what students said during the lesson, keeping the dialogue going. Building on those responses more explicitly is the natural next step.`,
-    back_row:     `You noticed what was happening in the classroom as you taught. That observational awareness — even when you couldn't act on everything — is a real teaching asset.`,
-  };
+  const strength = hasPositive
+    ? `You noticed the class went well today — that observational awareness is itself a teaching skill. A teacher who notices what works can repeat it; one who doesn't has to rely on luck.`
+    : `You showed up, taught your class, and took time to reflect on it — that habit of pausing to notice what happened is where every good teacher begins.`;
 
   return {
-    strength: STRENGTH_BY_DIM[dimId] || `You completed a full lesson and took time to reflect on it. That habit — stepping back and noticing what happened — is the foundation of every teacher who gets better over time.`,
-    pattern:  content.pattern,
-    try:      content.try,
-    tip:      content.tip,
+    strength,
+    pattern,
+    try: tryThis,
+    tip,
     followups: [
       "How do I do this with 50 students at once?",
       "What if students still don't respond?",
-      "How long does this take to become a habit?",
+      "How do I find time for this in a packed syllabus?",
     ]
   };
 }
+
+
+
 
 // ═══════════════════════════════════
 //  SAVE SESSION
@@ -1605,11 +1562,23 @@ function newSession() {
   // reflect rec
   const rb=document.getElementById('reflect-rec-btn');
   rb.className='rec-btn idle'; rb.innerHTML=micIcon();
-  document.getElementById('reflect-rec-label').textContent='Tap to answer';
+  document.getElementById('reflect-rec-label').textContent='Speak your answer';
   document.getElementById('reflect-timer').style.display='none';
   document.getElementById('feedback-btn').disabled=true;
-  document.getElementById('chips-wrap').style.display='none';
-  document.getElementById('chips-row').innerHTML='';
+  // reset class state chips and new Screen 2 UI
+  selectedClassStates = [];
+  const csChips = document.getElementById('class-state-chips');
+  if (csChips) csChips.innerHTML = '';
+  const qWrap = document.getElementById('reflect-question-wrap');
+  if (qWrap) qWrap.style.display = 'none';
+  const aWrap = document.getElementById('reflect-answer-wrap');
+  if (aWrap) aWrap.style.display = 'none';
+  const rtInput = document.getElementById('reflect-text-input');
+  if (rtInput) rtInput.value = '';
+  // remove stale chips-wrap refs (removed from Screen 2 HTML — guard against null)
+  const chipsWrap = document.getElementById('chips-wrap');
+  if (chipsWrap) chipsWrap.style.display = 'none';
+  // reflect-text-toggle removed from new Screen 2 — skip
   // form
   ['subject','grade','topic'].forEach(id=>document.getElementById(id).value='');
   // save btn
@@ -1638,9 +1607,12 @@ function newSession() {
   document.getElementById('lesson-text-panel').style.display='flex';
   document.getElementById('lesson-text-input').value='';
   document.getElementById('lesson-text-toggle-btn').textContent='show / hide';
-  document.getElementById('reflect-text-panel').style.display='flex';
-  document.getElementById('reflect-text-input').value='';
-  document.getElementById('reflect-text-toggle').textContent='show / hide';
+  // reflect-text-input still exists in new Screen 2
+  const rti = document.getElementById('reflect-text-input');
+  if (rti) rti.value='';
+  // reflect-text-toggle removed from new Screen 2 HTML — guard
+  const rtt = document.getElementById('reflect-text-toggle');
+  if (rtt) rtt.textContent='show / hide';
   document.getElementById('unsaved-warning').style.display='none';
 
   navTo('screen-record','nav-home');
@@ -1784,7 +1756,6 @@ function toggleExpand(i) {
 // ═══════════════════════════════════
 //  GRADE PROFILE
 // ═══════════════════════════════════
-const ALL_GRADES = ['Class 3','Class 4','Class 5','Class 6','Class 7','Class 8','Class 9','Class 10'];
 
 function renderGradeChips() {
   const saved = lsGetJSON('ss_grades', []);
@@ -2165,10 +2136,14 @@ function submitLessonText() { onLessonTextInput(); }
 function toggleReflectText() {
   const panel = document.getElementById('reflect-text-panel');
   const btn   = document.getElementById('reflect-text-toggle');
+  if (!panel) return; // element may not exist in this layout
   const show  = panel.style.display === 'none' || !panel.style.display;
   panel.style.display = show ? 'flex' : 'none';
-  btn.textContent = show ? 'hide' : 'Write your response';
-  if (show) document.getElementById('reflect-text-input').focus();
+  if (btn) btn.textContent = 'show / hide';
+  if (show) {
+    const ta = document.getElementById('reflect-text-input');
+    if (ta) ta.focus();
+  }
 }
 
 function onReflectTextInput() {
@@ -2514,192 +2489,148 @@ function runRubricEngine(text) {
   return signals;
 }
 
-function getWeakestDimension(signals) {
-  if (!signals) return null;
-  return Object.values(signals).reduce((weakest, dim) =>
-    dim.score < weakest.score ? dim : weakest
-  );
-}
+// getWeakestDimension removed — rubric no longer drives UI
 
 // ═══════════════════════════════════
 //  REFLECTION QUESTION BANK
 //  Keyed by rubric dimension — targets the weakest signal
 // ═══════════════════════════════════
-const REFLECTION_CHIPS = {
-  prior_review: [
-    "jumped straight to new content",
-    "no time for review today",
-    "assumed they remembered from last class",
-  ],
-  small_steps: [
-    "explained everything first, then gave practice",
-    "covered a lot at once without breaks",
-    "felt rushed to get through the content",
-  ],
-  cfu_quality: [
-    "asked 'everyone understood?' and moved on",
-    "mostly the class answered together",
-    "hard to tell who actually understood",
-  ],
-  cold_call: [
-    "only front-row students answered",
-    "same 3–4 students every time",
-    "didn't call anyone by name today",
-  ],
-  wait_time: [
-    "moved on as soon as someone answered",
-    "didn't pause much after questions",
-    "felt pressure to keep pace",
-  ],
-  student_talk: [
-    "I talked most of the lesson",
-    "students only gave short answers",
-    "no pair or group discussion today",
-  ],
-  uptake: [
-    "said correct/wrong and moved on",
-    "didn't really build on what students said",
-    "acknowledged answers briefly and continued",
-  ],
-  back_row: [
-    "didn't check back rows specifically",
-    "some students seemed lost but I moved on",
-    "didn't circulate during the lesson",
-  ],
-};
-
-// 3 questions per dimension — rotated by session count within the dimension
-const REFLECTION_QUESTION_BANK = {
-  prior_review: [
-    "How did you open the lesson? Did you connect it to what students already know?",
-    "Before introducing today's new idea, how did you find out what students already remembered?",
-    "What was the very first thing you did in class — and did it connect to previous learning?",
-  ],
-  small_steps: [
-    "After explaining something new, did students get to try it before you moved on — or did you cover everything first?",
-    "At what point did students practise during the lesson? Was it after each idea, or only at the end?",
-    "If you split today's lesson into steps — explanation, then practice — where did the practice actually happen?",
-  ],
-  cfu_quality: [
-    "When you asked questions, how did you know which individual students understood and which didn't?",
-    "What's the difference between how a confident student responded and how a quieter student responded today?",
-    "If you had to name three students right now and say whether each understood — could you? How do you know?",
-  ],
-  cold_call: [
-    "Think about who answered your questions today — who answered? Who stayed quiet the whole time?",
-    "Were the same students answering every time, or did you hear from different students throughout?",
-    "How did you decide which student to ask? Did every student have an equal chance of being called?",
-  ],
-  wait_time: [
-    "After you asked a question, what did you do while waiting for someone to answer?",
-    "When a student answered your question, how much time had passed since you asked it?",
-    "When you asked a question, who was thinking — just the student who answered, or the whole class?",
-  ],
-  student_talk: [
-    "How much did students talk compared to you? When did they get to explain something in their own words?",
-    "At what point in the lesson did students talk to each other, not just answer your questions?",
-    "If you had to estimate — how many minutes did you talk versus how many minutes did students talk?",
-  ],
-  uptake: [
-    "When a student gave an answer — right or wrong — what did you do with it? Did you build on it or move on?",
-    "Think of one student answer today. What did you say immediately after — did you go deeper or move on?",
-    "When a student said something interesting or surprising, what happened next in the lesson?",
-  ],
-  back_row: [
-    "Think about the students at the back or the sides — were you sure they were following throughout?",
-    "Which students did you not hear from today — and do you know why?",
-    "If you had to identify two students who may not have understood, who would they be and why?",
-  ],
-};
-
-// Flat map for backwards compatibility
-const REFLECTION_QUESTIONS = Object.fromEntries(
-  Object.entries(REFLECTION_QUESTION_BANK).map(([k, v]) => [k, v[0]])
-);
-
-const FALLBACK_QUESTIONS = [
-  "Which moment in today's lesson felt most uncertain, and why?",
-  "If you taught this lesson again tomorrow, what one thing would you change first?",
+// ═══════════════════════════════════════════════════════
+//  CLASS STATE CHIPS — Screen 2 multi-select
+//  Teacher picks what felt true about this class.
+//  Selection drives reflection question + coaching context.
+// ═══════════════════════════════════════════════════════
+const CLASS_STATE_CHIPS = [
+  { id: 'quiet',       label: 'Students were quiet and focused',         context: 'Students were quiet and focused throughout.' },
+  { id: 'confused',    label: 'Students seemed confused or lost',         context: 'Students seemed confused or lost during the lesson.' },
+  { id: 'same_few',    label: 'Same few students answered everything',    context: 'The same few students answered all the questions.' },
+  { id: 'no_check',    label: "Couldn't tell who actually understood",    context: 'It was hard to tell which individual students understood.' },
+  { id: 'rushed',      label: 'Felt rushed / ran out of time',            context: 'The lesson felt rushed and there was not enough time.' },
+  { id: 'back_lost',   label: 'Back rows seemed disengaged',              context: 'Students at the back seemed disengaged or lost.' },
+  { id: 'no_answer',   label: 'Students did not answer my questions',     context: 'Students were not answering questions.' },
+  { id: 'good_energy', label: 'Discussion was good / students were active', context: 'The discussion was good and students were actively participating.' },
+  { id: 'choral',      label: 'Class answered together, not individually', context: 'Students answered in chorus — hard to tell what individuals knew.' },
+  { id: 'better',      label: 'Better than expected',                     context: 'The lesson went better than expected.' },
 ];
 
-// Returns { question, dimId }
-function getReflectionQuestionAndDim(signals) {
-  const sessions = lsGetJSON('ss_sessions', []);
+// State for multi-select
+function renderClassStateChips() {
+  const container = document.getElementById('class-state-chips');
+  if (!container) return;
+  selectedClassStates = [];
 
-  if (signals) {
-    const entries = Object.entries(signals).sort((a,b) => a[1].score - b[1].score);
-    const lowestScore = entries[0][1].score;
-
-    if (lowestScore < 2) {
-      // Find ALL dimensions tied at the lowest score — rotate among them
-      const tied = entries.filter(([,v]) => v.score === lowestScore);
-      const dimId = tied[sessions.length % tied.length][0];
-      const bank  = REFLECTION_QUESTION_BANK[dimId];
-      const q = bank ? bank[Math.floor(sessions.length / tied.length) % bank.length] : FALLBACK_QUESTIONS[0];
-      return { question: q, dimId };
-    }
-  }
-
-  // All dimensions strong — rotate across all dimensions
-  const dimKeys = Object.keys(REFLECTION_QUESTION_BANK);
-  if (sessions.length > 0) {
-    const dimIdx = sessions.length % dimKeys.length;
-    const dimId  = dimKeys[dimIdx];
-    const bank   = REFLECTION_QUESTION_BANK[dimId];
-    const qIdx   = Math.floor(sessions.length / dimKeys.length) % bank.length;
-    return { question: bank[qIdx], dimId };
-  }
-
-  return { question: FALLBACK_QUESTIONS[0], dimId: null };
-}
-
-// Kept for any legacy calls
-function getReflectionQuestion(signals) {
-  return getReflectionQuestionAndDim(signals).question;
-}
-
-function renderReflectionChips(dimId) {
-  const wrap = document.getElementById('chips-wrap');
-  const row  = document.getElementById('chips-row');
-  row.innerHTML = '';
-  const chips = dimId && REFLECTION_CHIPS[dimId];
-  if (!chips) { wrap.style.display='none'; return; }
-
-  chips.forEach(text => {
+  container.innerHTML = '';
+  CLASS_STATE_CHIPS.forEach(chip => {
     const btn = document.createElement('button');
     btn.className = 'chip';
-    btn.textContent = text;
-    btn.onclick = () => selectChip(btn, text);
-    row.appendChild(btn);
+    btn.textContent = chip.label;
+    btn.dataset.id = chip.id;
+    btn.onclick = () => toggleClassStateChip(btn, chip);
+    container.appendChild(btn);
   });
-  wrap.style.display = 'block';
 }
 
-function selectChip(btn, text) {
-  // Deselect all chips first
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-
-  if (state.selectedChip === text) {
-    // Tapping same chip again deselects — teacher can record instead
-    state.selectedChip = null;
-    state.reflectTranscript = '';
-    // Only disable feedback btn if not already recorded
-    if (!state.reflectDone) document.getElementById('feedback-btn').disabled = true;
-    return;
+function toggleClassStateChip(btn, chip) {
+  const idx = selectedClassStates.findIndex(s => s.id === chip.id);
+  if (idx >= 0) {
+    // Deselect
+    selectedClassStates.splice(idx, 1);
+    btn.classList.remove('selected');
+  } else {
+    // Select
+    selectedClassStates.push(chip);
+    btn.classList.add('selected');
   }
 
-  btn.classList.add('selected');
-  state.selectedChip = text;
-  state.reflectTranscript = text;
-  state.reflectDone = true;
-  document.getElementById('feedback-btn').disabled = false;
-
-  // Update recorder label to show chip was selected
-  const lbl = document.getElementById('reflect-rec-label');
-  if (!state.reflectRecording) {
-    lbl.textContent = 'Response selected';
+  if (selectedClassStates.length > 0) {
+    // Unlock continue
+    document.getElementById('feedback-btn').disabled = false;
+    // Show reflection question area
+    document.getElementById('reflect-question-wrap').style.display = 'flex';
+    document.getElementById('reflect-answer-wrap').style.display = 'flex';
+    // Update question — AI generates it, or use fallback
+    updateReflectionQuestion();
+  } else {
+    document.getElementById('feedback-btn').disabled = true;
+    document.getElementById('reflect-question-wrap').style.display = 'none';
+    document.getElementById('reflect-answer-wrap').style.display = 'none';
   }
 }
+function updateReflectionQuestion() {
+  // Debounce — wait 600ms after last chip tap before generating question
+  clearTimeout(questionUpdateTimer);
+  questionUpdateTimer = setTimeout(async () => {
+    const key = lsGet('ss_gemini_key');
+    if (key && navigator.onLine && selectedClassStates.length > 0) {
+      document.getElementById('question-box').style.display = 'none';
+      document.getElementById('question-loading').style.display = 'flex';
+
+      const stateContext = selectedClassStates.map(s => s.context).join(' ');
+      const lessonText = state.lessonTranscript.substring(0, 200);
+      const hasDevanagari = /[\u0900-\u097F]/.test(lessonText);
+      const hasHinglish = /\b(tha|the|thi|hai|hain|nahi|kiya|karte|bacche|sab|aaj|kal|bhi|toh)\b/i.test(lessonText);
+      const langNote = hasDevanagari ? 'Write in simple Hindi.' : hasHinglish ? 'Write in Hinglish.' : 'Write in English.';
+
+      const prompt = `A teacher just described their class:
+Lesson: "${lessonText}"
+What happened: ${stateContext}
+
+Write ONE open reflection question (max 20 words) that:
+- Is grounded in what they selected and described
+- Invites them to notice something specific
+- Does NOT imply they failed or suggest what they should have done
+- Sounds like a curious colleague asking
+- ${langNote}
+
+Reply with ONLY the question. No quotes.`;
+
+      try {
+        const res = await geminiCall(key,
+          { contents:[{role:'user', parts:[{text:prompt}]}] },
+          { temperature:0.6, maxOutputTokens:60 }
+        );
+        const data = await res.json();
+        const q = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        const bad = /\b(could you have|should you have|why didn't|how could you have)\b/i;
+        if (q && q.length > 8 && !bad.test(q)) {
+          state.reflectionQuestion = q;
+          document.getElementById('reflection-question').textContent = '"' + q + '"';
+        } else {
+          setFallbackQuestion();
+        }
+      } catch(e) {
+        setFallbackQuestion();
+      }
+
+      document.getElementById('question-loading').style.display = 'none';
+      document.getElementById('question-box').style.display = 'block';
+    } else {
+      setFallbackQuestion();
+      document.getElementById('question-box').style.display = 'block';
+    }
+  }, 600);
+}
+
+function setFallbackQuestion() {
+  // Pick a question from bank based on selected states
+  const hasConfusion  = selectedClassStates.some(s => ['confused','no_check','choral'].includes(s.id));
+  const hasEngagement = selectedClassStates.some(s => ['same_few','no_answer','back_lost'].includes(s.id));
+  const hasPositive   = selectedClassStates.some(s => ['good_energy','better'].includes(s.id));
+
+  let q;
+  if (hasConfusion)    q = "When did students seem most uncertain — and what were you doing at that point?";
+  else if (hasEngagement) q = "Which students did you hear from today — and which ones were silent throughout?";
+  else if (hasPositive)   q = "What specifically went well — and what do you think caused it?";
+  else                    q = "Which moment in this lesson felt most important, and why?";
+
+  state.reflectionQuestion = q;
+  document.getElementById('reflection-question').textContent = '"' + q + '"';
+}
+
+// Legacy stubs — kept so other code doesn't break
+function renderReflectionChips() {}
+function selectChip() {}
+
 
 // ═══════════════════════════════════
 //  FOLLOW-UP CHAT
@@ -2802,21 +2733,30 @@ async function fetchFollowUpResponse(question) {
         : hasHinglish ? "Respond in Hinglish, matching the teacher's register."
         : 'Respond in English.';
 
-      const systemPrompt = `You are Meera, a teaching coach with 20 years of experience in Indian government schools. You speak to teachers as equals — warm, direct, never judgmental.
+      // Also detect language from the question itself, not just lesson transcript
+      const qHasDevanagari = /[ऀ-ॿ]/.test(question);
+      const qHasHinglish = /(tha|the|thi|hai|hain|nahi|kiya|karte|sab|kuch|bahut|achha|theek|kaise|kya)/i.test(question);
+      const effectiveLangNote = (qHasDevanagari || hasDevanagari) ? 'Respond in simple Hindi (Devanagari).'
+        : (qHasHinglish || hasHinglish) ? "Respond in Hinglish, matching the teacher's register."
+        : 'Respond in English.';
 
-${langNote}
+      const systemPrompt = `You are Meera, a teaching coach. You are in a brief, focused conversation helping a teacher try ONE specific idea in their classroom tomorrow. This is not an open-ended chat — it has ${MAX_TURNS} exchanges total and this is exchange ${turnNum}.
 
-The teacher received this coaching note:
+${effectiveLangNote}
+
+The teacher's coaching note:
 ${noteContext}
 
-Subject: ${state.sessionSubject||'?'}, ${state.sessionGrade||'?'}. This is exchange ${turnNum} of ${MAX_TURNS}.
+Subject: ${state.sessionSubject||'?'}, ${state.sessionGrade||'?'}.
 
-Your job: help them execute the tip in their actual classroom. Answer only implementation questions.
+Your ONLY job: help them understand how to actually do the tip in their real classroom — with real students, a large class, limited time.
 
-NEVER: scold, say "you should have", use jargon, give more than one piece of advice, end with a question.
-If off-topic: "Good question — let's stay with today's tip for now. [redirect]."
+ALWAYS DO: Give one concrete thing. Name what to say or do. Be specific to their subject and grade.
+NEVER DO: scold, say "you should have", use jargon, give more than one idea, end with a question, repeat the coaching note back at them.
+
+If the question is not about implementing the tip: "Let's stay with today's tip — [one sentence redirect to tip]."
 Maximum 3 sentences.
-${isLastTurn ? 'Final exchange — end with one grounding statement that sends the teacher back to class with confidence.' : ''}`;
+${isLastTurn ? 'This is the last exchange. End with one sentence that sends the teacher back to their classroom with something specific to try — a statement, not a question.' : ''}`;
 
       const messages = [
         ...state.chatHistory,
@@ -2886,7 +2826,7 @@ async function copyNote() {
 }
 
 async function copyAllTips() {
-  const sessions = JSON.parse(localStorage.getItem('ss_sessions')||'[]');
+  const sessions = lsGetJSON('ss_sessions', []);
   if (sessions.length===0) return;
   const lines = [
     `Shiksha Saathi — All Tips`,
@@ -2897,7 +2837,7 @@ async function copyAllTips() {
 }
 
 async function copySession(i) {
-  const sessions = JSON.parse(localStorage.getItem('ss_sessions')||'[]');
+  const sessions = lsGetJSON('ss_sessions', []);
   const s = sessions[i]; if (!s) return;
   const lines = [
     `Shiksha Saathi — ${s.dateDisplay}${s.subject?' · '+s.subject:''}${s.grade?', '+s.grade:''}${s.topic?' · '+s.topic:''}`,
@@ -2939,7 +2879,6 @@ async function copyToClipboard(text, btnId, successLabel, originalLabel) {
 // ═══════════════════════════════════
 //  TIP TALK
 // ═══════════════════════════════════
-const TIPTALK_UNLOCK_COUNT = 5;
 const DIM_NAMES = {
   prior_review: 'Start by connecting to prior knowledge',
   small_steps:  'Teach one step at a time',
@@ -3175,12 +3114,29 @@ ${sessions.slice(0,10).map(s => `- ${s.dateDisplay} (${s.subject||'?'}, ${s.grad
 Self-ratings this month (1-5): ${Object.entries(ratings).map(([k,v])=>`${DIM_NAMES[k]}: ${v}/5`).join(', ') || 'not rated yet'}
 Focus goals: ${goals.map(g=>DIM_NAMES[g]).join(', ') || 'none set'}`;
 
-      const systemPrompt = `You are Meera, a teaching coach with 20 years of experience in Indian government schools. You speak to teachers as equals — warm, direct, specific, never judgmental.
+      // Language detection for Tip Talk
+      const ttHasDevanagari = /[ऀ-ॿ]/.test(question);
+      const ttHasHinglish = /(tha|the|thi|hai|hain|nahi|kiya|karte|sab|kuch|achha|theek|kaise|kya)/i.test(question);
+      const ttLangNote = ttHasDevanagari ? 'Respond in simple Hindi (Devanagari).'
+        : ttHasHinglish ? "Respond in Hinglish."
+        : 'Respond in English.';
 
-Help this teacher understand their teaching patterns, celebrate genuine progress, and identify what to focus on next. Be specific — reference actual tips from their history, not generic advice.
+      // Richer context — include pattern data not just tips
+      const patternContext = sessions.length >= 3
+        ? `Notable patterns across sessions: tips often mention ${[...new Set(sessions.slice(0,8).map(s=>s.tip))].slice(0,3).join('; ')}.`
+        : '';
 
-NEVER: scold, say "you should have", use academic jargon, end with a question, give a generic motivational speech.
-Maximum 4 sentences per response.`;
+      const systemPrompt = `You are Meera, a teaching coach. This teacher is looking back at their teaching across multiple sessions. Your job is to help them see genuine patterns, notice real progress, and think about what to try next.
+
+${ttLangNote}
+
+This is a reflective conversation — different from asking for advice about today's lesson. The teacher wants to understand themselves as a teacher over time.
+
+Self-ratings use a 3-point scale: 1 = not yet doing this, 3 = doing it sometimes, 5 = doing it regularly.
+
+ALWAYS DO: Reference specific tips or patterns from their actual history. Name real progress when you see it. Be honest when a pattern keeps repeating. Speak as an equal.
+NEVER DO: scold, say "you should have", use jargon (no "formative assessment", "metacognition", "scaffolding"), end with a question, give generic motivational phrases like "keep it up!" or "you're doing great!".
+Maximum 4 sentences.`;
 
       tiptalkHistory.push({ role:'user', parts:[{text: question}] });
 
@@ -3207,6 +3163,17 @@ Maximum 4 sentences per response.`;
 // ═══════════════════════════════════
 //  LEARN TAB
 // ═══════════════════════════════════
+const LEARN_SOURCES = {
+  prior_review: { label:'Rosenshine (2012) — Principles of Instruction', url:'https://www.aft.org/sites/default/files/periodicals/Rosenshine.pdf' },
+  small_steps:  { label:'Rosenshine (2012) — Principles of Instruction', url:'https://www.aft.org/sites/default/files/periodicals/Rosenshine.pdf' },
+  cfu_quality:  { label:'TLAC — Free Resources (Check for Understanding)', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
+  cold_call:    { label:'TLAC — Free Resources (Cold Call)', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
+  wait_time:    { label:'TLAC — Free Resources (Wait Time)', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
+  student_talk: { label:'TLAC — Free Resources (Turn and Talk)', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
+  uptake:       { label:'TLAC — Free Resources (No Opt Out)', url:'https://teachlikeachampion.org/resources/grab-and-go/' },
+  back_row:     { label:'Rosenshine (2012) — Principles of Instruction', url:'https://www.aft.org/sites/default/files/periodicals/Rosenshine.pdf' },
+};
+
 const LEARN_CARDS = [
   {
     id: 'prior_review',
@@ -3322,7 +3289,6 @@ const LEARN_CARDS = [
   },
 ];
 
-let learnRendered = false;
 
 function renderLearn() {
   if (learnRendered) return; // static content — only render once
