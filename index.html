@@ -568,6 +568,13 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
   <!-- unlocked state -->
   <div id="tiptalk-unlocked" style="display:none;flex-direction:column;gap:16px;">
 
+    <!-- nudge if no self-rating set this month -->
+    <div id="tiptalk-rating-nudge" style="display:none;background:var(--teal-l);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+      <p style="font-size:13px;color:var(--teal);font-weight:500;">⭐ Rate yourself to track your growth</p>
+      <p style="font-size:12px;color:var(--ink2);">Tell Meera how you're doing across 8 teaching areas this month — it helps her give you more specific responses.</p>
+      <button onclick="openSettings()" style="align-self:flex-start;font-size:12px;font-weight:500;color:var(--teal);background:none;border:1px solid var(--teal);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;">Go to Settings → My teaching ratings</button>
+    </div>
+
     <!-- My Score card — summary from self-rating in settings -->
     <div class="card" id="my-score-card" style="display:none;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
@@ -719,6 +726,11 @@ h2{font-family:'Lora',serif;font-size:18px;font-weight:500;}
     <p class="wordmark">Shiksha Saathi</p>
     <h1>Learn</h1>
     <p class="subtext" style="margin-top:6px;">What good teaching looks like — and how to get there.</p>
+  </div>
+  <div id="learn-rating-nudge" style="display:none;background:var(--teal-l);border-radius:10px;padding:14px 16px;flex-direction:column;gap:8px;">
+    <p style="font-size:13px;color:var(--teal);font-weight:500;">⭐ Pick your focus areas to get more from these cards</p>
+    <p style="font-size:12px;color:var(--ink2);">Rate yourself on 8 teaching dimensions in Settings — then set up to 3 priorities for this month. The areas you want to improve will feel more relevant as you read.</p>
+    <button onclick="openSettings()" style="align-self:flex-start;font-size:12px;font-weight:500;color:var(--teal);background:none;border:1px solid var(--teal);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;">Go to Settings → My teaching ratings</button>
   </div>
   <div id="learn-cards" style="display:flex;flex-direction:column;gap:12px;"></div>
   <div class="spacer-nav"></div>
@@ -3012,6 +3024,10 @@ function renderTiptalk() {
   const goals    = lsGetJSON('ss_goals', []);
   const ratedDims = Object.values(ratings).filter(v => v > 0);
 
+  // Show nudge if no ratings set this month
+  const nudge = document.getElementById('tiptalk-rating-nudge');
+  if (nudge) nudge.style.display = ratedDims.length === 0 ? 'flex' : 'none';
+
   const scoreCard = document.getElementById('my-score-card');
   if (ratedDims.length > 0) {
     scoreCard.style.display = 'block';
@@ -3099,6 +3115,8 @@ function saveRatings() {
   const orig = btn.textContent;
   btn.textContent = 'Saved ✓';
   setTimeout(() => btn.textContent = orig, 1500);
+  // Allow Learn and Tip Talk nudge to refresh on next visit
+  learnRendered = false;
 }
 
 function onTiptalkKeydown(e) {
@@ -3338,9 +3356,18 @@ const LEARN_CARDS = [
 
 
 function renderLearn() {
-  if (learnRendered) return; // static content — only render once
+  if (learnRendered) return;
   learnRendered = true;
-  const goals = lsGetJSON('ss_goals', []);
+
+  // Show nudge if no ratings or no goals set yet this month
+  const now      = new Date();
+  const monthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  const ratings  = (lsGetJSON('ss_ratings', {}))[monthKey] || {};
+  const goals    = lsGetJSON('ss_goals', []);
+  const hasRatings = Object.values(ratings).some(v => v > 0);
+  const nudge = document.getElementById('learn-rating-nudge');
+  if (nudge) nudge.style.display = (!hasRatings || goals.length === 0) ? 'flex' : 'none';
+
   const container = document.getElementById('learn-cards');
   container.innerHTML = LEARN_CARDS.map((card, idx) => {
     const isGoal = goals.includes(card.id);
